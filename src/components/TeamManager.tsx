@@ -202,7 +202,7 @@ export default function TeamManager({ userUid, teamId, onTeamUpdate }: TeamManag
                             required
                             value={newTeamName}
                             onChange={(e) => setNewTeamName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent bg-white text-[#202124] placeholder-gray-400"
                         />
                         <button
                             type="submit"
@@ -226,7 +226,7 @@ export default function TeamManager({ userUid, teamId, onTeamUpdate }: TeamManag
                             required
                             value={joinCode}
                             onChange={(e) => setJoinCode(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-green)] focus:border-transparent uppercase"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-green)] focus:border-transparent uppercase bg-white text-[#202124] placeholder-gray-400"
                         />
                         <button
                             type="submit"

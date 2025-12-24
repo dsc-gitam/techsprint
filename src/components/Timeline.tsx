@@ -31,13 +31,13 @@ export default function Timeline() {
     ];
 
     return (
-        <section id="timeline" className="py-20 bg-[var(--io-light-gray)]">
+        <section id="timeline" className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-4xl font-bold text-center mb-16 text-[var(--foreground)]">Event Timeline</h2>
+                <h2 className="text-4xl font-bold text-center mb-16 text-[var(--io-dark)]">Event Timeline</h2>
 
                 <div className="relative">
                     {/* Vertical Line */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-200 hidden md:block"></div>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-300 hidden md:block"></div>
 
                     <div className="space-y-12">
                         {events.map((event, index) => (
@@ -48,15 +48,15 @@ export default function Timeline() {
                                     {event.completed && <div className="w-4 h-4 rounded-full" style={{ backgroundColor: event.color }}></div>}
                                 </div>
 
-                                <div className="w-full md:w-5/12 bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-t-4" style={{ borderColor: event.color }}>
+                                <div className="w-full md:w-5/12 bg-[var(--io-light-gray)] p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-l-4" style={{ borderColor: event.color }}>
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-bold uppercase tracking-wider text-gray-500">{event.date}</span>
-                                        <span className={`px-2 py-1 text-xs rounded-full ${event.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                        <span className="text-sm font-bold uppercase tracking-wider" style={{ color: event.color }}>{event.date}</span>
+                                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${event.completed ? 'bg-[var(--google-green)] text-white' : 'bg-[var(--io-dark)] text-white'}`}>
                                             {event.completed ? 'Completed' : 'Upcoming'}
                                         </span>
                                     </div>
-                                    <h3 className="text-xl font-bold mb-2 text-[var(--foreground)]">{event.title}</h3>
-                                    <p className="text-gray-600">{event.description}</p>
+                                    <h3 className="text-xl font-bold mb-2 text-[var(--io-dark)]">{event.title}</h3>
+                                    <p className="text-gray-700">{event.description}</p>
                                 </div>
                             </div>
                         ))}
@@ -66,3 +66,4 @@ export default function Timeline() {
         </section>
     );
 }
+

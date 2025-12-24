@@ -43,9 +43,9 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="">
+            <nav className="bg-white sticky top-0 z-50 border-b border-[#e8eaed]">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-20">
+                    <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
                             <Link href="/" className="flex items-center gap-2"><svg className='w-10 h-8' width="504" height="504" viewBox="0 0 504 504" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M444.659 220.504C467.171 207.749 493.228 219.295 498.604 243.651L498.727 244.229C501.671 258.54 495.24 273.965 482.448 281.42C434.774 309.203 387.042 336.867 339.078 364.106C325.898 371.59 312.542 370.305 300.344 360.99L300.343 360.989C294.111 356.233 290.164 350.706 288.079 344.589C286.001 338.497 285.683 331.551 287.135 323.809C290.43 312.527 297.845 304.843 308.548 298.869L308.547 298.868C327.591 288.24 346.371 277.027 365.128 266.138L365.127 266.137C388.346 252.802 411.466 239.398 434.694 226.166L444.659 220.504Z" fill="#FABC05" stroke="black" strokeWidth="9" />
@@ -54,16 +54,16 @@ export default function Navbar() {
                                 <path d="M36.8911 215.636C39.0871 215.365 40.7791 215.318 42.1997 215.621C49.0358 217.077 55.7766 219.15 61.5825 222.281C81.0734 232.792 100.137 243.988 119.523 255.009H119.524C136.356 264.881 153.193 274.783 170.051 284.633V284.632C180.041 290.47 189.837 295.938 199.647 301.792V301.791C217.304 312.332 222.813 333.566 212.645 351.156V351.157C203.147 367.591 182.123 373.725 164.965 364.488L164.152 364.036L146.327 353.844C104.749 330.04 63.2664 306.073 21.9233 281.873C8.99308 274.304 3.15327 262.401 4.81689 247.474C5.70649 239.489 8.48863 233.105 12.7817 228.065C17.0004 223.113 22.8619 219.245 30.3276 216.52C32.5694 216.298 35.192 215.846 36.8911 215.636Z" fill="#4385F3" stroke="black" strokeWidth="9" />
                             </svg>
 
-                                <span className="text-xl font-bold text-(--foreground) relative">
-                                    TechS<span>p<div className='absolute -bottom-1 left-[58.5px] w-[2.5px] h-4 bg-(--foreground)'></div></span>rint
+                                <span className="text-xl font-bold text-[#202124] relative">
+                                    TechS<span>p<div className='absolute -bottom-1 left-[58.5px] w-[2.5px] h-4 bg-[#202124]'></div></span>rint
                                 </span>
                             </Link>
                         </div>
                         <div className="hidden md:flex items-center space-x-8">
-                            <Link href="#about" className="text-gray-600 hover:text-(--google-blue) font-medium transition-colors">
+                            <Link href="/#about" className="text-[#5f6368] hover:text-[#4285F4] font-medium transition-colors">
                                 About
                             </Link>
-                            <Link href="/timeline" className="text-gray-600 hover:text-(--google-blue) font-medium transition-colors">
+                            <Link href="/timeline" className="text-[#5f6368] hover:text-[#4285F4] font-medium transition-colors">
                                 Timeline
                             </Link>
 

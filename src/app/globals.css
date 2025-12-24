@@ -3,17 +3,20 @@
 :root {
   --background: #ffffff;
   --foreground: #202124;
-  
+
   /* Google Brand Colors */
   --google-blue: #4285f4;
   --google-red: #ea4335;
   --google-yellow: #fbbc04;
   --google-green: #34a853;
-  
+
   /* Google I/O 2020/2025 Inspired Colors */
   --io-dark: #202124;
   --io-light-gray: #f8f9fa;
-  --io-border: #121212;
+  --io-border: #dadce0;
+
+  /* Force light mode */
+  color-scheme: light;
 }
 
 @theme {
@@ -25,19 +28,35 @@
   --color-foreground: var(--foreground);
 }
 
-/* Dark mode preference */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #202124;
-    --foreground: #ffffff;
-    --io-border: #ffffff/70;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+/* Custom Scrollbar - Clean Google Style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dadce0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bdc1c6;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #dadce0 #f8f9fa;
 }
 
 /* Utility for Google Sans if hosted or imported */

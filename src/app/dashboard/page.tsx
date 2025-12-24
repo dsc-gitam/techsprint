@@ -98,8 +98,8 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-[var(--io-light-gray)]">
-            <nav className="bg-white">
+        <div className="min-h-screen bg-[#f8f9fa]">
+            <nav className="bg-white border-b border-[#e8eaed]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center">
@@ -110,8 +110,8 @@ export default function Dashboard() {
                                 <path d="M36.8911 215.636C39.0871 215.365 40.7791 215.318 42.1997 215.621C49.0358 217.077 55.7766 219.15 61.5825 222.281C81.0734 232.792 100.137 243.988 119.523 255.009H119.524C136.356 264.881 153.193 274.783 170.051 284.633V284.632C180.041 290.47 189.837 295.938 199.647 301.792V301.791C217.304 312.332 222.813 333.566 212.645 351.156V351.157C203.147 367.591 182.123 373.725 164.965 364.488L164.152 364.036L146.327 353.844C104.749 330.04 63.2664 306.073 21.9233 281.873C8.99308 274.304 3.15327 262.401 4.81689 247.474C5.70649 239.489 8.48863 233.105 12.7817 228.065C17.0004 223.113 22.8619 219.245 30.3276 216.52C32.5694 216.298 35.192 215.846 36.8911 215.636Z" fill="#4385F3" stroke="black" strokeWidth="9" />
                             </svg>
 
-                                <span className="text-xl font-bold text-(--foreground) relative">
-                                    TechS<span>p<div className='absolute -bottom-1 left-[58.5px] w-[2.5px] h-4 bg-(--foreground)'></div></span>rint
+                                <span className="text-xl font-bold text-[#202124] relative">
+                                    TechS<span>p<div className='absolute -bottom-1 left-[58.5px] w-[2.5px] h-4 bg-[#202124]'></div></span>rint
                                 </span>
                             </Link>
                         </div>
@@ -166,7 +166,7 @@ export default function Dashboard() {
                                                 required
                                                 value={formData.college}
                                                 onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent bg-white text-[#202124] placeholder-gray-400"
                                                 placeholder="Enter college name"
                                             />
                                         </div>
@@ -176,7 +176,7 @@ export default function Dashboard() {
                                                 required
                                                 value={formData.year}
                                                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--google-blue)] focus:border-transparent bg-white text-[#202124]"
                                             >
                                                 <option value="">Select Year</option>
                                                 <option value="1st Year">1st Year</option>

@@ -58,7 +58,7 @@ export default function ProfileModal({ user, isOpen, onClose, onComplete }: Prof
                             required
                             value={formData.college}
                             onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white text-[#202124] placeholder-gray-400"
                             placeholder="e.g. IIT Bombay"
                         />
                     </div>
@@ -69,7 +69,7 @@ export default function ProfileModal({ user, isOpen, onClose, onComplete }: Prof
                             required
                             value={formData.year}
                             onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white text-[#202124]"
                         >
                             <option value="">Select Year</option>
                             <option value="1st Year">1st Year</option>
