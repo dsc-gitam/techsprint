@@ -65,7 +65,7 @@ export default function Navbar() {
                                     <span>TechS</span>
                                     <span className="relative">
                                         p
-                                        <span className='absolute top-[80%] left-[1px] w-[2px] sm:w-[2.5px] h-3 sm:h-4 bg-[#202124]'></span>
+                                        <span className='absolute top-[68%] left-[1px] w-[2px] sm:w-[2.5px] h-3 sm:h-4 bg-[#202124]'></span>
                                     </span>
                                     <span>rint</span>
                                 </span>
