@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { auth, db, isFirebaseConfigured } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,6 @@ export default function Navbar() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!auth) return;
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
         });
@@ -24,10 +23,6 @@ export default function Navbar() {
     }, []);
 
     const handleSignIn = async () => {
-        if (!auth || !db) {
-            alert('Firebase is not configured. Running in UI-only mode.');
-            return;
-        }
         const provider = new GoogleAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
@@ -106,6 +101,7 @@ export default function Navbar() {
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
                             aria-label="Toggle menu"
+                            aria-expanded={mobileMenuOpen}
                         >
                             <svg className="w-6 h-6 text-[#202124]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 {mobileMenuOpen ? (
