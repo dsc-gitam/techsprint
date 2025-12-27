@@ -24,7 +24,7 @@ export default function Timeline() {
         {
             date: "Jan 3",
             title: "TechSprint Hackathon",
-            description: "The main event! 48 hours of building and innovation.",
+            description: "The main event! 24 hours of building and innovation.",
             completed: false,
             color: "var(--google-green)"
         }

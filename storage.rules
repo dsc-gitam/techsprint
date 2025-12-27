@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Milestone submissions folder
+    match /milestone_submissions/{allPaths=**} {
+      // Allow authenticated users to upload files (max 2MB)
+      // Only PDF and DOCX files allowed
+      allow create: if isAuthenticated() && 
+                       request.resource.size < 2 * 1024 * 1024 &&
+                       request.resource.contentType.matches('application/pdf|application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      
+      // Allow authenticated users to read their own uploads
+      allow read: if isAuthenticated();
+      
+      // No updates or deletes allowed (prevent tampering with submissions)
+      allow update, delete: if false;
+    }
+    
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "format": "Day 1",
+    "time": "16:30",
+    "title": "MILESTONE #1: Idea Research Document (IRD)",
+    "id": "milestone_one"
+  },
+  {
+    "format": "Day 1",
+    "time": "20:30",
+    "title": "MILESTONE #2: END of Frontend!",
+    "id": "milestone_two"
+  },
+  {
+    "format": "Day 2",
+    "time": "04:00",
+    "title": "MILESTONE #3: Core Features Done!",
+    "id": "milestone_three"
+  },
+  {
+    "format": "Day 2",
+    "time": "08:30",
+    "title": "MILESTONE #4: Launchpad - Submission Time!",
+    "id": "milestone_four"
+  }
+]

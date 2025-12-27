@@ -1,0 +1,43 @@
+.faq h2{
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.faq h3{
+    font-weight: 500;
+}
+
+.faq h3, .faq p, .faq ul{
+    font-size: 16px;
+    line-height: 1.87;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+}
+
+@media screen and (min-width: 768px){
+
+    .faq h2{
+        width: 25%;
+    }
+
+    .faq h3, .faq p, .faq ul{
+        padding-left: 64px;
+    }
+    
+.faq{
+    max-width: 1040px;
+    
+}
+}
+
+.faq a{
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+    .faq a {
+        color: #8ab4f8;
+    }
+}

@@ -1,0 +1,40 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px
+  }
+  
+  .ball {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    margin: 0 10px;
+  
+    animation: 1s bounce ease-in-out infinite;
+  }
+  
+  .blue {
+    background-color: #2480F0;
+  }
+  
+  .red {
+    background-color: #54A7ED;
+    animation-delay: .125s;
+  }
+  
+  .yellow {
+    background-color: #00DBA2;
+    animation-delay: .25s;
+  }
+  
+  .green {
+    background-color: #00B698;
+    animation-delay: .375s;
+  }
+  
+  @keyframes bounce {  
+      50% {
+          transform: translateY(25px);
+      }
+  }
