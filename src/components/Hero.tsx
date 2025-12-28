@@ -73,6 +73,9 @@ export default function Hero() {
                     <a href="#about" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                         Learn More
                     </a>
+                    <a href="https://www.google.com/maps/place/I.C.T+BHAVAN/@17.780655,83.3750075,18.16z/data=!4m6!3m5!1s0x3a395b1ce07ef447:0x2d3bc5abd9fa0c49!8m2!3d17.7804343!4d83.3761856!16s%2Fg%2F11cjnnm2kb?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                        View Location
+                    </a>
                 </div>
 
             </div>

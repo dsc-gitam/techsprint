@@ -66,7 +66,7 @@ export default function Navbar() {
                             </svg>
 
                                 <span className="text-lg md:text-xl font-bold text-(--foreground) relative">
-                                    TechS<span>p<div className='absolute -bottom-1 left-[48px] md:left-[58.5px] w-[2px] md:w-[2.5px] h-3 md:h-4 bg-(--foreground)'></div></span>rint
+                                    TechSprint
                                 </span>
                             </Link>
                         </div>
