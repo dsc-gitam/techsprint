@@ -67,6 +67,18 @@ export default function Partners() {
           </div>
         </div>
 
+        {/* Partner - GCGC */}
+        <div className="w-max">
+          <h4 className="opacity-50 mt-[26.6px] text-xl">Partner</h4>
+          <div className="w-[160px] h-[130px]">
+            <img
+              src="/partners/gcgc_logo.png"
+              className="w-full h-full object-contain"
+              alt="GCGC"
+            />
+          </div>
+        </div>
+
         {/* VDC - Sponsor */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Sponsor</h4>
