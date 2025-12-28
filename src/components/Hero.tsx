@@ -6,15 +6,26 @@ import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'f
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import ProfileModal from './ProfileModal';
+import GetUserProgress from '@/utils/getUserProgress';
+import Progress from '@/utils/progress';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
     const [showProfileModal, setShowProfileModal] = useState(false);
+    const [userProgress, setUserProgress] = useState<Progress | null>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                const progress = await GetUserProgress(currentUser.uid);
+                setUserProgress(progress);
+            } else {
+                setUserProgress(null);
+            }
+            setLoading(false);
         });
         return () => unsubscribe();
     }, []);
@@ -46,6 +57,36 @@ export default function Hero() {
         }
     };
 
+    const getButtonText = () => {
+        if (!user) return "Register Now";
+        if (loading) return "Loading...";
+        
+        switch (userProgress) {
+            case Progress.noApplication:
+                return "Register Now";
+            case Progress.paymentPending:
+            case Progress.incompleteRegistration:
+            case Progress.notYetTeamMember:
+                return "Complete Registration";
+            case Progress.completeRegistration:
+            case Progress.completeRegistrationTeamLead:
+                return "You're In ✓";
+            default:
+                return "Register Now";
+        }
+    };
+
+    const getButtonStyle = () => {
+        if (userProgress === Progress.completeRegistration || 
+            userProgress === Progress.completeRegistrationTeamLead) {
+            return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-default";
+        }
+        return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer";
+    };
+
+    const isRegistered = userProgress === Progress.completeRegistration || 
+                        userProgress === Progress.completeRegistrationTeamLead;
+
     return (
         <section className="relative min-h-[calc(100vh-80px)] pb-[36px] flex items-center justify-center overflow-hidden px-4">
 
@@ -53,7 +94,7 @@ export default function Hero() {
             <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
                 <div className="mb-6 md:mb-8 inline-block">
                     <span className="px-3 md:px-4 py-1.5 rounded-full border border-(--io-border) bg-white/50 dark:bg-[#121212]/50 backdrop-blur-sm text-xs md:text-sm font-medium text-gray-600 dark:text-white/50">
-                        January 3<sup>rd</sup>-4<sup>th</sup>, 2026
+                        Building Good Things Together
                     </span>
                 </div>
 
@@ -67,8 +108,12 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-                    <button onClick={handleRegister} className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer">
-                        Register Now
+                    <button 
+                        onClick={isRegistered ? undefined : handleRegister} 
+                        className={getButtonStyle()}
+                        disabled={isRegistered}
+                    >
+                        {getButtonText()}
                     </button>
                     <a href="#about" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                         Learn More

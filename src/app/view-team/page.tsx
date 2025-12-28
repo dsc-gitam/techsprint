@@ -146,7 +146,7 @@ export default function Confirmation() {
                         </h2>
 
                         <p className="mt-3 text-lg">TechSprint 2026</p>
-                        <p>Vignan's Institute of Information Technology, Visakhapatnam</p>
+                        <p>Gandhi Institute of Technology and Management, Visakhapatnam</p>
                     </div>
                     <img
                         src="gdsc_sc.webp"
@@ -156,20 +156,29 @@ export default function Confirmation() {
 
                 <div className="flex flex-col md:flex-row gap-x-4 mb-8 mt-4">
                     {team.map((attendee, index) => (
-                        <div className="inline-flex flex-col p-[20px] bg-amber-200 w-max mt-3 rounded-xl">
-                            <p className="text-2xl font-medium">{attendee.label}</p>
-                            <p className="text-2xl font-medium">
+                        <div className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
+                            <p className="text-2xl font-medium dark:text-white">{attendee.label}</p>
+                            <p className="text-2xl font-medium dark:text-white">
                                 {attendee.lastName}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-sm dark:text-gray-300">
                                 {attendee.gender}
                             </p>
-                            <p className="mt-2 text-sm border-[1px] border-black px-3 py-1 rounded-full">
+                            <p className="mt-2 text-sm border-[1px] border-black dark:border-gray-600 dark:text-gray-300 px-3 py-1 rounded-full">
                                 {attendee.email}
                             </p>
 
                         </div>
                     ))}
+                </div>
+
+                <div className="w-full flex justify-center items-center mb-8">
+                    <button
+                        onClick={() => router.push('/edit-team')}
+                        className="py-2 px-6 text-blue-500 dark:text-blue-400 rounded border-neutral-300 dark:border-gray-600 border font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                        Edit Team
+                    </button>
                 </div>
 
                 {loading && (

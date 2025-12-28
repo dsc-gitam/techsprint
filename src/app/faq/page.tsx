@@ -35,8 +35,8 @@ export default function Page() {
             <br />
             <h3>Date and location</h3>
             <p className="mb-4">
-              Google TechSprint 2026 will take place on Day 1 & Day 2 at Vignan
-              Institute of Information Technology, Visakhapatnam.
+              Google TechSprint 2026 will take place on Day 1 & Day 2 at GITAM
+              University, Visakhapatnam.
             </p>
             <p className="mb-4">
               To see a detailed schedule of events
