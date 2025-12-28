@@ -174,7 +174,7 @@ export default function Confirmation() {
             </h2>
 
             <p className="mt-3 text-lg">TechSprint 2026</p>
-            <p>Vignan's Institute of Information Technology, Visakhapatnam</p>
+            <p>andhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
@@ -352,7 +352,7 @@ export default function Confirmation() {
               {isTeamLead && team.length > 0 && (
                 <div className="flex flex-col md:flex-row gap-x-4">
                   {team.map((attendee, index) => (
-                    <div className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
+                    <div key={index} className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
                       <p className="text-2xl font-medium dark:text-white">{attendee.label}</p>
                       <p className="text-2xl font-medium dark:text-white">
                         {attendee.lastName}

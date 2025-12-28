@@ -15,7 +15,7 @@ export default async function GetUserProgress(uid: string): Promise<Progress> {
     if (!userDoc.exists()) {
       return Progress.noApplication;
     }
-
+    
     const userData = userDoc.data();
 
     // Check if payment is pending

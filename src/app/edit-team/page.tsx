@@ -173,7 +173,7 @@ export default function Confirmation() {
             </h2>
 
             <p className="mt-3 text-lg">TechSprint 2026</p>
-            <p>Vignan's Institute of Information Technology, Visakhapatnam</p>
+            <p>Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
