@@ -1,0 +1,89 @@
+[
+    {
+        "day": "1",
+        "date": "24th March",
+        "schedule": [
+            {
+                "startTime": "09:00",
+                "endTime": "09:45",
+                "session": 201
+            },
+            {
+                "startTime": "10:00",
+                "endTime": "13:00",
+                "session": 203
+            },
+            {
+                "startTime": "13:00",
+                "endTime": "14:00",
+                "session": 204
+            },
+            {
+                "startTime": "14:00",
+                "endTime": "15:00",
+                "session": 205
+            },
+            {
+                "startTime": "15:00",
+                "endTime": "16:30",
+                "session": 206
+            },
+            {
+                "startTime": "16:30",
+                "endTime": "19:00",
+                "session": 207
+            },
+            {
+                "startTime": "19:00",
+                "endTime": "20:30",
+                "session": 208
+            },
+            {
+                "startTime": "20:30",
+                "endTime": "21:30",
+                "session": 209
+            },
+            {
+                "startTime": "21:30",
+                "endTime": "01:00",
+                "session": 210
+            }
+        ]
+    },
+    {
+        "day": "2",
+        "date": "25th March",
+        "schedule": [
+            {
+                "startTime": "01:00",
+                "endTime": "02:30",
+                "session": 211
+            },
+            {
+                "startTime": "02:30",
+                "endTime": "05:00",
+                "session": 212
+            },
+            {
+                "startTime": "05:00",
+                "endTime": "05:45",
+                "session": 213
+            },
+            {
+                "startTime": "06:00",
+                "endTime": "09:30",
+                "session": 215
+            },
+            {
+                "startTime": "09:30",
+                "endTime": "10:00",
+                "session": 216
+            },
+            {
+                "startTime": "10:00",
+                "endTime": "10:30",
+                "session": 217
+            }
+        ]
+    }
+]

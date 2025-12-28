@@ -1,0 +1,13 @@
+.register-input{
+    border: 1.5px solid #d3d3d3;
+    padding: 16px 24px;
+    border-radius: 12px;
+    background-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+    .register-input {
+        border-color: #5f6368;
+        color: white;
+    }
+}

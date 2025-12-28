@@ -1,0 +1,155 @@
+[
+    {
+        "id": "106",
+        "name": "Manitej Pratha",
+        "company": {
+            "name": "laiout",
+            "designation": "Front-end developer"
+        },
+        "community_title": "Domain Lead, Web",
+        "image": "https://media.licdn.com/dms/image/v2/D5603AQECEScY8FdxkA/profile-displayphoto-shrink_200_200/B56ZPZonnFG8AY-/0/1734523125412?e=2147483647&v=beta&t=lRya7a6ugX2s25IiFCmtpzLE-px-a6SJOmMxSN3C4z0",
+        "bio": "Based out of vizianagaram, completed my graduation from lendi institute. Interested in front-end development and cloud.",
+        "social": {
+            "linkedin": "maniteja-pratha-2a1469197",
+            "twitter": "PrataManitej",
+            "web": "https://manitej.vercel.app/"
+        }
+    },
+    {
+        "id": "103",
+        "name": "Sampath Kumar Balivada",
+        "company": {
+            "name": "PayPal",
+            "designation": "SDE"
+        },
+        "community_title": "Organizer",
+        "image": "https://github.com/sampathbalivada.png",
+        "bio": "Sai Sampath Kumar Balivada is a seasoned Software Engineer at PayPal, based in Visakhapatnam, India. With a passion for crafting intuitive and engaging experiences, he specializes in ensuring transactional compliance across PayPal and its partners. Previously, he contributed significantly to Amazon Web Services (AWS), excelling in roles such as Cloud Support Associate. Sai Sampath holds a Bachelor's degree in Computer Science and Engineering and boasts certifications in AWS, Google Go programming, and open-source software development. As an organizer for GDG Vizag, he combines technical prowess with a commitment to community engagement, reflecting his dedication to both professional excellence and knowledge sharing.",
+        "social": {
+            "linkedin": "sampathbalivada",
+            "twitter": "sampathbalivada",
+            "web": "https://sampath.dev"
+        }
+    },
+    {
+        "id": "104",
+        "name": "Sasi Teja Kamsu",
+        "company": {
+            "name": "Confluent",
+            "designation": "Engineer"
+        },
+        "image": "https://pbs.twimg.com/profile_images/1595854380850245633/h6a6jGQD_400x400.jpg",
+        "bio": "Meet Sasi, an Engineer at Confluent, the visionary creators of Kafka. With a rich professional journey that includes roles at AWS and Cisco, Sasi is a seasoned expert in Kafka, Cloud technologies, and DevOps. He excels in designing and implementing real-time data streaming applications. A certified AWS Solutions Architect Associate, Sasi's passion for data science and machine learning is evident through a research paper in time series analytics. A dedicated community enthusiast, he's been an integral part of the GDG (Google Developer Groups) community since 2018",
+        "social": {
+            "linkedin": "kamsusasiteja",
+            "twitter": "KamsuSasi",
+            "web": "mailto:shashiteja2012@gmail.com"
+        }
+    },
+    {
+        "id": "105",
+        "name": "Gireesh Kumar Yejju",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "image": "",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "107",
+        "name": "Ravi Teja Kamsu",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "image": "https://i.pinimg.com/280x280_RS/4a/d3/34/4ad3341c2c91e47596028c38235e4825.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "108",
+        "name": "Swapna Dande",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "image": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/swapna_dande_fUR7oSk.jpeg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "109",
+        "name": "Manas Malla",
+        "company": {
+            "name": "the ananta",
+            "designation": "Founder, CEO"
+        },
+        "community_title": "Google Product Expert for Android,\nGoogle Developer Groups Vizag Core Contributor",
+        "image": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/manas_malla_PcTXqM4.jpg",
+        "bio": "Google Developer Student Club Lead, GITAM. Life's too short & beautiful! Keep making miracles and enjoy what life throws at us with an enthusiastic spirit and bright smile. Building solutions is my ikigai. a Designer, Developer, Speaker, Student and Tech Geek. I specialise in Swift Development, UI/UX design, Android development, Flutter Development and open-source contribtion.",
+        "social": {
+            "linkedin": "manasmalla",
+            "twitter": "malla_manas_",
+            "web": "https://manasmalla.dev"
+        }
+    },
+    {
+        "id": "110",
+        "name": "Kavya Chandana",
+        "company": {
+            "name": "the ananta",
+            "designation": "CFO"
+        },
+        "image": "https://github.com/Kavya-chandana.png",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "111",
+        "name": "Varshita Palleti",
+        "company": {
+            "name": "the ananta",
+            "designation": "Front-end Engineer"
+        },
+        "image": "https://github.com/palleti-varshita.png",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "112",
+        "name": "Jayadhar Ummadisingu",
+        "company": {
+            "name": "the ananta ",
+            "designation": "Backend Engineer"
+        },
+        "image": "https://github.com/U-Jayadhar.png",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    }
+]
