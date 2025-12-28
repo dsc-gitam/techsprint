@@ -176,8 +176,8 @@ export function TopNavigationBar(props: any) {
       {/* Show "My Profile" if user is fully registered with team */}
       {user !== null &&
         !pathName.includes("/register") &&
-        (userProgress === Progress.completeRegistration || 
-         userProgress === Progress.completeRegistrationTeamLead) && (
+        (userProgress === Progress.completeRegistration ||
+          userProgress === Progress.completeRegistrationTeamLead) && (
           <Link href="/profile" className="flex">
             <button className="my-3 md:mx-3 mr-0 ml-3 py-[10px] bg-[#1a73e8] text-white font-medium text-sm px-5 rounded-lg">
               My Profile
@@ -215,26 +215,21 @@ export default function RootLayout({
       </body> */}
       <body className={`text-neutral-600 bg-(--background)`}>
         <Navbar />
-        <div className="flex flex-col-reverse md:flex-row items-center justify-center overflow-hidden w-screen h-screen">
-          <AuthContextProvider>
-            <>
-              <Script
-                id="razorpay-checkout-js"
-                src="https://checkout.razorpay.com/v1/checkout.js"
-              />
-              {/* <Navbar /> */}
-              <div className="h-[64px] md:hidden" />
-              <div className="w-full md:w-[unset] h-full overflow-y-scroll grow">
-                {/* <TopNavigationBar /> */}
-                {children}
-                <Suspense>
-                  <SignOutDialog />
-                </Suspense>
-                {/* <Footer /> */}
-              </div>
-            </>
-          </AuthContextProvider>
-        </div>
+        <AuthContextProvider>
+          <>
+            <Script
+              id="razorpay-checkout-js"
+              src="https://checkout.razorpay.com/v1/checkout.js"
+            />
+            <div className="h-[64px] md:hidden bg-(--background)" />
+            <main>
+              {children}
+              <Suspense>
+                <SignOutDialog />
+              </Suspense>
+            </main>
+          </>
+        </AuthContextProvider>
       </body>
     </html>
   );
