@@ -6,10 +6,10 @@ export default function Partners() {
       </h3>
       <h4 className="opacity-50 mb-3 mt-[26.6px] text-xl">Community Partner</h4>
       <div className="flex gap-x-16 justify-center">
-        <div className="w-[160px] h-[130px]">
+        <div className="w-[220px] h-[140px] flex items-center justify-center">
           <img
             src="https://miro.medium.com/v2/resize:fit:1200/1*4YZ4tOc5oRs_Ksx-R_WFMw.png"
-            className="w-full h-full object-contain"
+            className="max-w-full max-h-full object-contain"
             alt="Google Developer Groups | Vizag"
           />
         </div>
@@ -20,16 +20,16 @@ export default function Partners() {
         {/* Venue Partner - GITAM */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Venue Partner</h4>
-          <div className="w-[160px] h-[130px]">
-            <a href="https://gitam.edu">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
+            <a href="https://gitam.edu" className="contents">
               <img
                 src="/partners/gitam-logo-black.png"
-                className="w-full h-full object-contain dark:hidden"
+                className="max-w-full max-h-full object-contain dark:hidden"
                 alt="GITAM"
               />
               <img
                 src="https://upload.wikimedia.org/wikipedia/en/thumb/d/da/GITAM_logo.svg/1200px-GITAM_logo.svg.png"
-                className="w-full h-full object-contain hidden dark:block"
+                className="max-w-full max-h-full object-contain hidden dark:block"
                 alt="GITAM"
               />
             </a>
@@ -39,16 +39,16 @@ export default function Partners() {
         {/* Tech Partner - Ananta */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Tech Partner</h4>
-          <div className="w-[160px] h-[130px]">
-            <a href="https://theananta.in">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
+            <a href="https://theananta.in" className="contents">
               <img
                 src="/partners/ananta-logo-black.png"
-                className="w-full h-full object-contain dark:hidden"
+                className="max-w-full max-h-full object-contain dark:hidden"
                 alt="The Ananta Studio™️"
               />
               <img
                 src="/partners/the_ananta_logo_white.svg"
-                className="w-full h-full object-contain hidden dark:block"
+                className="max-w-full max-h-full object-contain hidden dark:block"
                 alt="The Ananta Studio™️"
               />
             </a>
@@ -58,10 +58,10 @@ export default function Partners() {
         {/* Partner - Student Life */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Partner</h4>
-          <div className="w-[160px] h-[130px]">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
             <img
               src="/partners/student_life_logo.jpg"
-              className="w-full h-full object-contain rounded-lg"
+              className="max-w-full max-h-full object-contain rounded-lg"
               alt="Student Life"
             />
           </div>
@@ -70,10 +70,10 @@ export default function Partners() {
         {/* Partner - GCGC */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Partner</h4>
-          <div className="w-[160px] h-[130px]">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
             <img
               src="/partners/gcgc_logo.png"
-              className="w-full h-full object-contain"
+              className="max-w-full max-h-full object-contain"
               alt="GCGC"
             />
           </div>
@@ -82,7 +82,7 @@ export default function Partners() {
         {/* VDC - Sponsor */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Sponsor</h4>
-          <div className="w-[280px] h-[160px] flex items-center justify-center">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
             <img
               src="/partners/VDC_Logo.png"
               className="max-w-full max-h-full object-contain"
@@ -94,7 +94,7 @@ export default function Partners() {
         {/* CSE - Sponsor */}
         <div className="w-max">
           <h4 className="opacity-50 mt-[26.6px] text-xl">Sponsor</h4>
-          <div className="w-[280px] h-[160px] flex items-center justify-center">
+          <div className="w-[220px] h-[140px] flex items-center justify-center">
             <img
               src="/partners/CSE_Logo.png"
               className="max-w-full max-h-full object-contain"
