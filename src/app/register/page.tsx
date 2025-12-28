@@ -140,7 +140,7 @@ const MyForm: React.FC = () => {
 
             <p className="opacity-60 mt-3 text-lg text-gray-700 dark:text-gray-300">24-25th March 2026</p>
 
-            <p className="opacity-60 text-gray-700 dark:text-gray-300">GITAM University, Visakhapatnam</p>
+            <p className="opacity-60 text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
