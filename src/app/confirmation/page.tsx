@@ -443,9 +443,11 @@ export default function Confirmation() {
                           "& .MuiOutlinedInput-notchedOutline": {
                             borderColor: "inherit",
                           },
+
                         }}
                         className="dark:text-white dark:border-gray-600"
                         label="Add team members"
+                        
                       />
                     )}
                   />

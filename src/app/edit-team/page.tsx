@@ -190,7 +190,7 @@ export default function Confirmation() {
               {isTeamLead && team.length > 0 && (
                 <div className="flex flex-col md:flex-row gap-x-4">
                   {team.map((attendee, index) => (
-                    <div className="inline-flex flex-col p-[20px] bg-amber-200 w-max mt-3 rounded-xl">
+                    <div key={attendee.userId || index} className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
                       <p className="text-2xl font-medium">{attendee.label}</p>
                       <p className="text-2xl font-medium">
                         {attendee.lastName}
@@ -241,28 +241,31 @@ export default function Confirmation() {
                       ")"
                     }
                     getOptionDisabled={(o) => !o.isPaid || o.isTeamMember == -1}
-                    renderOption={(props, option: Attendee) => (
-                      <li {...props}>
-                        <div className="flex gap-4">
-                          <img
-                            src={option.image}
-                            className="size-12 rounded-full object-cover"
-                          />
-                          <div>
-                            <p>
-                              {option.label} {option.lastName}
-                            </p>
-                            <p className="text-sm opacity-70">
-                              {option.profession}
-                            </p>
+                    renderOption={(props, option: Attendee) => {
+                      const { key, ...otherProps } = props as any;
+                      return (
+                        <li key={key || option.userId} {...otherProps}>
+                          <div className="flex gap-4">
+                            <img
+                              src={option.image}
+                              className="size-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <p>
+                                {option.label} {option.lastName}
+                              </p>
+                              <p className="text-sm opacity-70">
+                                {option.profession}
+                              </p>
+                            </div>
+                            {!option.isPaid && <Chip label="Payment Pending" />}
+                            {option.isTeamMember == -1 && option.isPaid && (
+                              <Chip label="Application Incomplete" />
+                            )}
                           </div>
-                          {!option.isPaid && <Chip label="Payment Pending" />}
-                          {option.isTeamMember == -1 && option.isPaid && (
-                            <Chip label="Application Incomplete" />
-                          )}
-                        </div>
-                      </li>
-                    )}
+                        </li>
+                      );
+                    }}
                     filterOptions={(options: Attendee[], state) => {
                       return options.filter(
                         (e) =>
@@ -340,13 +343,13 @@ export default function Confirmation() {
         </form>
 
         {loading && (
-          <div className="absolute top-0 w-full h-full flex items-center justify-center z-10 bg-opacity-50 bg-black md:ml-[80px] text-center">
-            <div className="px-[40px] md:px-[80px] pb-[40px] bg-white rounded-2xl shadow-2xl mx-8 md:mx-[unset]">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
+            <div className="px-6 md:px-16 py-8 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full text-center">
               {isCompleteRegistration ? (
                 <>
-                  <PeopleOutline fontSize="large" className="mt-8" />
-                  <h2 className="text-2xl font-medium mt-4">Team Updated.</h2>
-                  <p className="text-sm mt-4 mb-8 max-w-[420px]">
+                  <PeopleOutline fontSize="large" className="text-gray-700 dark:text-gray-300" />
+                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">Team Updated.</h2>
+                  <p className="text-sm mt-4 mb-8 text-gray-600 dark:text-gray-300">
                     Excited to host your team for TechSprint 2026.
                     <br />
                     Earn badges and have fun before the event.
@@ -357,18 +360,18 @@ export default function Confirmation() {
                       setIsCompleteRegistration(false);
                       window.location.href = "/";
                     }}
-                    className="border-[1.5px] px-8 py-2 rounded-full border-gray-500"
+                    className="border-2 px-8 py-2.5 rounded-full border-gray-400 dark:border-gray-500 text-gray-700 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     Done
                   </button>
                 </>
               ) : (
-                <>
-                  <Loader></Loader>
-                  <p className="font-medium">
+                <div className="py-4">
+                  <Loader />
+                  <p className="font-medium mt-4 text-gray-700 dark:text-gray-300">
                     Please wait while we process your application.
                   </p>
-                </>
+                </div>
               )}
             </div>
           </div>

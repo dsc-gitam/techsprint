@@ -27,14 +27,13 @@ export default function Profile() {
             src={user.photoURL}
             className="my-3 mx-2 w-[100px] h-[100px] rounded-full aspect-square"
           />
-          <p className="text-xl my-1 font-medium max-w-[400px]">
+          <p className="text-xl my-1 font-medium max-w-[400px] dark:text-white">
             {userData.firstName} {userData.lastName}
           </p>
-          <p className="text-l my-1">{userData.university}</p>
+          <p className="text-l my-1 dark:text-gray-300">{userData.university}</p>
           <p
-            className={`text-l my-1 ${
-              userData.gender === "He/Him" ? "text-blue-500" : "text-pink-500"
-            }`}
+            className={`text-l my-1 ${userData.gender === "He/Him" ? "text-blue-500" : "text-pink-500"
+              }`}
           >
             {userData.gender}
           </p>
@@ -45,11 +44,10 @@ export default function Profile() {
           onClick={() => {
             setTabIndex(0);
           }}
-          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex ${
-            tabIndex == 0
+          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex ${tabIndex == 0
               ? "text-blue-500 font-medium underline underline-offset-[12px]"
               : ""
-          }`}
+            }`}
         >
           Your QR Code
         </p>
