@@ -1,97 +1,5 @@
 [
     {
-        "id": "106",
-        "name": "Manitej Pratha",
-        "company": {
-            "name": "laiout",
-            "designation": "Front-end developer"
-        },
-        "community_title": "Domain Lead, Web",
-        "image": "https://media.licdn.com/dms/image/v2/D5603AQECEScY8FdxkA/profile-displayphoto-shrink_200_200/B56ZPZonnFG8AY-/0/1734523125412?e=2147483647&v=beta&t=lRya7a6ugX2s25IiFCmtpzLE-px-a6SJOmMxSN3C4z0",
-        "bio": "Based out of vizianagaram, completed my graduation from lendi institute. Interested in front-end development and cloud.",
-        "social": {
-            "linkedin": "maniteja-pratha-2a1469197",
-            "twitter": "PrataManitej",
-            "web": "https://manitej.vercel.app/"
-        }
-    },
-    {
-        "id": "103",
-        "name": "Sampath Kumar Balivada",
-        "company": {
-            "name": "PayPal",
-            "designation": "SDE"
-        },
-        "community_title": "Organizer",
-        "image": "https://github.com/sampathbalivada.png",
-        "bio": "Sai Sampath Kumar Balivada is a seasoned Software Engineer at PayPal, based in Visakhapatnam, India. With a passion for crafting intuitive and engaging experiences, he specializes in ensuring transactional compliance across PayPal and its partners. Previously, he contributed significantly to Amazon Web Services (AWS), excelling in roles such as Cloud Support Associate. Sai Sampath holds a Bachelor's degree in Computer Science and Engineering and boasts certifications in AWS, Google Go programming, and open-source software development. As an organizer for GDG Vizag, he combines technical prowess with a commitment to community engagement, reflecting his dedication to both professional excellence and knowledge sharing.",
-        "social": {
-            "linkedin": "sampathbalivada",
-            "twitter": "sampathbalivada",
-            "web": "https://sampath.dev"
-        }
-    },
-    {
-        "id": "104",
-        "name": "Sasi Teja Kamsu",
-        "company": {
-            "name": "Confluent",
-            "designation": "Engineer"
-        },
-        "image": "https://pbs.twimg.com/profile_images/1595854380850245633/h6a6jGQD_400x400.jpg",
-        "bio": "Meet Sasi, an Engineer at Confluent, the visionary creators of Kafka. With a rich professional journey that includes roles at AWS and Cisco, Sasi is a seasoned expert in Kafka, Cloud technologies, and DevOps. He excels in designing and implementing real-time data streaming applications. A certified AWS Solutions Architect Associate, Sasi's passion for data science and machine learning is evident through a research paper in time series analytics. A dedicated community enthusiast, he's been an integral part of the GDG (Google Developer Groups) community since 2018",
-        "social": {
-            "linkedin": "kamsusasiteja",
-            "twitter": "KamsuSasi",
-            "web": "mailto:shashiteja2012@gmail.com"
-        }
-    },
-    {
-        "id": "105",
-        "name": "Gireesh Kumar Yejju",
-        "company": {
-            "name": "",
-            "designation": ""
-        },
-        "image": "",
-        "bio": "",
-        "social": {
-            "linkedin": "",
-            "twitter": "",
-            "web": ""
-        }
-    },
-    {
-        "id": "107",
-        "name": "Ravi Teja Kamsu",
-        "company": {
-            "name": "",
-            "designation": ""
-        },
-        "image": "https://i.pinimg.com/280x280_RS/4a/d3/34/4ad3341c2c91e47596028c38235e4825.jpg",
-        "bio": "",
-        "social": {
-            "linkedin": "",
-            "twitter": "",
-            "web": ""
-        }
-    },
-    {
-        "id": "108",
-        "name": "Swapna Dande",
-        "company": {
-            "name": "",
-            "designation": ""
-        },
-        "image": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/swapna_dande_fUR7oSk.jpeg",
-        "bio": "",
-        "social": {
-            "linkedin": "",
-            "twitter": "",
-            "web": ""
-        }
-    },
-    {
         "id": "109",
         "name": "Manas Malla",
         "company": {
@@ -114,6 +22,7 @@
             "name": "the ananta",
             "designation": "CFO"
         },
+        "community_title": "GDGoC GITAM Core Team",
         "image": "https://github.com/Kavya-chandana.png",
         "bio": "",
         "social": {
@@ -129,7 +38,8 @@
             "name": "the ananta",
             "designation": "Front-end Engineer"
         },
-        "image": "https://github.com/palleti-varshita.png",
+        "community_title": "GDGoC GITAM Core Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991615/Varshita_Palleti_xl2pyd.jpg",
         "bio": "",
         "social": {
             "linkedin": "",
@@ -141,10 +51,235 @@
         "id": "112",
         "name": "Jayadhar Ummadisingu",
         "company": {
-            "name": "the ananta ",
+            "name": "the ananta",
             "designation": "Backend Engineer"
         },
+        "community_title": "GDGoC GITAM Core Team",
         "image": "https://github.com/U-Jayadhar.png",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "113",
+        "name": "Yashwanth Kamireddi",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991613/Yashwanth_Kamireddi_os8fu1.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "114",
+        "name": "Aftab Ali",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991622/Aftab_Ali_j7xluo.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "115",
+        "name": "Chaitanya Sameer",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991618/Chaitanya_Sameer_az2ci0.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "116",
+        "name": "Deva Harshini",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991620/Deva_Harshini_tiogrf.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "117",
+        "name": "Gagana",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991619/Gagana_sgp8gf.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "118",
+        "name": "Jaswanth Kumar",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991628/Jaswanth_Kumar_cz9e9w.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "119",
+        "name": "K Sharvan",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991623/K_Sharvan_znnlot.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "120",
+        "name": "M.G.S.S Srikar",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991625/M.G.S.S_Srikar_xvimcj.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "121",
+        "name": "Pavan Kumar",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991627/Pavan_Kumar_axeprk.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "122",
+        "name": "Sanvi Seetha",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991616/Sanvi_Seetha_osj2tt.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "123",
+        "name": "Tummala Somanadh",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991623/Tummala_Somanadh_nabuku.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "124",
+        "name": "V Sohana",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991615/V_Sohana_hmydkm.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "125",
+        "name": "Vaibhav",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991617/Vaibhav_af7o5n.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "126",
+        "name": "Satwika Rejeti",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991614/Satwika_Rejeti_rnn0fh.jpg",
         "bio": "",
         "social": {
             "linkedin": "",

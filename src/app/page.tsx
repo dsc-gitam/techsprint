@@ -29,20 +29,19 @@ export default function Home() {
                 </div>
             </div>
             <About />
-            <div className='py-8 overflow-hidden'>
+            <div className='py-8 overflow-hidden bg-(--background)'>
                 <Marquee>
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://storage.googleapis.com/cms-storage-bucket/lockup_flutter_horizontal.c823e53b3a1a7b0d36a9.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Android_logo_2023.svg/2560px-Android_logo_2023.svg.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/New_Firebase_logo.svg/1200px-New_Firebase_logo.svg.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/2560px-Google_Gemini_logo.svg.png" />
-                    <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://pbs.twimg.com/profile_images/1924895422327463936/V991NnhE_400x400.jpg" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Google_Cloud_logo.svg/1024px-Google_Cloud_logo.svg.png" />
-                    <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://play-lh.googleusercontent.com/dWGgMuaN9WwN3Ihha4QMzOI4RtpfrpMhP0jSeqDm5DKnFcv74HvA33Rna4tTKZ8Ifk2E" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://pnghdpro.com/wp-content/themes/pnghdpro/download/social-media-and-brands/google-antigravity-logo-icon.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://angular.dev/assets/images/press-kit/angular_wordmark_gradient.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/2048px-Google_Chrome_icon_%28February_2022%29.svg.png" />
                     <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://www.tensorflow.org/images/tf_logo_horizontal.png" />
-                    <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" />
+                    <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kubernetes_logo_without_workmark.svg/1200px-Kubernetes_logo_without_workmark.svg.png" />
+                    <img className='h-6 md:h-8 w-auto mx-4 md:mx-8 object-contain' src="/stitch.png" />
                 </Marquee>
             </div>
             <Gallery />
@@ -50,9 +49,9 @@ export default function Home() {
             <Partners />
             {/* <Streams /> */}
             <img
-                src="/highlights/iwd-2023.jpg"
+                src="/highlights/9.jpg"
                 className="w-full h-[400px] md:h-[700px] object-cover"
-                alt="A picture from an event hosted by WTM Vizag"
+                alt="GDG on Campus GITAM event"
             />
             <Links />
 
