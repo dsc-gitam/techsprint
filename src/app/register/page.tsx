@@ -8,7 +8,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import addData from "@/utils/addData";
 import Loader from "@/components/LoadingAnimation/page";
 import { auth, db } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   collection,
   doc,
@@ -19,13 +19,15 @@ import {
   updateDoc,
   arrayUnion,
   where,
+  setDoc,
 } from "firebase/firestore";
-import { ArrowForwardIos, EmojiEventsOutlined } from "@mui/icons-material";
+import { ArrowForwardIos, EmojiEventsOutlined, ContentCopy, CheckCircle } from "@mui/icons-material";
 import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
 
 const MyForm: React.FC = () => {
   const user = useAuthContext();
+  const searchParams = useSearchParams();
   const [loading, setLoadingState] = useState(true);
   const [registered, setRegistrationStatus] = useState(false);
   const [popUp, setPopUp] = useState(false);
@@ -73,7 +75,20 @@ const MyForm: React.FC = () => {
   const [formState, setFormState] = useState(initialFormData);
   const [isTeamLead, setIsTeamLead] = useState<boolean | undefined>(undefined);
   const [referralCode, setReferralCode] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [generatedReferralCode, setGeneratedReferralCode] = useState("");
+  const [teamCreated, setTeamCreated] = useState(false);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
+  
+  // Check for referral code in URL
+  useEffect(() => {
+    const urlReferralCode = searchParams.get("referral");
+    if (urlReferralCode) {
+      setReferralCode(urlReferralCode.toUpperCase());
+      setIsTeamLead(false); // Automatically set as team member
+    }
+  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -91,6 +106,38 @@ const MyForm: React.FC = () => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const generateReferralCode = () => {
+    let code = "";
+    // Ensure we always generate at least 6 characters before slicing
+    while (code.length < 6) {
+      code += Math.random().toString(36).substring(2);
+    }
+    return code.substring(0, 6).toUpperCase();
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shareReferralLink = () => {
+    const shareUrl = `${window.location.origin}/register?referral=${generatedReferralCode}`;
+    const shareText = `Join my team "${teamName}" for TechSprint 2026!\n\nClick this link to register and auto-join: ${shareUrl}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: "Join my TechSprint team!",
+        text: shareText,
+        url: shareUrl,
+      }).catch(() => {
+        copyToClipboard(shareUrl);
+      });
+    } else {
+      copyToClipboard(shareUrl);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -111,8 +158,78 @@ const MyForm: React.FC = () => {
 
     let teamInfo = null;
 
+    // If team lead, create team first
+    if (isTeamLead) {
+      if (!teamName.trim()) {
+        alert("Please enter a team name");
+        setLoadingState(false);
+        return;
+      }
+
+      try {
+        // Check if team name is unique
+        const teamsRef = collection(db, "teams");
+        const teamQuery = query(teamsRef, where("teamName", "==", teamName));
+        const count = (await getCountFromServer(teamQuery)).data().count;
+
+        if (count > 0) {
+          alert("Team name already exists. Please choose a different name.");
+          setLoadingState(false);
+          return;
+        }
+
+        // Generate referral code with uniqueness check
+        let code = generateReferralCode();
+        let codeExists = true;
+        let attempts = 0;
+        
+        while (codeExists && attempts < 10) {
+          const codeQuery = query(teamsRef, where("referralCode", "==", code));
+          const codeCount = (await getCountFromServer(codeQuery)).data().count;
+          if (codeCount === 0) {
+            codeExists = false;
+          } else {
+            code = generateReferralCode();
+            attempts++;
+          }
+        }
+
+        if (codeExists) {
+          alert("Failed to generate unique referral code. Please try again.");
+          setLoadingState(false);
+          return;
+        }
+
+        setGeneratedReferralCode(code);
+
+        // Get team number
+        const teamNumber = (await getCountFromServer(query(teamsRef))).data().count + 1;
+
+        // Create team document
+        await setDoc(doc(db, "teams", teamName), {
+          teamName: teamName,
+          teamNumber: teamNumber,
+          referralCode: code,
+          leaderId: user.uid,
+          participants: [user.uid],
+          createdAt: new Date().toISOString(),
+        });
+
+        teamInfo = {
+          teamName: teamName,
+          isTeamMember: 1,
+        };
+
+        setTeamCreated(true);
+      } catch (error) {
+        console.error("Error creating team:", error);
+        alert("Failed to create team. Please try again.");
+        setLoadingState(false);
+        return;
+      }
+    }
     // If member provided a referral code, validate and join team
-    if (!isTeamLead && referralCode) {
+    else if (!isTeamLead && referralCode) {
       try {
         const teamsRef = collection(db, "teams");
         const teamQuery = query(teamsRef, where("referralCode", "==", referralCode.toUpperCase()));
@@ -167,17 +284,15 @@ const MyForm: React.FC = () => {
       ["coc"]: 1,
       ["terms"]: 1,
       ["payment_status"]: "captured",
-      ["teamName"]: teamInfo?.teamName || "",
+      ["teamName"]: teamInfo?.teamName ?? "",
     });
     
-    // Redirect based on team lead status
-    if (isTeamLead) {
-      window.location.href = "/create-team";
-    } else if (teamInfo) {
-      // Successfully joined team, go to dashboard
-      window.location.href = "/dashboard";
+    // If team was just created, show the success modal with referral code
+    if (teamCreated) {
+      setLoadingState(false);
+      // The UI will show the team creation success modal
     } else {
-      // No team yet, but registration complete - go to dashboard
+      // Redirect to dashboard for non-team-leads or members who joined
       window.location.href = "/dashboard";
     }
   };
@@ -214,7 +329,7 @@ const MyForm: React.FC = () => {
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a developer profile</h3>
           <p className="mt-2 max-w-[480px] md:text-base text-sm text-gray-700 dark:text-gray-300">
             Create your developer profile to apply for a ticket to Google TechSprint 2026
-            Visakhapatnam so that you don't miss out on the fun and learning.
+            Visakhapatnam so that you don&apos;t miss out on the fun and learning.
             You can also use your profile to earn badges during the conference.
           </p>
           <p className="font-medium text-gray-900 dark:text-white">
@@ -304,7 +419,7 @@ const MyForm: React.FC = () => {
                     Gayatri Vidya Parishad College of Engineering for Women
                   </option>
                   <option className="dark:bg-black">Andhra University College of Engineering</option>
-                  <option className="dark:bg-black">Vignan's Institute of Information Technology</option>
+                  <option className="dark:bg-black">Vignan&apos;s Institute of Information Technology</option>
                   <option className="dark:bg-black">Vignan Institute of Engineering Women</option>
                   <option className="dark:bg-black">Raghu Engineering College</option>
                   <option className="dark:bg-black">GMR Institute of Technology</option>
@@ -431,7 +546,7 @@ const MyForm: React.FC = () => {
               <p className="font-bold text-lg text-gray-900 dark:text-white mb-3">Team Registration</p>
               <p className="font-medium text-gray-900 dark:text-white mb-2">Are you a team lead?</p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Team leads create teams and get a referral code. Team members use the code to join.
+                Team leads create teams and get a referral link. Team members use the link to join.
               </p>
               <div className="flex items-center space-x-4 mb-4">
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -444,9 +559,10 @@ const MyForm: React.FC = () => {
                       setReferralCode("");
                     }}
                     required
+                    disabled={!!searchParams.get("referral")}
                     className="w-4 h-4"
                   />
-                  <span className="text-gray-900 dark:text-gray-300">Yes, I'll create a team</span>
+                  <span className="text-gray-900 dark:text-gray-300">Yes, I&apos;ll create a team</span>
                 </label>
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -455,28 +571,70 @@ const MyForm: React.FC = () => {
                     checked={isTeamLead === false}
                     onChange={() => setIsTeamLead(false)}
                     required
+                    disabled={!!searchParams.get("referral")}
                     className="w-4 h-4"
                   />
-                  <span className="text-gray-900 dark:text-gray-300">No, I'll join a team</span>
+                  <span className="text-gray-900 dark:text-gray-300">No, I&apos;ll join a team</span>
                 </label>
               </div>
               
+              {/* Team Creation Form - Inline */}
+              {isTeamLead === true && (
+                <div className="mt-4 p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Team Name
+                  </label>
+                  <input
+                    type="text"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    placeholder="Enter your team name"
+                    required={isTeamLead === true}
+                    minLength={3}
+                    maxLength={50}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Choose a unique name for your team (3-50 characters)
+                  </p>
+                  <div className="mt-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                    <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">Team Size: 2-4 members</p>
+                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                      After registration, you&apos;ll get a shareable link to invite 1-3 team members.
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Referral Code Input for Members */}
               {isTeamLead === false && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    Team Referral Code (Optional)
+                    Team Referral Code {searchParams.get("referral") ? "" : "(Optional)"}
                   </label>
                   <input
                     type="text"
                     value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                    onChange={(e) => {
+                      const raw = e.target.value.toUpperCase();
+                      const cleaned = raw.replace(/[^A-Z0-9]/g, "");
+                      setReferralCode(cleaned);
+                    }}
                     placeholder="Enter code (e.g., ABC123)"
                     maxLength={6}
-                    className="register-input w-full uppercase"
+                    disabled={!!searchParams.get("referral")}
+                    className="register-input w-full uppercase disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Get this code from your team lead. You can also join a team later.
-                  </p>
+                  {searchParams.get("referral") ? (
+                    <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center">
+                      <CheckCircle fontSize="small" className="mr-1" />
+                      Referral code auto-filled from link. You&apos;ll automatically join this team!
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Get this code from your team lead. You can also join a team later.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -498,6 +656,63 @@ const MyForm: React.FC = () => {
             </button>
           </div>
         </form>
+        
+        {/* Team Creation Success Modal */}
+        {teamCreated && !loading && (
+          <div className="absolute top-0 w-full h-full flex items-center justify-center z-20 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] p-4">
+            <div className="max-w-2xl w-full bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
+              <CheckCircle className="text-green-500 mx-auto mb-4" style={{ fontSize: 64 }} />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Team Created Successfully!</h1>
+              <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">Team: {teamName}</p>
+              
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Your Referral Link</p>
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-widest">{generatedReferralCode}</p>
+                  <button
+                    onClick={() => copyToClipboard(generatedReferralCode)}
+                    className="p-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-lg transition-colors"
+                    title="Copy code"
+                  >
+                    {copied ? (
+                      <CheckCircle className="text-green-500" />
+                    ) : (
+                      <ContentCopy className="text-blue-600 dark:text-blue-400" />
+                    )}
+                  </button>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded p-3 mb-2">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 break-all">
+                    {typeof window !== 'undefined' ? `${window.location.origin}/register?referral=${generatedReferralCode}` : ''}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-6">
+                <p className="text-gray-700 dark:text-gray-300 font-medium">Share this link with your team members</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  When they click the link, the referral code will be auto-filled and they&apos;ll automatically join your team!
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={shareReferralLink}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-colors"
+                >
+                  Share Link
+                </button>
+                <button
+                  onClick={() => window.location.href = "/dashboard"}
+                  className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Go to Dashboard
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {loading && (
           <div className="absolute top-0 w-full h-full flex items-center justify-center z-10 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] text-center">
             <div className="px-[40px] md:px-[80px] pb-[40px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl mx-8 md:mx-[unset]">
@@ -511,8 +726,8 @@ const MyForm: React.FC = () => {
                 <>
                   <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Recieved</h2>
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
-                    You'll be notified of the status of your hackathon team
-                    soon. If you're not into a team before the hackathon, we'll
+                    You&apos;ll be notified of the status of your hackathon team
+                    soon. If you&apos;re not into a team before the hackathon, we&apos;ll
                     try to get you a team at the venue. Otherwise, request your
                     team lead to add you to the team.
                     <br />
@@ -533,7 +748,7 @@ const MyForm: React.FC = () => {
               {registered && isCompleteRegistration && (
                 <>
                   <EmojiEventsOutlined fontSize="large" className="mt-8 text-gray-900 dark:text-white" />
-                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">You're in.</h2>
+                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">You&apos;re in.</h2>
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
                     Excited to host you for TechSprint 2026.
                     <br />
@@ -561,7 +776,7 @@ const MyForm: React.FC = () => {
                     Confirm your payment
                   </h2>
                   <p className="mt-4 max-w-[480px] mx-auto dark:text-gray-300">
-                    We're sold out on tickets. But, its not the end of the
+                    We&apos;re sold out on tickets. But, its not the end of the
                     world. We're amazed by your enthuasism, and we added more
                     tickets. Here's what your Rs. 200 ticket will unlock for
                     you:
