@@ -60,11 +60,11 @@ export default function Gallery() {
         alt="Cloud Study Jams participants wearing their swags at MVGR"
         loading="lazy"
       />
-      <div className="gallery_info p-8!">
+      <div className="gallery_info p-4 md:p-8!">
         <div>
-          <h2 className="text-4xl! text-white!">GDGoC GITAM's<br />highlights</h2>
+          <h2 className="text-2xl md:text-4xl! text-white!">GDGoC GITAM's<br />highlights</h2>
 
-          <p className="text-white/70! w-[28ch] mt-4">
+          <p className="text-white/70! text-sm md:text-base mt-2 md:mt-4">
             Past year's built lots of excitement. Check out photos from featured
             talks, hands-on learning sessions, and after-hours fun.
           </p>

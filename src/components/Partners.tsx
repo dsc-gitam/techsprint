@@ -1,12 +1,12 @@
 export default function Partners() {
   return (
-    <div className="px-[20px] md:px-[60px] py-[20px] md:py-12 max-w-[1400px] mx-auto text-center">
+    <div className="px-4 md:px-[60px] py-[20px] md:py-12 max-w-[1400px] mx-auto text-center overflow-hidden">
       <h3 className="my-7 p-0 text-[28px] md:text-[32px] leading-[30px]">
         Partners
       </h3>
-      <h4 className="opacity-50 mb-3 mt-[26.6px] text-xl">Community Partner</h4>
-      <div className="flex gap-x-16 justify-center">
-        <div className="w-[220px] h-[140px] flex items-center justify-center">
+      <h4 className="opacity-50 mb-3 mt-[26.6px] text-lg md:text-xl">Community Partner</h4>
+      <div className="flex gap-x-8 md:gap-x-16 justify-center">
+        <div className="w-[180px] md:w-[220px] h-[120px] md:h-[140px] flex items-center justify-center">
           <img
             src="https://miro.medium.com/v2/resize:fit:1200/1*4YZ4tOc5oRs_Ksx-R_WFMw.png"
             className="max-w-full max-h-full object-contain"
@@ -15,12 +15,12 @@ export default function Partners() {
         </div>
       </div>
 
-      {/* All Partners in one row - including sponsors */}
-      <div className="flex flex-wrap gap-8 md:gap-12 justify-center items-end mx-auto mt-4">
+      {/* All Partners - 2 columns on mobile, flex on desktop */}
+      <div className="grid grid-cols-2 md:flex md:flex-wrap gap-6 md:gap-12 justify-center items-end mx-auto mt-4">
         {/* Venue Partner - GITAM */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Venue Partner</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Venue Partner</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <a href="https://gitam.edu" className="contents">
               <img
                 src="/partners/gitam-logo-black.png"
@@ -37,9 +37,9 @@ export default function Partners() {
         </div>
 
         {/* Tech Partner - Ananta */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Tech Partner</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Tech Partner</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <a href="https://theananta.in" className="contents">
               <img
                 src="/partners/ananta-logo-black.png"
@@ -56,9 +56,9 @@ export default function Partners() {
         </div>
 
         {/* Partner - Student Life */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Partner</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Partner</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <img
               src="/partners/student_life_logo.jpg"
               className="max-w-full max-h-full object-contain rounded-lg"
@@ -67,12 +67,12 @@ export default function Partners() {
           </div>
         </div>
 
-        {/* Partner - GCGC */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Partner</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        {/* GCGC - Sponsor */}
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Sponsor</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <img
-              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_200/v1767012299/gcgc_logo_efnugd.png"
+              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_400/v1767012299/gcgc_logo_efnugd.png"
               className="max-w-full max-h-full object-contain"
               alt="GCGC"
             />
@@ -80,23 +80,23 @@ export default function Partners() {
         </div>
 
         {/* VDC - Sponsor */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Sponsor</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Sponsor</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <img
-              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_200/v1767012298/VDC_Logo_petfvc.png"
+              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_400/v1767012298/VDC_Logo_petfvc.png"
               className="max-w-full max-h-full object-contain"
               alt="VDC - Vizag Developer Community"
             />
           </div>
         </div>
 
-        {/* CSE - Sponsor */}
-        <div className="w-max">
-          <h4 className="opacity-50 mt-[26.6px] text-xl">Sponsor</h4>
-          <div className="w-[220px] h-[140px] flex items-center justify-center">
+        {/* CSE - Partner */}
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Partner</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
             <img
-              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_200/v1767012298/CSE_Logo_pu283y.png"
+              src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_400/v1767012298/CSE_Logo_pu283y.png"
               className="max-w-full max-h-full object-contain"
               alt="GITAM CSE"
             />
