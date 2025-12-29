@@ -1,17 +1,14 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import ProfileModal from './ProfileModal';
 import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
-    const [showProfileModal, setShowProfileModal] = useState(false);
     const [userProgress, setUserProgress] = useState<Progress | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -40,18 +37,8 @@ export default function Hero() {
 
         const provider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, provider);
-            const signedInUser = result.user;
-
-            // Check if profile exists
-            const docRef = doc(db, "users", signedInUser.uid);
-            const docSnap = await getDoc(docRef);
-
-            if (!docSnap.exists()) {
-                setShowProfileModal(true);
-            } else {
-                router.push('/dashboard');
-            }
+            await signInWithPopup(auth, provider);
+            router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in", error);
         }
@@ -60,7 +47,7 @@ export default function Hero() {
     const getButtonText = () => {
         if (!user) return "Register Now";
         if (loading) return "Loading...";
-        
+
         switch (userProgress) {
             case Progress.noApplication:
                 return "Register Now";
@@ -77,15 +64,15 @@ export default function Hero() {
     };
 
     const getButtonStyle = () => {
-        if (userProgress === Progress.completeRegistration || 
+        if (userProgress === Progress.completeRegistration ||
             userProgress === Progress.completeRegistrationTeamLead) {
             return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-default";
         }
         return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer";
     };
 
-    const isRegistered = userProgress === Progress.completeRegistration || 
-                        userProgress === Progress.completeRegistrationTeamLead;
+    const isRegistered = userProgress === Progress.completeRegistration ||
+        userProgress === Progress.completeRegistrationTeamLead;
 
     return (
         <section className="relative min-h-[calc(100vh-80px)] pb-[36px] flex items-center justify-center overflow-hidden px-4">
@@ -108,8 +95,8 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-                    <button 
-                        onClick={isRegistered ? undefined : handleRegister} 
+                    <button
+                        onClick={isRegistered ? undefined : handleRegister}
                         className={getButtonStyle()}
                         disabled={isRegistered}
                     >
@@ -128,15 +115,6 @@ export default function Hero() {
             <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden md:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
             <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
             <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="-scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
-
-            {user && (
-                <ProfileModal
-                    user={user}
-                    isOpen={showProfileModal}
-                    onClose={() => setShowProfileModal(false)}
-                    onComplete={() => setShowProfileModal(false)}
-                />
-            )}
         </section>
     );
 }
