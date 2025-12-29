@@ -48,27 +48,40 @@ const MyForm: React.FC = () => {
         setPopUp(false);
       }
       if (response === Progress.paymentPending) {
-        // Payment flow disabled - redirect to confirmation
-        window.location.href = "/confirmation";
+        // Old user migration: Payment is now skipped. Auto-capture payment and redirect.
+        // We also set isTeamMember to 0 (if it was -1) to ensure they are treated as fully registered.
+        updateDoc(doc(db, "registrations", user.uid), {
+          payment_status: "captured",
+          isTeamMember: 0, // Ensure they are not stuck in "notYetTeamMember"
+        }).then(() => {
+          window.location.href = "/dashboard";
+        });
         return;
       }
       if (response === Progress.incompleteRegistration) {
-        window.location.href = "/confirmation";
+        // If registration is incomplete (missing fields), show the form to let them finish.
+        setLoadingState(false);
+        setRegistrationStatus(false);
+        setPopUp(false);
         return;
       }
       if (response === Progress.notYetTeamMember) {
-        setLoadingState(true);
-        setRegistrationStatus(true);
-        setPopUp(false);
+        // Old user migration: User registered but was in "confirmation pending" state (-1).
+        // Update to 0 (Registered, no team) and redirect.
+        updateDoc(doc(db, "registrations", user.uid), {
+          isTeamMember: 0,
+        }).then(() => {
+          window.location.href = "/dashboard";
+        });
+        return;
       }
       if (
         response === Progress.completeRegistration ||
         response === Progress.completeRegistrationTeamLead
       ) {
-        setLoadingState(true);
-        setRegistrationStatus(true);
-        setIsCompleteRegistration(true);
-        setPopUp(false);
+        // User is fully registered. Redirect to dashboard.
+        window.location.href = "/dashboard";
+        return;
       }
     });
   }, [user]);
@@ -324,9 +337,9 @@ const MyForm: React.FC = () => {
           <div className="md:grow md:pt-[30px] md:pl-[40px] pt-[20px] pb-[40px] md:pb-[unset]">
             <h1 className="text-3xl font-medium text-gray-900 dark:text-white">Register for TechSprint 2026</h1>
 
-            <p className="opacity-60 mt-3 text-lg text-gray-700 dark:text-gray-300">24-25th March 2026</p>
+            <p className="mt-3 text-lg text-gray-700 dark:text-gray-300">24-25th March 2026</p>
 
-            <p className="opacity-60 text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
+            <p className="text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
@@ -358,7 +371,7 @@ const MyForm: React.FC = () => {
                 placeholder="First Name"
                 value={formState.firstName}
                 onChange={handleChange}
-                className="register-input grow"
+                className="register-input grow text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
 
               <input
@@ -369,7 +382,7 @@ const MyForm: React.FC = () => {
                 placeholder="Last Name"
                 value={formState.lastName}
                 onChange={handleChange}
-                className="register-input grow"
+                className="register-input grow text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8  gap-y-4 md:gap-y-[unset]">
@@ -378,14 +391,15 @@ const MyForm: React.FC = () => {
                 id="email"
                 name="email"
                 required
+                readOnly
                 placeholder="Email Address"
                 value={formState.email}
                 onChange={handleChange}
-                className="register-input grow md:w-1/2 "
+                className="register-input grow md:w-1/2 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 opacity-70 cursor-not-allowed bg-gray-100 dark:bg-gray-800"
               />
               <select
                 name="gender"
-                className="register-input grow md:w-1/2 "
+                className="register-input grow md:w-1/2 text-gray-900 dark:text-white"
                 onChange={handleSelectChange}
                 required
               >
@@ -404,7 +418,7 @@ const MyForm: React.FC = () => {
                   placeholder="Website (optional)"
                   value={formState.socialProfile}
                   onChange={handleChange}
-                  className="register-input w-full"
+                  className="register-input w-full text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 />
                 <p className="mt-2 md:mt-4 max-w-[440px] text-[12px] text-gray-700 dark:text-gray-400">
                   Share us a link where we can get to know more about you. It
@@ -414,7 +428,7 @@ const MyForm: React.FC = () => {
               </div>
               <div className="md:w-1/2 ">
                 <select
-                  className="w-full register-input h-max"
+                  className="w-full register-input h-max text-gray-900 dark:text-white"
                   required
                   onChange={handleSelectChange}
                   name="university"
@@ -455,7 +469,7 @@ const MyForm: React.FC = () => {
                     placeholder="Institution Name"
                     value={formState.otherUniversity}
                     onChange={handleChange}
-                    className="register-input grow mt-4 w-full"
+                    className="register-input grow mt-4 w-full text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   />
                 )}
               </div>

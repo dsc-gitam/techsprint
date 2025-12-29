@@ -3,6 +3,7 @@
     padding: 16px 24px;
     border-radius: 12px;
     background-color: transparent;
+    color: inherit;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -10,4 +11,20 @@
         border-color: #5f6368;
         color: white;
     }
+    
+    .register-input option {
+        background-color: #141414;
+        color: white;
+    }
+}
+
+/* Support class-based dark mode */
+.dark .register-input {
+    border-color: #5f6368;
+    color: white;
+}
+
+.dark .register-input option {
+    background-color: #141414;
+    color: white;
 }

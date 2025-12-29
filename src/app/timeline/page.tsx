@@ -2,7 +2,7 @@ import Timeline from '@/components/Timeline';
 
 export default function TimelinePage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-white dark:bg-white">
       <Timeline />
     </div>
   );

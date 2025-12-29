@@ -7,11 +7,13 @@ import { useRouter } from 'next/navigation';
 import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
 import { CalendarMonth, MapOutlined } from '@mui/icons-material';
+import ProfileModal from './ProfileModal';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
     const [userProgress, setUserProgress] = useState<Progress | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showProfileModal, setShowProfileModal] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -105,7 +107,7 @@ export default function Hero() {
                             href={"https://maps.google.com?q=Chandrahas%20Bhavan,%20Q9JG+5FF,%20RUSHIKONDA,%20GITAM,%20Rushikonda,%20Visakhapatnam,%20Andhra%20Pradesh%20530045&ftid=0x0:0x6c1c27dfb649611a&entry=gps&lucs=,94297699,94275415,94284508,94231188,94280568,47071704,94218641,94282134,94286869&g_st=ic"}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black"
+                            className="text-black underline-offset-2 dark:text-white"
                         >
                             GITAM (Deemed to be University)
                         </a>
@@ -132,10 +134,19 @@ export default function Hero() {
                 </div>
 
             </div>
-            <img src="https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/vip/2025/05/google_io_personalized_context.jpg" className="absolute top-10 right-4 md:right-20 blur-[0.8px] w-24 h-16 md:w-48 md:h-32 object-cover rounded-xl opacity-50 md:opacity-100" />
-            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden md:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
-            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
-            <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="-scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
+            <img src="https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/vip/2025/05/google_io_personalized_context.jpg" className="hidden lg:block absolute top-10 right-4 md:right-20 blur-[0.8px] w-24 h-16 md:w-48 md:h-32 object-cover rounded-xl opacity-50 md:opacity-100" />
+            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden lg:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
+            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="hidden lg:block absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
+            <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="hidden lg:block -scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
+
+            {user && (
+                <ProfileModal
+                    user={user}
+                    isOpen={showProfileModal}
+                    onClose={() => setShowProfileModal(false)}
+                    onComplete={() => setShowProfileModal(false)}
+                />
+            )}
         </section>
     );
 }
