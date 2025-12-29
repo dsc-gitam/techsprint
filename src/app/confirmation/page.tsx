@@ -523,9 +523,7 @@ export default function Confirmation() {
                   </p>
                   <button
                     onClick={() => {
-                      setLoadingState(false);
-                      setIsCompleteRegistration(false);
-                      window.location.href = "/dashboard";
+                      router.push("/dashboard");
                     }}
                     className="border-[1.5px] px-8 py-2 rounded-full border-gray-500 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
