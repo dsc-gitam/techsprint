@@ -1,18 +1,15 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import ProfileModal from './ProfileModal';
 import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
 import { CalendarMonth, MapOutlined } from '@mui/icons-material';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
-    const [showProfileModal, setShowProfileModal] = useState(false);
     const [userProgress, setUserProgress] = useState<Progress | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -41,18 +38,8 @@ export default function Hero() {
 
         const provider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, provider);
-            const signedInUser = result.user;
-
-            // Check if profile exists
-            const docRef = doc(db, "users", signedInUser.uid);
-            const docSnap = await getDoc(docRef);
-
-            if (!docSnap.exists()) {
-                setShowProfileModal(true);
-            } else {
-                router.push('/dashboard');
-            }
+            await signInWithPopup(auth, provider);
+            router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in", error);
         }
@@ -149,15 +136,6 @@ export default function Hero() {
             <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden md:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
             <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
             <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="-scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
-
-            {user && (
-                <ProfileModal
-                    user={user}
-                    isOpen={showProfileModal}
-                    onClose={() => setShowProfileModal(false)}
-                    onComplete={() => setShowProfileModal(false)}
-                />
-            )}
         </section>
     );
 }

@@ -20,7 +20,7 @@ export default function Profile() {
     });
   }, [user]);
   return (
-    <div className="w-full flex flex-col items-center h-full">
+    <div className="w-full flex flex-col items-center h-full min-h-screen bg-(--background)">
       {user !== null && user.photoURL !== null && userData != undefined && (
         <>
           <img
@@ -44,9 +44,9 @@ export default function Profile() {
           onClick={() => {
             setTabIndex(0);
           }}
-          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex ${tabIndex == 0
-              ? "text-blue-500 font-medium underline underline-offset-[12px]"
-              : ""
+          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex dark:text-gray-400 ${tabIndex == 0
+            ? "text-blue-500 dark:text-blue-500 font-medium underline underline-offset-[12px]"
+            : ""
             }`}
         >
           Your QR Code
@@ -66,17 +66,33 @@ export default function Profile() {
         </p> */}
       </div>
       {tabIndex == 0 && (
-        <div className="flex felx-col justify-center">
-          <QRCode
-            size={300}
-            style={{ height: "auto", maxWidth: "70%", width: "70%" }}
-            value={user?.uid ?? ""}
-            className="m-10 sm:mb-24 "
-            viewBox={`0 0 128 128`}
-          />
+        <div className="flex flex-col justify-center items-center">
+          <div className="bg-white p-4 rounded-xl">
+            <QRCode
+              size={300}
+              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              value={user?.uid ?? ""}
+              viewBox={`0 0 128 128`}
+            />
+          </div>
         </div>
       )}
       {tabIndex == 1 && <div></div>}
+
+      {/* Team Action Buttons - Same style as Signout */}
+      <div className="flex flex-col sm:flex-row gap-3 mt-6 mb-4 w-full max-w-[320px] sm:max-w-[400px] px-4">
+        <Link href="/view-team" className="flex-1">
+          <div className="border-[2px] border-blue-300 rounded-[20px] text-blue-500 px-4 py-2 text-[17px] sm:text-[19px] font-medium text-center">
+            View My Team
+          </div>
+        </Link>
+        <Link href="/edit-team" className="flex-1">
+          <div className="border-[2px] border-green-300 rounded-[20px] text-green-500 px-4 py-2 text-[17px] sm:text-[19px] font-medium text-center">
+            Edit Team
+          </div>
+        </Link>
+      </div>
+
       <Link href="?signout">
         <div className="border-[2px] border-red-300 rounded-[20px] text-red-500 px-4 py-2 text-[19px] font-medium">
           Signout

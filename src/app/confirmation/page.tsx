@@ -93,7 +93,7 @@ export default function Confirmation() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoadingState(true);
-    
+
     try {
       if (isTeamLead === false) {
         const updatableData = {
@@ -393,28 +393,31 @@ export default function Confirmation() {
                       ")"
                     }
                     getOptionDisabled={(o) => !o.isPaid || o.isTeamMember == -1}
-                    renderOption={(props, option: Attendee) => (
-                      <li {...props}>
-                        <div className="flex gap-4">
-                          <img
-                            src={option.image}
-                            className="size-12 rounded-full object-cover"
-                          />
-                          <div>
-                            <p>
-                              {option.label} {option.lastName}
-                            </p>
-                            <p className="text-sm opacity-70">
-                              {option.profession}
-                            </p>
+                    renderOption={(props, option: Attendee) => {
+                      const { key, ...otherProps } = props as any;
+                      return (
+                        <li key={key || option.userId} {...otherProps}>
+                          <div className="flex gap-4">
+                            <img
+                              src={option.image}
+                              className="size-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <p>
+                                {option.label} {option.lastName}
+                              </p>
+                              <p className="text-sm opacity-70">
+                                {option.profession}
+                              </p>
+                            </div>
+                            {!option.isPaid && <Chip label="Payment Pending" />}
+                            {option.isTeamMember == -1 && option.isPaid && (
+                              <Chip label="Application Incomplete" />
+                            )}
                           </div>
-                          {!option.isPaid && <Chip label="Payment Pending" />}
-                          {option.isTeamMember == -1 && option.isPaid && (
-                            <Chip label="Application Incomplete" />
-                          )}
-                        </div>
-                      </li>
-                    )}
+                        </li>
+                      );
+                    }}
                     filterOptions={(options: Attendee[], state) => {
                       return options.filter(
                         (e) =>
@@ -447,7 +450,7 @@ export default function Confirmation() {
                         }}
                         className="dark:text-white dark:border-gray-600"
                         label="Add team members"
-                        
+
                       />
                     )}
                   />
