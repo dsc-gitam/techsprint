@@ -20,7 +20,7 @@ export default function Profile() {
     });
   }, [user]);
   return (
-    <div className="w-full flex flex-col items-center h-full min-h-screen bg-(--background)">
+    <div className="w-full flex flex-col items-center h-full min-h-screen bg-(--background) dark:text-white">
       {user !== null && user.photoURL !== null && userData != undefined && (
         <>
           <img
@@ -32,8 +32,9 @@ export default function Profile() {
           </p>
           <p className="text-l my-1 dark:text-gray-300">{userData.university}</p>
           <p
-            className={`text-l my-1 ${userData.gender === "He/Him" ? "text-blue-500" : "text-pink-500"
-              }`}
+            className={`text-l my-1 ${
+              userData.gender === "He/Him" ? "text-blue-500 dark:text-blue-400" : "text-pink-500 dark:text-pink-400"
+            }`}
           >
             {userData.gender}
           </p>
@@ -44,10 +45,11 @@ export default function Profile() {
           onClick={() => {
             setTabIndex(0);
           }}
-          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex dark:text-gray-400 ${tabIndex == 0
-            ? "text-blue-500 dark:text-blue-500 font-medium underline underline-offset-[12px]"
-            : ""
-            }`}
+          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex dark:text-white ${
+            tabIndex == 0
+              ? "text-blue-500 dark:text-blue-400 font-medium underline underline-offset-[12px]"
+              : ""
+          }`}
         >
           Your QR Code
         </p>
@@ -56,9 +58,9 @@ export default function Profile() {
           onClick={() => {
             setTabIndex(1);
           }}
-          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex ${
+          className={`cursor-pointer pt-2 pb-8 sm:py-8 text-xl font-light inline-flex dark:text-white ${
             tabIndex == 1
-              ? "text-blue-500 font-medium underline underline-offset-[12px]"
+              ? "text-blue-500 dark:text-blue-400 font-medium underline underline-offset-[12px]"
               : ""
           }`}
         >
