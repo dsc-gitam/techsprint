@@ -195,18 +195,18 @@ const MyForm: React.FC = () => {
                 placeholder="Email Address"
                 value={formState.email}
                 onChange={handleChange}
-                className="register-input grow md:w-1/2"
+                className="register-input grow md:w-1/2 "
               />
               <select
                 name="gender"
-                className="register-input grow md:w-1/2"
+                className="register-input grow md:w-1/2 "
                 onChange={handleSelectChange}
                 required
               >
-                <option value="">Pronouns (select)</option>
-                <option>She/Her</option>
-                <option>He/Him</option>
-                <option>They/Them</option>
+                <option className="dark:bg-black" value="">Pronouns (select)</option>
+                <option className="dark:bg-black">She/Her</option>
+                <option className="dark:bg-black">He/Him</option>
+                <option className="dark:bg-black">They/Them</option>
               </select>
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8 gap-y-4 md:gap-y-[unset">
@@ -226,39 +226,39 @@ const MyForm: React.FC = () => {
                   want us to know
                 </p>
               </div>
-              <div className="md:w-1/2">
+              <div className="md:w-1/2 ">
                 <select
                   className="w-full register-input h-max"
                   required
                   onChange={handleSelectChange}
                   name="university"
                 >
-                  <option value="">University (select)</option>
-                  <option>Gandhi Institute of Technology and Management</option>
+                  <option className="dark:bg-black" value="">University (select)</option>
+                  <option className="dark:bg-black">Gandhi Institute of Technology and Management</option>
 
-                  <option>Gayatri Vidya Parishad College of Engineering</option>
-                  <option>
+                  <option className="dark:bg-black">Gayatri Vidya Parishad College of Engineering</option>
+                  <option className="dark:bg-black">
                     Gayatri Vidya Parishad College of Engineering for Women
                   </option>
-                  <option>Andhra University College of Engineering</option>
-                  <option>Vignan's Institute of Information Technology</option>
-                  <option>Vignan Institute of Engineering Women</option>
-                  <option>Raghu Engineering College</option>
-                  <option>GMR Institute of Technology</option>
-                  <option>SVR Engineering College</option>
-                  <option>
+                  <option className="dark:bg-black">Andhra University College of Engineering</option>
+                  <option className="dark:bg-black">Vignan's Institute of Information Technology</option>
+                  <option className="dark:bg-black">Vignan Institute of Engineering Women</option>
+                  <option className="dark:bg-black">Raghu Engineering College</option>
+                  <option className="dark:bg-black">GMR Institute of Technology</option>
+                  <option className="dark:bg-black">SVR Engineering College</option>
+                  <option className="dark:bg-black">
                     G. Pullaiah College of Engineering and Technology
                   </option>
-                  <option>
+                  <option className="dark:bg-black">
                     Maharaj Vijayaram Gajapathi Raj College of Engineering
                   </option>
-                  <option>Sagi Ramakrishnam Raju Engineering College</option>
-                  <option>Pragati Engineering College</option>
-                  <option>
+                  <option className="dark:bg-black">Sagi Ramakrishnam Raju Engineering College</option>
+                  <option className="dark:bg-black">Pragati Engineering College</option>
+                  <option className="dark:bg-black">
                     Geethanjali Institute of Science and Technology
                   </option>
-                  <option>Aditya Institute of Technology and Management</option>
-                  <option>Other</option>
+                  <option className="dark:bg-black">Aditya Institute of Technology and Management</option>
+                  <option className="dark:bg-black">Other</option>
                 </select>
                 {formState.university === "Other" && (
                   <input
