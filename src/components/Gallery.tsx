@@ -4,22 +4,22 @@ export default function Gallery() {
       <img
         crossOrigin="anonymous"
         className="grid_item object-top"
-        data-src="/highlights/IWD-2023-1.jpg"
-        src="/highlights/IWD-2023-1.jpg"
+        data-src="/highlights/1.JPG"
+        src="/highlights/1.JPG"
         alt="Web Study Jams at GITAM University"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="highlights/IWD-2023-2.jpg"
-        src="highlights/IWD-2023-2.jpg"
+        data-src="/highlights/2.jpg"
+        src="/highlights/2.jpg"
         alt="Hacktober Fest at GVP"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="/highlights/IWD-2023-3.jpg"
-        src="/highlights/IWD-2023-3.jpg"
+        data-src="/highlights/3.jpg"
+        src="/highlights/3.jpg"
       />
       {/* <img
         crossOrigin="anonymous"
@@ -30,32 +30,32 @@ export default function Gallery() {
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="/highlights/IWD-2023-4.jpg"
-        src="/highlights/IWD-2023-4.jpg"
+        data-src="/highlights/4.jpg"
+        src="/highlights/4.jpg"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="/highlights/IWD-2023-5.jpg"
-        src="/highlights/IWD-2023-5.jpg"
+        data-src="/highlights/5.jpg"
+        src="/highlights/5.jpg"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="/highlights/IWD-2023-7.jpg"
-        src="/highlights/IWD-2023-7.jpg"
+        data-src="/highlights/7.jpg"
+        src="/highlights/7.jpg"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="/highlights/IWD-2023-6.jpg"
-        src="/highlights/IWD-2023-6.jpg"
+        data-src="/highlights/6.jpg"
+        src="/highlights/6.jpg"
       />
       <img
         crossOrigin="anonymous"
         className="grid_item"
-        data-src="highlights/IWD-2023-9.jpg"
-        src="highlights/IWD-2023-9.jpg"
+        data-src="/highlights/8.jpg"
+        src="/highlights/8.jpg"
         alt="Cloud Study Jams participants wearing their swags at MVGR"
       />
       <div className="gallery_info p-8!">

@@ -1,68 +1,96 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #202124;
-  
-  /* Google Brand Colors */
-  --google-blue: #4285f4;
-  --google-red: #ea4335;
-  --google-yellow: #fbbc04;
-  --google-green: #34a853;
-  
-  /* Google I/O 2026 Inspired Colors */
-  --io-dark: #202124;
-  --io-light-gray: #f8f9fa;
-  --io-border: #121212;
+    --background: #ffffff;
+    --foreground: #202124;
+
+    /* Google Brand Colors */
+    --google-blue: #4285f4;
+    --google-red: #ea4335;
+    --google-yellow: #fbbc04;
+    --google-green: #34a853;
+
+    /* Google I/O 2026 Inspired Colors */
+    --io-dark: #202124;
+    --io-light-gray: #f8f9fa;
+    --io-border: #121212;
 }
 
 @theme {
-  --color-google-blue: var(--google-blue);
-  --color-google-red: var(--google-red);
-  --color-google-yellow: var(--google-yellow);
-  --color-google-green: var(--google-green);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+    --color-google-blue: var(--google-blue);
+    --color-google-red: var(--google-red);
+    --color-google-yellow: var(--google-yellow);
+    --color-google-green: var(--google-green);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
 }
 
 /* Dark mode preference */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #060606;
-    --foreground: #ffffff;
-    --io-border: #ffffff/70;
-  }
+    :root {
+        --background: #060606;
+        --foreground: #ffffff;
+        --io-border: #ffffff/70;
+    }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Google Sans', 'Roboto', sans-serif;
+    color: var(--foreground);
+    background: var(--background);
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+/* Ensure Google Sans applies to ALL elements */
+*,
+*::before,
+*::after {
+    font-family: inherit;
+}
+
+input,
+button,
+textarea,
+select {
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li,
+label {
+    font-family: 'Google Sans', 'Roboto', sans-serif;
 }
 
 /* Utility for Google Sans if hosted or imported */
 @font-face {
-  font-family: 'Google Sans';
-  src: url('https://fonts.gstatic.com/s/googlesans/v14/4UaGrENHsxJlGDuGo1OIlL3Owp5eKQtG.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Google Sans';
+    src: url('https://fonts.gstatic.com/s/googlesans/v14/4UaGrENHsxJlGDuGo1OIlL3Owp5eKQtG.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'Google Sans';
-  src: url('https://fonts.gstatic.com/s/googlesans/v14/4UabrENHsxJlGDuGo1OIlLU94YtzCw.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Google Sans';
+    src: url('https://fonts.gstatic.com/s/googlesans/v14/4UabrENHsxJlGDuGo1OIlLU94YtzCw.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'Google Sans';
-  src: url('https://fonts.gstatic.com/s/googlesans/v14/4UabrENHsxJlGDuGo1OIlLU94YtzCw.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Google Sans';
+    src: url('https://fonts.gstatic.com/s/googlesans/v14/4UabrENHsxJlGDuGo1OIlLU94YtzCw.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 .social_footer {
@@ -72,12 +100,12 @@ body {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
     background-color: #fefefe;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 
 .social_body {
@@ -109,13 +137,14 @@ body {
     .social_footer {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
         -webkit-box-align: start;
-            -ms-flex-align: start;
-                align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
     }
-    .social_gif  {
+
+    .social_gif {
         margin-top: 80px;
     }
 }
@@ -125,7 +154,7 @@ body {
         padding: 60px 20px 64px;
     }
 
-    .social_body p  {
+    .social_body p {
         margin-right: 24px;
         font-size: 18px;
     }
@@ -139,26 +168,26 @@ body {
 @media (prefers-color-scheme: dark) {
     .social_footer {
         /* Dark background (usually not pure black to reduce eye strain) */
-        background-color: #121212; 
-        
+        background-color: #121212;
+
         /* Darker border color */
-        border-top: 1px solid #333333; 
-        
+        border-top: 1px solid #333333;
+
         /* Light text color */
-        color: #e0e0e0; 
+        color: #e0e0e0;
     }
 
     /* Ensure links or icons inside anchors are visible */
     .social_body a {
-        color: #ffffff; 
+        color: #ffffff;
     }
-    
+
     /* Optional: Slightly dim images/gifs to reduce glare in dark mode */
     .social_gif img {
         opacity: 0.85;
         transition: opacity 0.3s ease;
     }
-    
+
     .social_gif img:hover {
         opacity: 1;
     }
