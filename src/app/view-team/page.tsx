@@ -136,85 +136,87 @@ export default function Confirmation() {
 
 
     return (
-        <div className="flex flex-col justify-center items-center py-[20px] md:py-[60px] md:px-[unset]">
-            <div className="flex flex-col justify-center items-center md:rounded-xl md:border-[1.5px] border-gray-500 md:w-4/5">
-                <div className="w-full md:rounded-t-xl bg-[#FBBC04] flex flex-col md:flex-row p-[20px] pt-[32px] pb-4 border-gray-500 border-b-[1.5px]">
-                    <div className="md:grow md:pt-[30px] md:pl-[40px] pt-[20px] pb-[40px] md:pb-[unset]">
-                        <h1 className="text-2xl md:text-6xl font-bold">You're in.</h1>
-                        <h2 className="text-xl md:text-4xl font-medium mt-2">
-                            {teamName} #{teamNumber == -1 ? "" : teamNumber}
-                        </h2>
+        <div className="min-h-screen bg-white dark:bg-[#121212]">
+            <div className="flex flex-col justify-center items-center py-[20px] md:py-[60px] px-4 md:px-0">
+                <div className="flex flex-col justify-center items-center md:rounded-xl md:border-[1.5px] border-gray-500 dark:border-gray-600 w-full md:w-4/5 max-w-4xl">
+                    <div className="w-full md:rounded-t-xl bg-[#FBBC04] flex flex-col md:flex-row p-4 md:p-[20px] pt-6 md:pt-[32px] pb-4 border-gray-500 border-b-[1.5px]">
+                        <div className="md:grow md:pt-[30px] md:pl-[40px] pt-[20px] pb-6 md:pb-[unset]">
+                            <h1 className="text-2xl md:text-6xl font-bold text-black">You're in.</h1>
+                            <h2 className="text-xl md:text-4xl font-medium mt-2 text-black">
+                                {teamName} #{teamNumber == -1 ? "" : teamNumber}
+                            </h2>
 
-                        <p className="mt-3 text-lg">TechSprint 2026</p>
-                        <p>Gandhi Institute of Technology and Management, Visakhapatnam</p>
-                    </div>
-                    <img
-                        src="gdsc_sc.webp"
-                        className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
-                    />
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-x-4 mb-8 mt-4">
-                    {team.map((attendee, index) => (
-                        <div className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
-                            <p className="text-2xl font-medium dark:text-white">{attendee.label}</p>
-                            <p className="text-2xl font-medium dark:text-white">
-                                {attendee.lastName}
-                            </p>
-                            <p className="text-sm dark:text-gray-300">
-                                {attendee.gender}
-                            </p>
-                            <p className="mt-2 text-sm border-[1px] border-black dark:border-gray-600 dark:text-gray-300 px-3 py-1 rounded-full">
-                                {attendee.email}
-                            </p>
-
+                            <p className="mt-3 text-lg text-black/80">TechSprint 2026</p>
+                            <p className="text-black/70">Gandhi Institute of Technology and Management, Visakhapatnam</p>
                         </div>
-                    ))}
-                </div>
-
-                <div className="w-full flex justify-center items-center mb-8">
-                    <button
-                        onClick={() => router.push('/edit-team')}
-                        className="py-2 px-6 text-blue-500 dark:text-blue-400 rounded border-neutral-300 dark:border-gray-600 border font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
-                    >
-                        Edit Team
-                    </button>
-                </div>
-
-                {loading && (
-                    <div className="absolute top-0 w-full h-full flex items-center justify-center z-10 bg-opacity-50 bg-black md:ml-[80px] text-center">
-                        <div className="px-[40px] md:px-[80px] pb-[40px] bg-white rounded-2xl shadow-2xl mx-8 md:mx-[unset]">
-                            {isCompleteRegistration ? (
-                                <>
-                                    <PeopleOutline fontSize="large" className="mt-8" />
-                                    <h2 className="text-2xl font-medium mt-4">Team Updated.</h2>
-                                    <p className="text-sm mt-4 mb-8 max-w-[420px]">
-                                        Excited to host your team for TechSprint 2026.
-                                        <br />
-                                        Earn badges and have fun before the event.
-                                    </p>
-                                    <button
-                                        onClick={() => {
-                                            setLoadingState(false);
-                                            setIsCompleteRegistration(false);
-                                            window.location.href = "/";
-                                        }}
-                                        className="border-[1.5px] px-8 py-2 rounded-full border-gray-500"
-                                    >
-                                        Done
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <Loader></Loader>
-                                    <p className="font-medium">
-                                        Please wait while we process your application.
-                                    </p>
-                                </>
-                            )}
-                        </div>
+                        <img
+                            src="/gdsc_sc.webp"
+                            className="h-32 md:h-56 -scale-x-100 translate-y-1 md:translate-y-2 self-center md:self-auto"
+                            alt="GDSC Mascot"
+                        />
                     </div>
-                )}
+
+                    <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 mt-4 px-4 md:px-8 w-full justify-center">
+                        {team.map((attendee, index) => (
+                            <div key={attendee.userId || index} className="flex flex-col p-5 bg-amber-200 dark:bg-amber-900/80 w-full md:w-auto md:min-w-[220px] rounded-xl shadow-sm">
+                                <p className="text-xl md:text-2xl font-medium text-black dark:text-white">{attendee.label}</p>
+                                <p className="text-xl md:text-2xl font-medium text-black dark:text-white">
+                                    {attendee.lastName}
+                                </p>
+                                <p className="text-sm text-black/70 dark:text-gray-300 mt-1">
+                                    {attendee.gender}
+                                </p>
+                                <p className="mt-3 text-sm border border-black/30 dark:border-gray-500 text-black/80 dark:text-gray-300 px-3 py-1.5 rounded-full w-fit">
+                                    {attendee.email}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="w-full flex justify-center items-center mb-8">
+                        <button
+                            onClick={() => router.push('/edit-team')}
+                            className="py-2 px-6 text-blue-500 dark:text-blue-400 rounded border-neutral-300 dark:border-gray-600 border font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+                        >
+                            Edit Team
+                        </button>
+                    </div>
+
+                    {loading && (
+                        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
+                            <div className="px-6 md:px-16 py-8 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full text-center">
+                                {isCompleteRegistration ? (
+                                    <>
+                                        <PeopleOutline fontSize="large" className="text-gray-700 dark:text-gray-300" />
+                                        <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">Team Updated.</h2>
+                                        <p className="text-sm mt-4 mb-8 text-gray-600 dark:text-gray-300">
+                                            Excited to host your team for TechSprint 2026.
+                                            <br />
+                                            Earn badges and have fun before the event.
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                setLoadingState(false);
+                                                setIsCompleteRegistration(false);
+                                                window.location.href = "/";
+                                            }}
+                                            className="border-2 px-8 py-2.5 rounded-full border-gray-400 dark:border-gray-500 text-gray-700 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                        >
+                                            Done
+                                        </button>
+                                    </>
+                                ) : (
+                                    <div className="py-4">
+                                        <Loader />
+                                        <p className="font-medium mt-4 text-gray-700 dark:text-gray-300">
+                                            Please wait while we process your application.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
