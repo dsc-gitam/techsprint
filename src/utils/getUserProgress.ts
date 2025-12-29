@@ -28,13 +28,8 @@ export default async function GetUserProgress(uid: string): Promise<Progress> {
       return Progress.incompleteRegistration;
     }
 
-    // Check if confirmation form is incomplete (no tshirt size or linkedin)
-    if (!userData.tshirtSize || !userData.linkedin_profile) {
-      return Progress.incompleteRegistration;
-    }
-
     // Check team membership status
-    // isTeamMember === -1 means they haven't completed confirmation yet
+    // isTeamMember === -1 means they haven't completed confirmation yet (old flow)
     if (userData.isTeamMember === -1) {
       return Progress.notYetTeamMember;
     }

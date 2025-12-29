@@ -14,7 +14,10 @@ import {
   doc,
   documentId,
   getCountFromServer,
+  getDocs,
   query,
+  updateDoc,
+  arrayUnion,
   where,
 } from "firebase/firestore";
 import { ArrowForwardIos, EmojiEventsOutlined } from "@mui/icons-material";
@@ -68,6 +71,8 @@ const MyForm: React.FC = () => {
   }, [user]);
 
   const [formState, setFormState] = useState(initialFormData);
+  const [isTeamLead, setIsTeamLead] = useState<boolean | undefined>(undefined);
+  const [referralCode, setReferralCode] = useState("");
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,19 +109,77 @@ const MyForm: React.FC = () => {
       return;
     }
 
+    let teamInfo = null;
+
+    // If member provided a referral code, validate and join team
+    if (!isTeamLead && referralCode) {
+      try {
+        const teamsRef = collection(db, "teams");
+        const teamQuery = query(teamsRef, where("referralCode", "==", referralCode.toUpperCase()));
+        const teamSnapshot = await getDocs(teamQuery);
+
+        if (teamSnapshot.empty) {
+          alert("Invalid referral code. Please check and try again.");
+          setLoadingState(false);
+          return;
+        }
+
+        const teamDoc = teamSnapshot.docs[0];
+        const teamData = teamDoc.data();
+        
+        // Check if team is full (max 4 members)
+        if (teamData.participants && teamData.participants.length >= 4) {
+          alert("This team is full (maximum 4 members). Please use a different referral code.");
+          setLoadingState(false);
+          return;
+        }
+
+        // Check if user is already in this team
+        if (teamData.participants && teamData.participants.includes(user.uid)) {
+          alert("You are already in this team!");
+          setLoadingState(false);
+          return;
+        }
+
+        // Add user to team
+        await updateDoc(doc(db, "teams", teamDoc.id), {
+          participants: arrayUnion(user.uid),
+        });
+
+        teamInfo = {
+          teamName: teamData.teamName,
+          isTeamMember: 1,
+        };
+      } catch (error) {
+        console.error("Error validating referral code:", error);
+        alert("Failed to join team. Please try again.");
+        setLoadingState(false);
+        return;
+      }
+    }
+
+    // Save registration data
     await addData("registrations", user.uid, {
       ...formState,
       ["displayPicture"]: user?.photoURL ?? "",
-      ["isTeamMember"]: -1,
-      ["isTeamLead"]: 0,
+      ["isTeamMember"]: teamInfo ? 1 : 0,
+      ["isTeamLead"]: isTeamLead ? 1 : 0,
       ["coc"]: 1,
       ["terms"]: 1,
-      ["payment_status"]: "captured", // Skip payment for now
+      ["payment_status"]: "captured",
+      ["teamName"]: teamInfo?.teamName || "",
     });
-    // Redirect directly to confirmation page
-    window.location.href = "/confirmation";
-    // setPopUp(true); // Commented out - payment flow disabled
-    // setRegistrationStatus(true);
+    
+    // Redirect based on team lead status
+    if (isTeamLead) {
+      window.location.href = "/create-team";
+    } else if (teamInfo) {
+      // Successfully joined team, go to dashboard
+      window.location.href = "/dashboard";
+    } else {
+      // No team yet, but registration complete - go to dashboard
+      window.location.href = "/dashboard";
+    }
   };
 
   useEffect(() => {
@@ -361,6 +424,61 @@ const MyForm: React.FC = () => {
                 </a>
                 .
               </p>
+            </div>
+
+            {/* Team Registration Section */}
+            <div className="mt-6 p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <p className="font-bold text-lg text-gray-900 dark:text-white mb-3">Team Registration</p>
+              <p className="font-medium text-gray-900 dark:text-white mb-2">Are you a team lead?</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                Team leads create teams and get a referral code. Team members use the code to join.
+              </p>
+              <div className="flex items-center space-x-4 mb-4">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="isLead"
+                    checked={isTeamLead === true}
+                    onChange={() => {
+                      setIsTeamLead(true);
+                      setReferralCode("");
+                    }}
+                    required
+                    className="w-4 h-4"
+                  />
+                  <span className="text-gray-900 dark:text-gray-300">Yes, I'll create a team</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="isLead"
+                    checked={isTeamLead === false}
+                    onChange={() => setIsTeamLead(false)}
+                    required
+                    className="w-4 h-4"
+                  />
+                  <span className="text-gray-900 dark:text-gray-300">No, I'll join a team</span>
+                </label>
+              </div>
+              
+              {isTeamLead === false && (
+                <div className="mt-3">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Team Referral Code (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                    placeholder="Enter code (e.g., ABC123)"
+                    maxLength={6}
+                    className="register-input w-full uppercase"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Get this code from your team lead. You can also join a team later.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           <div className="w-full flex justify-center items-center">

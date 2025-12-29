@@ -394,20 +394,22 @@ export default function Confirmation() {
                       ")"
                     }
                     getOptionDisabled={(o) => !o.isPaid || o.isTeamMember == -1}
-                    renderOption={(props, option: Attendee) => (
-                      <li {...props}>
-                        <div className="flex gap-4">
-                          <img
-                            src={option.image}
-                            className="size-12 rounded-full object-cover"
-                          />
-                          <div>
-                            <p>
-                              {option.label} {option.lastName}
-                            </p>
-                            <p className="text-sm opacity-70">
-                              {option.profession}
-                            </p>
+                    renderOption={(props, option: Attendee) => {
+                      const { key, ...otherProps } = props;
+                      return (
+                        <li key={key} {...otherProps}>
+                          <div className="flex gap-4">
+                            <img
+                              src={option.image}
+                              className="size-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <p>
+                                {option.label} {option.lastName}
+                              </p>
+                              <p className="text-sm opacity-70">
+                                {option.profession}
+                              </p>
                           </div>
                           {!option.isPaid && <Chip label="Payment Pending" />}
                           {option.isTeamMember == -1 && option.isPaid && (
@@ -415,7 +417,8 @@ export default function Confirmation() {
                           )}
                         </div>
                       </li>
-                    )}
+                      );
+                    }}
                     filterOptions={(options: Attendee[], state) => {
                       return options.filter(
                         (e) =>
@@ -511,9 +514,7 @@ export default function Confirmation() {
                   </p>
                   <button
                     onClick={() => {
-                      setLoadingState(false);
-                      setIsCompleteRegistration(false);
-                      window.location.href = "/dashboard";
+                      router.push("/dashboard");
                     }}
                     className="border-[1.5px] px-8 py-2 rounded-full border-gray-500 dark:border-gray-600 dark:text-white dark:hover:bg-gray-800"
                   >
