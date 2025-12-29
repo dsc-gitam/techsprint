@@ -57,18 +57,18 @@ const MyForm: React.FC = () => {
         return;
       }
       if (response === Progress.notYetTeamMember) {
-        setLoadingState(true);
-        setRegistrationStatus(true);
-        setPopUp(false);
+        // User has registered but not joined a team yet. 
+        // Redirect to dashboard to manage team status instead of showing success modal here.
+        window.location.href = "/dashboard";
+        return;
       }
       if (
         response === Progress.completeRegistration ||
         response === Progress.completeRegistrationTeamLead
       ) {
-        setLoadingState(true);
-        setRegistrationStatus(true);
-        setIsCompleteRegistration(true);
-        setPopUp(false);
+        // User is fully registered. Redirect to dashboard.
+        window.location.href = "/dashboard";
+        return;
       }
     });
   }, [user]);
@@ -378,17 +378,15 @@ const MyForm: React.FC = () => {
                 id="email"
                 name="email"
                 required
+                readOnly
                 placeholder="Email Address"
                 value={formState.email}
                 onChange={handleChange}
-                className="register-input grow md:w-1/2 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                className="register-input grow md:w-1/2 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 opacity-70 cursor-not-allowed bg-gray-100 dark:bg-gray-800"
               />
               <select
                 name="gender"
                 className="register-input grow md:w-1/2 text-gray-900 dark:text-white"
-                onChange={handleSelectChange}
-                required
-              >
                 onChange={handleSelectChange}
                 required
               >
@@ -735,11 +733,7 @@ const MyForm: React.FC = () => {
               )}
               {registered && !isCompleteRegistration && (
                 <>
-<<<<<<< HEAD
-                  <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Registration Successful</h2>
-=======
                   <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Received</h2>
->>>>>>> c345836f0c711459ad453d904502b9c6d3e21f7b
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
                     You&apos;ll be notified of the status of your hackathon team
                     soon. If you&apos;re not into a team before the hackathon, we&apos;ll
