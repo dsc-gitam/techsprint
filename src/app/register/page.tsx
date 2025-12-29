@@ -26,6 +26,7 @@ import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
 
 const MyForm: React.FC = () => {
+  const MAX_CODE_GENERATION_ATTEMPTS = 10;
   const user = useAuthContext();
   const searchParams = useSearchParams();
   const [loading, setLoadingState] = useState(true);
@@ -139,6 +140,13 @@ const MyForm: React.FC = () => {
       copyToClipboard(shareUrl);
     }
   };
+  
+  const getReferralUrl = () => {
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/register?referral=${generatedReferralCode}`;
+    }
+    return '';
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -183,7 +191,7 @@ const MyForm: React.FC = () => {
         let codeExists = true;
         let attempts = 0;
         
-        while (codeExists && attempts < 10) {
+        while (codeExists && attempts < MAX_CODE_GENERATION_ATTEMPTS) {
           const codeQuery = query(teamsRef, where("referralCode", "==", code));
           const codeCount = (await getCountFromServer(codeQuery)).data().count;
           if (codeCount === 0) {
@@ -683,7 +691,7 @@ const MyForm: React.FC = () => {
                 </div>
                 <div className="bg-white dark:bg-gray-900 rounded p-3 mb-2">
                   <p className="text-sm text-gray-700 dark:text-gray-300 break-all">
-                    {typeof window !== 'undefined' ? `${window.location.origin}/register?referral=${generatedReferralCode}` : ''}
+                    {getReferralUrl()}
                   </p>
                 </div>
               </div>
@@ -724,7 +732,7 @@ const MyForm: React.FC = () => {
               )}
               {registered && !isCompleteRegistration && (
                 <>
-                  <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Recieved</h2>
+                  <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Received</h2>
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
                     You&apos;ll be notified of the status of your hackathon team
                     soon. If you&apos;re not into a team before the hackathon, we&apos;ll
