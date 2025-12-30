@@ -93,7 +93,7 @@ export default function Confirmation() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoadingState(true);
-    
+
     try {
       if (isTeamLead === false) {
         const updatableData = {
@@ -168,22 +168,22 @@ export default function Confirmation() {
       <div className="flex flex-col justify-center items-center md:rounded-xl md:border-[1.5px] border-gray-500 dark:border-gray-700 md:w-4/5 dark:bg-[#141414]">
         <div className="w-full md:rounded-t-xl bg-[#FBBC04] flex flex-col md:flex-row p-[20px] pt-[32px] pb-4 border-gray-500 border-b-[1.5px]">
           <div className="md:grow md:pt-[30px] md:pl-[40px] pt-[20px] pb-[40px] md:pb-[unset]">
-            <h1 className="text-2xl md:text-6xl font-bold">Hurray!</h1>
-            <h2 className="text-xl md:text-4xl font-medium mt-2">
+            <h1 className="text-2xl md:text-6xl font-bold text-black">Hurray!</h1>
+            <h2 className="text-xl md:text-4xl font-medium mt-2 text-black">
               We've reserved you a seat.
             </h2>
 
-            <p className="mt-3 text-lg">TechSprint 2026</p>
-            <p>andhi Institute of Technology and Management, Visakhapatnam</p>
+            <p className="mt-3 text-lg text-black">TechSprint 2026</p>
+            <p className="text-black">Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
             className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
           />
         </div>
-        <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto">
-          <h3 className="text-xl font-medium dark:text-white">Complete your registration</h3>
-          <p className="mt-2 max-w-[480px] md:text-base text-sm dark:text-gray-300">
+        <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto bg-white dark:bg-[#141414]">
+          <h3 className="text-xl font-medium text-gray-900 dark:text-white">Complete your registration</h3>
+          <p className="mt-2 max-w-[480px] md:text-base text-sm text-gray-700 dark:text-gray-300">
             We need some more details from your provide the best experience and
             make sure everything is in place for you.
           </p>
@@ -191,10 +191,10 @@ export default function Confirmation() {
 
         <form
           onSubmit={handleSubmit}
-          className="px-[20px] md:px-[unset] md:w-4/5"
+          className="px-[20px] md:px-[unset] md:w-4/5 bg-white dark:bg-[#141414]"
         >
           <div className="mb-4 py-8 rounded-3xl w-full  flex flex-col space-y-4 md:space-y-8">
-            <div className="gap-x-4 flex">
+            <div className="gap-x-4 flex flex-col md:flex-row gap-y-4 md:gap-y-0">
               <input
                 type="url"
                 id="github_profile"
@@ -214,14 +214,13 @@ export default function Confirmation() {
                 onChange={(e) => {
                   setLinkedinProfile(e.target.value);
                 }}
-                required
-                placeholder="LinkedIn Profile"
+                placeholder="LinkedIn Profile (Optional)"
                 className="register-input w-1/2"
               />
             </div>
             <div>
-              <p className="font-medium mt-1 text-lg dark:text-white">T-shirt size</p>
-              <div className="space-x-4 mt-2 dark:text-gray-300">
+              <p className="font-medium mt-1 text-lg text-gray-900 dark:text-white">T-shirt size</p>
+              <div className="space-x-4 mt-2 text-gray-700 dark:text-gray-300">
                 <div className="w-max inline-flex gap-x-3">
                   <input
                     type="radio"
@@ -281,12 +280,12 @@ export default function Confirmation() {
               </div>
             </div>
             <div>
-              <p className="font-bold text-xl dark:text-white">Hackathon Related Information</p>
-              <p className="font-medium mt-1 text-lg dark:text-white">Are you the team lead?</p>
-              <p className="text-sm dark:text-gray-300">
+              <p className="font-bold text-xl text-gray-900 dark:text-white">Hackathon Related Information</p>
+              <p className="font-medium mt-1 text-lg text-gray-900 dark:text-white">Are you the team lead?</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 If you don't have a team, we can help you find one at the venue.
               </p>
-              <div className="flex items-center space-x-2 mt-2 dark:text-gray-300">
+              <div className="flex items-center space-x-2 mt-2 text-gray-700 dark:text-gray-300">
                 <input
                   type="radio"
                   name="isLead"
@@ -353,11 +352,11 @@ export default function Confirmation() {
                 <div className="flex flex-col md:flex-row gap-x-4">
                   {team.map((attendee, index) => (
                     <div key={index} className="inline-flex flex-col p-[20px] bg-amber-200 dark:bg-amber-900 w-max mt-3 rounded-xl">
-                      <p className="text-2xl font-medium dark:text-white">{attendee.label}</p>
-                      <p className="text-2xl font-medium dark:text-white">
+                      <p className="text-2xl font-medium text-black dark:text-white">{attendee.label}</p>
+                      <p className="text-2xl font-medium text-black dark:text-white">
                         {attendee.lastName}
                       </p>
-                      <p className="mt-2 text-sm border-[1px] border-black dark:border-gray-600 dark:text-gray-300 px-3 py-1 rounded-full">
+                      <p className="mt-2 text-sm border-[1px] border-black dark:border-gray-600 text-black dark:text-gray-300 px-3 py-1 rounded-full">
                         {attendee.email}
                       </p>
                       {attendee.userId != user?.uid && (
@@ -395,9 +394,9 @@ export default function Confirmation() {
                     }
                     getOptionDisabled={(o) => !o.isPaid || o.isTeamMember == -1}
                     renderOption={(props, option: Attendee) => {
-                      const { key, ...otherProps } = props;
+                      const { key, ...otherProps } = props as any;
                       return (
-                        <li key={key} {...otherProps}>
+                        <li key={key || option.userId} {...otherProps}>
                           <div className="flex gap-4">
                             <img
                               src={option.image}
@@ -410,13 +409,13 @@ export default function Confirmation() {
                               <p className="text-sm opacity-70">
                                 {option.profession}
                               </p>
+                            </div>
+                            {!option.isPaid && <Chip label="Payment Pending" />}
+                            {option.isTeamMember == -1 && option.isPaid && (
+                              <Chip label="Application Incomplete" />
+                            )}
                           </div>
-                          {!option.isPaid && <Chip label="Payment Pending" />}
-                          {option.isTeamMember == -1 && option.isPaid && (
-                            <Chip label="Application Incomplete" />
-                          )}
-                        </div>
-                      </li>
+                        </li>
                       );
                     }}
                     filterOptions={(options: Attendee[], state) => {
@@ -438,10 +437,20 @@ export default function Confirmation() {
                         {...params}
                         sx={{
                           borderRadius: "12px",
-                          
+                          "& .MuiInputBase-root": {
+                            color: "inherit",
+                          },
+                          "& .MuiInputLabel-root": {
+                            color: "inherit",
+                          },
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "inherit",
+                          },
+
                         }}
+                        className="dark:text-white dark:border-gray-600"
                         label="Add team members"
-                        
+
                       />
                     )}
                   />
@@ -480,7 +489,7 @@ export default function Confirmation() {
                 </div>
               )}
               {isTeamLead && (
-                <p className="mt-2 dark:text-gray-300">
+                <p className="mt-2 text-gray-700 dark:text-gray-300">
                   <b>Note</b>: Team size should be within <b>2-4 only</b>. You
                   can edit your team anytime.
                 </p>
@@ -502,9 +511,9 @@ export default function Confirmation() {
             <div className="px-[40px] md:px-[80px] pb-[40px] bg-white dark:bg-[#141414] rounded-2xl shadow-2xl mx-8 md:mx-[unset]">
               {isCompleteRegistration ? (
                 <>
-                  <EmojiEventsOutlined fontSize="large" className="mt-8 dark:text-white" />
-                  <h2 className="text-2xl font-medium mt-4 dark:text-white">You're in.</h2>
-                  <p className="text-sm mt-4 mb-8 max-w-[420px] dark:text-gray-300">
+                  <EmojiEventsOutlined fontSize="large" className="mt-8 text-gray-900 dark:text-white" />
+                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">You're in.</h2>
+                  <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
                     Excited to host you for TechSprint 2026.
                     <br />
                     Earn badges and have fun before the event.
@@ -516,7 +525,7 @@ export default function Confirmation() {
                     onClick={() => {
                       router.push("/dashboard");
                     }}
-                    className="border-[1.5px] px-8 py-2 rounded-full border-gray-500 dark:border-gray-600 dark:text-white dark:hover:bg-gray-800"
+                    className="border-[1.5px] px-8 py-2 rounded-full border-gray-500 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Go to Dashboard
                   </button>
@@ -524,7 +533,7 @@ export default function Confirmation() {
               ) : (
                 <>
                   <Loader></Loader>
-                  <p className="font-medium dark:text-white">
+                  <p className="font-medium text-gray-900 dark:text-white">
                     Please wait while we process your application.
                   </p>
                 </>

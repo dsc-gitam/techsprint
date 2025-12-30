@@ -49,7 +49,7 @@ export default function Home() {
             <Partners />
             {/* <Streams /> */}
             <img
-                src="/highlights/9.jpg"
+                src="https://res.cloudinary.com/dlhw4q5rh/image/upload/f_auto,q_auto,w_1200/v1767012101/9_nrcnyw.jpg"
                 className="w-full h-[400px] md:h-[700px] object-cover"
                 alt="GDG on Campus GITAM event"
             />

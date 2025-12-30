@@ -29,9 +29,12 @@ export default function Dashboard() {
           break;
         
         case Progress.incompleteRegistration:
-        case Progress.notYetTeamMember:
           // User registered but not in team yet
           router.push("/confirmation");
+          break;
+
+        case Progress.notYetTeamMember:
+          router.push("/profile");
           break;
         
         case Progress.completeRegistration:

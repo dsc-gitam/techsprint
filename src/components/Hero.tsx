@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
@@ -14,6 +13,7 @@ export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
     const [userProgress, setUserProgress] = useState<Progress | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showProfileModal, setShowProfileModal] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function Hero() {
     const getButtonText = () => {
         if (!user) return "Register Now";
         if (loading) return "Loading...";
-        
+
         switch (userProgress) {
             case Progress.noApplication:
                 return "Register Now";
@@ -67,15 +67,15 @@ export default function Hero() {
     };
 
     const getButtonStyle = () => {
-        if (userProgress === Progress.completeRegistration || 
+        if (userProgress === Progress.completeRegistration ||
             userProgress === Progress.completeRegistrationTeamLead) {
             return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-default";
         }
         return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer";
     };
 
-    const isRegistered = userProgress === Progress.completeRegistration || 
-                        userProgress === Progress.completeRegistrationTeamLead;
+    const isRegistered = userProgress === Progress.completeRegistration ||
+        userProgress === Progress.completeRegistrationTeamLead;
 
     return (
         <section className="relative min-h-[calc(100vh-80px)] pb-[36px] flex items-center justify-center overflow-hidden px-4">
@@ -121,8 +121,8 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-                    <button 
-                        onClick={isRegistered ? undefined : handleRegister} 
+                    <button
+                        onClick={isRegistered ? undefined : handleRegister}
                         className={getButtonStyle()}
                         disabled={isRegistered}
                     >
@@ -131,6 +131,9 @@ export default function Hero() {
                     <a href="#about" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                         Learn More
                     </a>
+                    {/* <a href="https://www.google.com/maps/place/I.C.T+BHAVAN/@17.780655,83.3750075,18.16z/data=!4m6!3m5!1s0x3a395b1ce07ef447:0x2d3bc5abd9fa0c49!8m2!3d17.7804343!4d83.3761856!16s%2Fg%2F11cjnnm2kb?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                        View Location
+                    </a> */}
                 </div>
 
             </div>

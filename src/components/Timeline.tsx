@@ -11,7 +11,7 @@ export default function Timeline() {
             date: "Dec 26",
             title: "Pitch Deck Workshop",
             description: "Learn how to craft a winning pitch deck for your project.",
-            completed: false,
+            completed: true,
             color: "var(--google-red)"
         },
         {
