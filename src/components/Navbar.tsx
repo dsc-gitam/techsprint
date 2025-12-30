@@ -7,11 +7,9 @@ import { auth, db } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import ProfileModal from './ProfileModal';
 
 export default function Navbar() {
     const [user, setUser] = useState<User | null>(null);
-    const [showProfileModal, setShowProfileModal] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const router = useRouter();
 
@@ -26,17 +24,7 @@ export default function Navbar() {
         const provider = new GoogleAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            // Check if profile exists
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-
-            if (!docSnap.exists()) {
-                setShowProfileModal(true);
-            } else {
-                router.push('/dashboard');
-            }
+            router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in", error);
         }
@@ -195,15 +183,6 @@ export default function Navbar() {
                     )}
                 </div>
             </nav>
-
-            {user && (
-                <ProfileModal
-                    user={user}
-                    isOpen={showProfileModal}
-                    onClose={() => setShowProfileModal(false)}
-                    onComplete={() => setShowProfileModal(false)}
-                />
-            )}
         </>
     );
 }
