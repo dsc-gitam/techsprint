@@ -22,7 +22,7 @@ export default function Navbar() {
     const handleSignIn = async () => {
         const provider = new GoogleAuthProvider();
         try {
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
             router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in", error);
@@ -182,7 +182,6 @@ export default function Navbar() {
                     )}
                 </div>
             </nav>
-
         </>
     );
 }

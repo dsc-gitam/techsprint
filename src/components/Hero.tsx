@@ -40,7 +40,7 @@ export default function Hero() {
 
         const provider = new GoogleAuthProvider();
         try {
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
             router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in", error);
@@ -137,19 +137,10 @@ export default function Hero() {
                 </div>
 
             </div>
-            <img src="https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/vip/2025/05/google_io_personalized_context.jpg" className="hidden lg:block absolute top-10 right-4 md:right-20 blur-[0.8px] w-24 h-16 md:w-48 md:h-32 object-cover rounded-xl opacity-50 md:opacity-100" />
-            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden lg:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
-            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="hidden lg:block absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
-            <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="hidden lg:block -scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
-
-            {user && (
-                <ProfileModal
-                    user={user}
-                    isOpen={showProfileModal}
-                    onClose={() => setShowProfileModal(false)}
-                    onComplete={() => setShowProfileModal(false)}
-                />
-            )}
+            <img src="https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/vip/2025/05/google_io_personalized_context.jpg" className="absolute top-10 right-4 md:right-20 blur-[0.8px] w-24 h-16 md:w-48 md:h-32 object-cover rounded-xl opacity-50 md:opacity-100" />
+            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PXL_20210518_000223011.max-1200x676.format-webp.webp" className="hidden md:block absolute bottom-42 right-72 blur-lg w-28 h-18 object-cover rounded-xl" />
+            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/210518_1004_3S1A4903_B_1_1.width-1300.jpg" className="absolute top-24 left-56 blur-sm w-36 h-24 object-cover rounded-xl" />
+            <img src="https://www.hindustantimes.com/ht-img/img/2024/05/15/1600x900/Google-AI-Showcase-18_1715737614992_1715737643291.jpg" className="-scale-x-100 absolute bottom-10 left-12 w-72 h-48 object-cover rounded-xl" />
         </section>
     );
 }
