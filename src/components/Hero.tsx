@@ -6,8 +6,8 @@ import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'f
 import { useRouter } from 'next/navigation';
 import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
-import { CalendarMonth, MapOutlined } from '@mui/icons-material';
-import ProfileModal from './ProfileModal';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import MapOutlined from '@mui/icons-material/MapOutlined';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
@@ -92,7 +92,8 @@ export default function Hero() {
                     Build the Future
                     <br />at TechSprint
                 </h1>
-                <p className="my-5 flex flex-wrap gap-y-2 md:justify-start">
+
+                <p className="my-5 flex flex-wrap gap-y-2 md:justify-center text-center justify-center">
                     <span className="mr-4 flex items-center">
                         <span className="mr-1">
                             <CalendarMonth />
@@ -107,12 +108,14 @@ export default function Hero() {
                             href={"https://maps.google.com?q=Chandrahas%20Bhavan,%20Q9JG+5FF,%20RUSHIKONDA,%20GITAM,%20Rushikonda,%20Visakhapatnam,%20Andhra%20Pradesh%20530045&ftid=0x0:0x6c1c27dfb649611a&entry=gps&lucs=,94297699,94275415,94284508,94231188,94280568,47071704,94218641,94282134,94286869&g_st=ic"}
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="text-black"
                             className="text-black underline-offset-2 dark:text-white"
                         >
                             GITAM (Deemed to be University)
                         </a>
                     </span>
                 </p>
+
                 <p className="mt-3 md:mt-4 text-base sm:text-lg md:text-xl lg:text-2xl text-black/80 dark:text-white/80 max-w-3xl mx-auto mb-6 md:mb-10 px-4">
                     Join us for a 24-hour innovation marathon. Create, collaborate, and compete with the best minds using Google's latest technologies.
                 </p>

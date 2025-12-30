@@ -16,6 +16,7 @@ import {
   getCountFromServer,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   arrayUnion,
   where,
@@ -24,6 +25,7 @@ import {
 import { ArrowForwardIos, EmojiEventsOutlined, ContentCopy, CheckCircle } from "@mui/icons-material";
 import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
+import { useSearchParams } from "next/navigation";
 
 const MyForm: React.FC = () => {
   const MAX_CODE_GENERATION_ATTEMPTS = 10;
@@ -90,9 +92,6 @@ const MyForm: React.FC = () => {
   const [isTeamLead, setIsTeamLead] = useState<boolean | undefined>(undefined);
   const [referralCode, setReferralCode] = useState("");
   const [teamName, setTeamName] = useState("");
-  const [generatedReferralCode, setGeneratedReferralCode] = useState("");
-  const [teamCreated, setTeamCreated] = useState(false);
-  const [copied, setCopied] = useState(false);
   const router = useRouter();
   
   // Check for referral code in URL
@@ -101,6 +100,15 @@ const MyForm: React.FC = () => {
     if (urlReferralCode) {
       setReferralCode(urlReferralCode.toUpperCase());
       setIsTeamLead(false); // Automatically set as team member
+    }
+  }, [searchParams]);
+
+  // Auto-fill referral code from URL parameter
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl) {
+      setReferralCode(codeFromUrl.toUpperCase());
+      setIsTeamLead(false); // Automatically select "No, I'll join a team"
     }
   }, [searchParams]);
 
@@ -178,6 +186,49 @@ const MyForm: React.FC = () => {
     }
 
     let teamInfo = null;
+    let generatedCode = "";
+
+    // If team lead, create the team
+    if (isTeamLead && teamName) {
+      try {
+        const teamsRef = collection(db, "teams");
+        const teamQuery = query(teamsRef, where("teamName", "==", teamName));
+        const count = (await getCountFromServer(teamQuery)).data().count;
+
+        if (count > 0) {
+          alert("Team name already exists. Please choose a different name.");
+          setLoadingState(false);
+          return;
+        }
+
+        // Generate referral code
+        generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        // Get team number
+        const teamNumber = (await getCountFromServer(query(teamsRef))).data().count + 1;
+
+        // Create team document
+        await setDoc(doc(db, "teams", teamName), {
+          teamName: teamName,
+          teamNumber: teamNumber,
+          referralCode: generatedCode,
+          leaderId: user.uid,
+          participants: [user.uid],
+          createdAt: new Date().toISOString(),
+        });
+
+        teamInfo = {
+          teamName: teamName,
+          isTeamMember: 1,
+          referralCode: generatedCode,
+        };
+      } catch (error) {
+        console.error("Error creating team:", error);
+        alert("Failed to create team. Please try again.");
+        setLoadingState(false);
+        return;
+      }
+    }
 
     // If team lead, create team first
     if (isTeamLead) {
@@ -308,14 +359,13 @@ const MyForm: React.FC = () => {
       ["teamName"]: teamInfo?.teamName ?? "",
     });
     
-    // If team was just created, show the success modal with referral code
-    if (teamCreated) {
-      setLoadingState(false);
-      // The UI will show the team creation success modal
-    } else {
-      // Redirect to dashboard for non-team-leads or members who joined
-      window.location.href = "/dashboard";
+    // If team lead, show referral code before redirecting
+    if (isTeamLead && generatedCode) {
+      alert(`Team created successfully! Your referral code is: ${generatedCode}\n\nShare this code with your team members.`);
     }
+    
+    // Redirect to dashboard
+    window.location.href = "/dashboard";
   };
 
   useEffect(() => {
@@ -337,7 +387,7 @@ const MyForm: React.FC = () => {
           <div className="md:grow md:pt-[30px] md:pl-[40px] pt-[20px] pb-[40px] md:pb-[unset]">
             <h1 className="text-3xl font-medium text-gray-900 dark:text-white">Register for TechSprint 2026</h1>
 
-            <p className="mt-3 text-lg text-gray-700 dark:text-gray-300">24-25th March 2026</p>
+            <p className="opacity-60 mt-3 text-lg text-gray-700 dark:text-gray-300">3-4th January 2026</p>
 
             <p className="text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
@@ -353,9 +403,7 @@ const MyForm: React.FC = () => {
             Visakhapatnam so that you don&apos;t miss out on the fun and learning.
             You can also use your profile to earn badges during the conference.
           </p>
-          <p className="font-medium text-gray-900 dark:text-white">
-            Note: This is a paid event, an offline <b>ticket costs ₹200</b>.
-          </p>
+
         </div>
         <form
           onSubmit={handleSubmit}
@@ -410,22 +458,7 @@ const MyForm: React.FC = () => {
               </select>
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8 gap-y-4 md:gap-y-[unset">
-              <div className="grow md:w-1/2">
-                <input
-                  type="url"
-                  id="socialProfile"
-                  name="socialProfile"
-                  placeholder="Website (optional)"
-                  value={formState.socialProfile}
-                  onChange={handleChange}
-                  className="register-input w-full text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                />
-                <p className="mt-2 md:mt-4 max-w-[440px] text-[12px] text-gray-700 dark:text-gray-400">
-                  Share us a link where we can get to know more about you. It
-                  can be your website, social media, or literally anything you
-                  want us to know
-                </p>
-              </div>
+              
               <div className="md:w-1/2 ">
                 <select
                   className="w-full register-input h-max text-gray-900 dark:text-white"
@@ -591,7 +624,10 @@ const MyForm: React.FC = () => {
                     type="radio"
                     name="isLead"
                     checked={isTeamLead === false}
-                    onChange={() => setIsTeamLead(false)}
+                    onChange={() => {
+                      setIsTeamLead(false);
+                      setTeamName("");
+                    }}
                     required
                     disabled={!!searchParams.get("referral")}
                     className="w-4 h-4"
@@ -600,11 +636,10 @@ const MyForm: React.FC = () => {
                 </label>
               </div>
               
-              {/* Team Creation Form - Inline */}
               {isTeamLead === true && (
-                <div className="mt-4 p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg">
+                <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    Team Name
+                    Team Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -614,21 +649,14 @@ const MyForm: React.FC = () => {
                     required={isTeamLead === true}
                     minLength={3}
                     maxLength={50}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="register-input w-full"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Choose a unique name for your team (3-50 characters)
                   </p>
-                  <div className="mt-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                    <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">Team Size: 2-4 members</p>
-                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                      After registration, you&apos;ll get a shareable link to invite 1-3 team members.
-                    </p>
-                  </div>
                 </div>
               )}
               
-              {/* Referral Code Input for Members */}
               {isTeamLead === false && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
