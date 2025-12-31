@@ -114,8 +114,8 @@ export default function TeamManager({ userUid, teamId, onTeamUpdate }: TeamManag
             const teamDoc = querySnapshot.docs[0];
             const teamData = teamDoc.data();
 
-            if (teamData.members.length >= 4) {
-                setError("Team is full (max 4 members).");
+            if (teamData.members.length >= 5) {
+                setError("Team is full (max 5 members).");
                 setLoading(false);
                 return;
             }
@@ -152,7 +152,7 @@ export default function TeamManager({ userUid, teamId, onTeamUpdate }: TeamManag
                         <p className="text-gray-500">Team Code: <span className="font-mono font-bold text-[var(--google-blue)] bg-blue-50 px-2 py-1 rounded">{team.code}</span></p>
                     </div>
                     <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {members.length} / 4 Members
+                        {members.length} / 5 Members
                     </div>
                 </div>
 

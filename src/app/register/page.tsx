@@ -183,9 +183,9 @@ const MyForm: React.FC = () => {
         const teamDoc = teamSnapshot.docs[0];
         const teamData = teamDoc.data();
         
-        // Check if team is full (max 4 members)
-        if (teamData.participants && teamData.participants.length >= 4) {
-          alert("This team is full (maximum 4 members). Please use a different referral code.");
+        // Check if team is full (max 5 members)
+        if (teamData.participants && teamData.participants.length >= 5) {
+          alert("This team is full (maximum 5 members). Please use a different referral code.");
           setLoadingState(false);
           return;
         }

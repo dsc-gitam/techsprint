@@ -308,7 +308,7 @@ export default function Confirmation() {
                         alert("This team member is already added");
                         return;
                       }
-                      if (team.length >= 4) {
+                      if (team.length >= 5) {
                         setTeamSearchAutocomplete(null);
                         alert("Team size should be within 2-4 only.");
                         return;
