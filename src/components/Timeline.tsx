@@ -15,7 +15,7 @@ export default function Timeline() {
             color: "var(--google-red)"
         },
         {
-            date: "Dec 31",
+            date: "Jan 1",
             title: "Registration Deadline",
             description: "Last day to register, form teams, and submit pitch decks.",
             completed: false,
