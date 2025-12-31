@@ -8,7 +8,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import addData from "@/utils/addData";
 import Loader from "@/components/LoadingAnimation/page";
 import { auth, db } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   collection,
   doc,
@@ -184,7 +184,7 @@ const MyForm: React.FC = () => {
 
         const teamDoc = teamSnapshot.docs[0];
         const teamData = teamDoc.data();
-        
+
         // Check if team is full (max 5 members)
         if (teamData.participants && teamData.participants.length >= 5) {
           alert("This team is full (maximum 5 members). Please use a different referral code.");
@@ -227,12 +227,12 @@ const MyForm: React.FC = () => {
       ["payment_status"]: "captured",
       ["teamName"]: teamInfo?.teamName || "",
     });
-    
+
     // If team lead, show referral code before redirecting
     if (isTeamLead && generatedCode) {
       alert(`Team created successfully! Your referral code is: ${generatedCode}\n\nShare this code with your team members.`);
     }
-    
+
     // Redirect to dashboard
     window.location.href = "/dashboard";
   };
@@ -263,7 +263,7 @@ const MyForm: React.FC = () => {
           <img
             src="gdsc_sc.webp"
             className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
-          /> 
+          />
         </div>
         <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto bg-white dark:bg-[#141414]">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a developer profile</h3>
@@ -326,7 +326,7 @@ const MyForm: React.FC = () => {
               </select>
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8 gap-y-4 md:gap-y-[unset">
-              
+
               <div className="md:w-1/2 ">
                 <select
                   className="w-full register-input h-max"
@@ -501,7 +501,7 @@ const MyForm: React.FC = () => {
                   <span className="text-gray-900 dark:text-gray-300">No, I'll join a team</span>
                 </label>
               </div>
-              
+
               {isTeamLead === true && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
@@ -522,7 +522,7 @@ const MyForm: React.FC = () => {
                   </p>
                 </div>
               )}
-              
+
               {isTeamLead === false && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
