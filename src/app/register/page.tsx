@@ -20,12 +20,11 @@ import {
   updateDoc,
   arrayUnion,
   where,
-  setDoc,
 } from "firebase/firestore";
 import { ArrowForwardIos, EmojiEventsOutlined, ContentCopy, CheckCircle } from "@mui/icons-material";
 import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
-import { useSearchParams } from "next/navigation";
+
 
 const MyForm: React.FC = () => {
   const MAX_CODE_GENERATION_ATTEMPTS = 10;
@@ -92,8 +91,11 @@ const MyForm: React.FC = () => {
   const [isTeamLead, setIsTeamLead] = useState<boolean | undefined>(undefined);
   const [referralCode, setReferralCode] = useState("");
   const [teamName, setTeamName] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [generatedReferralCode, setGeneratedReferralCode] = useState("");
+  const [teamCreated, setTeamCreated] = useState(false);
   const router = useRouter();
-  
+
   // Check for referral code in URL
   useEffect(() => {
     const urlReferralCode = searchParams.get("referral");
@@ -148,7 +150,7 @@ const MyForm: React.FC = () => {
   const shareReferralLink = () => {
     const shareUrl = `${window.location.origin}/register?referral=${generatedReferralCode}`;
     const shareText = `Join my team "${teamName}" for TechSprint 2026!\n\nClick this link to register and auto-join: ${shareUrl}`;
-    
+
     if (navigator.share) {
       navigator.share({
         title: "Join my TechSprint team!",
@@ -161,7 +163,7 @@ const MyForm: React.FC = () => {
       copyToClipboard(shareUrl);
     }
   };
-  
+
   const getReferralUrl = () => {
     if (typeof window !== 'undefined') {
       return `${window.location.origin}/register?referral=${generatedReferralCode}`;
@@ -254,7 +256,7 @@ const MyForm: React.FC = () => {
         let code = generateReferralCode();
         let codeExists = true;
         let attempts = 0;
-        
+
         while (codeExists && attempts < MAX_CODE_GENERATION_ATTEMPTS) {
           const codeQuery = query(teamsRef, where("referralCode", "==", code));
           const codeCount = (await getCountFromServer(codeQuery)).data().count;
@@ -315,7 +317,7 @@ const MyForm: React.FC = () => {
 
         const teamDoc = teamSnapshot.docs[0];
         const teamData = teamDoc.data();
-        
+
         // Check if team is full (max 5 members)
         if (teamData.participants && teamData.participants.length >= 5) {
           alert("This team is full (maximum 5 members). Please use a different referral code.");
@@ -358,12 +360,12 @@ const MyForm: React.FC = () => {
       ["payment_status"]: "captured",
       ["teamName"]: teamInfo?.teamName ?? "",
     });
-    
+
     // If team lead, show referral code before redirecting
     if (isTeamLead && generatedCode) {
       alert(`Team created successfully! Your referral code is: ${generatedCode}\n\nShare this code with your team members.`);
     }
-    
+
     // Redirect to dashboard
     window.location.href = "/dashboard";
   };
@@ -394,7 +396,7 @@ const MyForm: React.FC = () => {
           <img
             src="gdsc_sc.webp"
             className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
-          /> 
+          />
         </div>
         <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto bg-white dark:bg-[#141414]">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a developer profile</h3>
@@ -458,7 +460,7 @@ const MyForm: React.FC = () => {
               </select>
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8 gap-y-4 md:gap-y-[unset">
-              
+
               <div className="md:w-1/2 ">
                 <select
                   className="w-full register-input h-max text-gray-900 dark:text-white"
@@ -635,7 +637,7 @@ const MyForm: React.FC = () => {
                   <span className="text-gray-900 dark:text-gray-300">No, I&apos;ll join a team</span>
                 </label>
               </div>
-              
+
               {isTeamLead === true && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
@@ -656,7 +658,7 @@ const MyForm: React.FC = () => {
                   </p>
                 </div>
               )}
-              
+
               {isTeamLead === false && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
@@ -706,7 +708,7 @@ const MyForm: React.FC = () => {
             </button>
           </div>
         </form>
-        
+
         {/* Team Creation Success Modal */}
         {teamCreated && !loading && (
           <div className="absolute top-0 w-full h-full flex items-center justify-center z-20 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] p-4">
@@ -714,7 +716,7 @@ const MyForm: React.FC = () => {
               <CheckCircle className="text-green-500 mx-auto mb-4" style={{ fontSize: 64 }} />
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Team Created Successfully!</h1>
               <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">Team: {teamName}</p>
-              
+
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Your Referral Link</p>
                 <div className="flex items-center justify-center gap-3 mb-3">
@@ -762,7 +764,7 @@ const MyForm: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {loading && (
           <div className="absolute top-0 w-full h-full flex items-center justify-center z-10 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] text-center">
             <div className="px-[40px] md:px-[80px] pb-[40px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl mx-8 md:mx-[unset]">

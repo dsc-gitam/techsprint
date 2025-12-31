@@ -39,7 +39,7 @@
             "designation": "Front-end Engineer"
         },
         "community_title": "GDGoC GITAM Core Team",
-        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991615/Varshita_Palleti_xl2pyd.jpg",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1767189232/Varshita_fqkkzb.jpg",
         "bio": "",
         "social": {
             "linkedin": "",
@@ -55,7 +55,7 @@
             "designation": "Backend Engineer"
         },
         "community_title": "GDGoC GITAM Core Team",
-        "image": "https://github.com/U-Jayadhar.png",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1767189233/Jayadhar_Ummadisingu_gts2vw.jpg",
         "bio": "",
         "social": {
             "linkedin": "",
@@ -74,14 +74,14 @@
         "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991613/Yashwanth_Kamireddi_os8fu1.jpg",
         "bio": "",
         "social": {
-            "linkedin": "",
+            "linkedin": "https://www.linkedin.com/in/yashwanthkamireddi/?originalSubdomain=in",
             "twitter": "",
-            "web": ""
+            "web": "https://www.yashwanthkamireddi.dev/"
         }
     },
     {
         "id": "114",
-        "name": "Aftab Ali",
+        "name": "Aafthab Ali",
         "company": {
             "name": "",
             "designation": ""
@@ -280,6 +280,54 @@
         },
         "community_title": "GDGoC GITAM Team",
         "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1766991614/Satwika_Rejeti_rnn0fh.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "127",
+        "name": "Aashita",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1767021669/Aashita_fq7qbd.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "128",
+        "name": "Srinivasam Konchada",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1767021669/Srinivasam_Konchada_rfp5ku.jpg",
+        "bio": "",
+        "social": {
+            "linkedin": "",
+            "twitter": "",
+            "web": ""
+        }
+    },
+    {
+        "id": "129",
+        "name": "Dheeraj",
+        "company": {
+            "name": "",
+            "designation": ""
+        },
+        "community_title": "GDGoC GITAM Team",
+        "image": "https://res.cloudinary.com/dlhw4q5rh/image/upload/c_fill,w_200,h_200,g_face,f_auto,q_auto/v1767189232/Dheeraj_epn8gi.jpg",
         "bio": "",
         "social": {
             "linkedin": "",

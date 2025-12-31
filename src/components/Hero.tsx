@@ -108,8 +108,7 @@ export default function Hero() {
                             href={"https://maps.google.com?q=Chandrahas%20Bhavan,%20Q9JG+5FF,%20RUSHIKONDA,%20GITAM,%20Rushikonda,%20Visakhapatnam,%20Andhra%20Pradesh%20530045&ftid=0x0:0x6c1c27dfb649611a&entry=gps&lucs=,94297699,94275415,94284508,94231188,94280568,47071704,94218641,94282134,94286869&g_st=ic"}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black"
-                            className="text-black underline-offset-2 dark:text-white"
+                            className="text-black dark:text-white underline-offset-2 hover:underline"
                         >
                             GITAM (Deemed to be University)
                         </a>
