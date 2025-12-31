@@ -1,5 +1,5 @@
 "use client";
-import { getDoc, doc, query, collection, where, getDocs, documentId, updateDoc } from "firebase/firestore";
+import { getDoc, doc, query, collection, where, getDocs, documentId, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuthContext } from "@/context/AuthContext";
 import QRCode from "react-qr-code";
@@ -34,6 +34,8 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [isEditingProblem, setIsEditingProblem] = useState(false);
   const [hasProblemStatement, setHasProblemStatement] = useState(false);
+  const [joinTeamCode, setJoinTeamCode] = useState("");
+  const [joining, setJoining] = useState(false);
   
   // Check if editing is allowed (until Jan 1st, 2026)
   const isEditingAllowed = new Date() < new Date('2026-01-01T00:00:00');
@@ -147,6 +149,82 @@ export default function Profile() {
       setSaving(false);
     }
   };
+
+  const handleJoinTeam = async () => {
+    if (!user?.uid || !joinTeamCode) return;
+    
+    setJoining(true);
+    try {
+      const teamsRef = collection(db, "teams");
+      const teamQuery = query(teamsRef, where("referralCode", "==", joinTeamCode.toUpperCase()));
+      const teamSnapshot = await getDocs(teamQuery);
+
+      if (teamSnapshot.empty) {
+        alert("Invalid referral code. Please check and try again.");
+        setJoining(false);
+        return;
+      }
+
+      const teamDoc = teamSnapshot.docs[0];
+      const teamData = teamDoc.data();
+      
+      if (teamData.participants && teamData.participants.length >= 5) {
+        alert("This team is full (maximum 5 members).");
+        setJoining(false);
+        return;
+      }
+
+      if (teamData.participants && teamData.participants.includes(user.uid)) {
+        alert("You are already in this team!");
+        setJoining(false);
+        return;
+      }
+
+      await updateDoc(doc(db, "teams", teamDoc.id), {
+        participants: arrayUnion(user.uid),
+      });
+
+      await updateDoc(doc(db, "registrations", user.uid), {
+        isTeamMember: 1,
+        teamName: teamData.teamName,
+      });
+
+      alert("Successfully joined team!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error joining team:", error);
+      alert("Failed to join team. Please try again.");
+    } finally {
+      setJoining(false);
+    }
+  };
+
+  const handleLeaveTeam = async () => {
+    if (!user?.uid || !teamData?.teamName) return;
+    
+    if (!confirm("Are you sure you want to leave this team?")) return;
+
+    setJoining(true);
+    try {
+      await updateDoc(doc(db, "teams", teamData.teamName), {
+        participants: arrayRemove(user.uid),
+      });
+
+      await updateDoc(doc(db, "registrations", user.uid), {
+        isTeamMember: 0,
+        teamName: "",
+      });
+
+      alert("Successfully left the team.");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error leaving team:", error);
+      alert("Failed to leave team. Please try again.");
+    } finally {
+      setJoining(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -251,7 +329,7 @@ export default function Profile() {
             <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Problem Statement</h2>
-                {hasProblemStatement && !isEditingProblem && isEditingAllowed && (
+                {hasProblemStatement && !isEditingProblem && isEditingAllowed && userData?.isTeamLead === 1 && (
                   <button
                     onClick={() => setIsEditingProblem(true)}
                     className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
@@ -261,7 +339,7 @@ export default function Profile() {
                 )}
               </div>
               
-              {!hasProblemStatement || isEditingProblem ? (
+              {userData?.isTeamLead === 1 && (!hasProblemStatement || isEditingProblem) ? (
                 // Edit Mode
                 <div className="space-y-4">
                   <div>
@@ -368,10 +446,46 @@ export default function Profile() {
                       </p>
                     </div>
                   )}
+                  
+                  {userData?.isTeamLead !== 1 && userData?.isTeamMember === 1 && (
+                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-sm text-blue-800 dark:text-blue-200">
+                        ℹ️ Only the Team Lead can edit the problem statement.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
             
+            {/* Join Team Section */}
+            {userData?.isTeamMember !== 1 && (
+              <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Join a Team</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                      Enter Referral Code
+                    </label>
+                    <input
+                      type="text"
+                      value={joinTeamCode}
+                      onChange={(e) => setJoinTeamCode(e.target.value)}
+                      placeholder="Enter 6-digit code"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  <button
+                    onClick={handleJoinTeam}
+                    disabled={joining || !joinTeamCode}
+                    className="w-full py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {joining ? "Joining..." : "Join Team"}
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Team View Section */}
             {userData?.isTeamMember === 1 && teamData && (
               <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
@@ -424,6 +538,16 @@ export default function Profile() {
                     className="w-full mt-4 py-2 text-blue-500 dark:text-blue-400 rounded-lg border border-gray-300 dark:border-gray-600 font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Edit Team
+                  </button>
+                )}
+                
+                {userData?.isTeamLead !== 1 && (
+                  <button
+                    onClick={handleLeaveTeam}
+                    disabled={joining}
+                    className="w-full mt-4 py-2 text-red-500 dark:text-red-400 rounded-lg border border-red-300 dark:border-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  >
+                    {joining ? "Leaving..." : "Leave Team"}
                   </button>
                 )}
               </div>

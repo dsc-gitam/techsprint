@@ -20,12 +20,10 @@ import {
   updateDoc,
   arrayUnion,
   where,
-  setDoc,
 } from "firebase/firestore";
 import { ArrowForwardIos, EmojiEventsOutlined, ContentCopy, CheckCircle } from "@mui/icons-material";
 import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
-import { useSearchParams } from "next/navigation";
 
 const MyForm: React.FC = () => {
   const MAX_CODE_GENERATION_ATTEMPTS = 10;
@@ -92,6 +90,9 @@ const MyForm: React.FC = () => {
   const [isTeamLead, setIsTeamLead] = useState<boolean | undefined>(undefined);
   const [referralCode, setReferralCode] = useState("");
   const [teamName, setTeamName] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [generatedReferralCode, setGeneratedReferralCode] = useState("");
+  const [teamCreated, setTeamCreated] = useState(false);
   const router = useRouter();
   
   // Check for referral code in URL
