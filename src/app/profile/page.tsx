@@ -71,6 +71,28 @@ export default function Profile() {
         if (teamDoc.exists()) {
           const teamInfo = teamDoc.data();
           setTeamData(teamInfo);
+
+          // Fetch problem statement for team members
+          if (!response?.problemStatement) {
+            if (teamInfo.problemStatement) {
+              setProblemStatement(teamInfo.problemStatement);
+              setSolution(teamInfo.solution || "");
+              setTechStack(teamInfo.techStack || "");
+              setHasProblemStatement(true);
+            } else if (teamInfo.leaderId) {
+              // Fallback: Fetch from leader's profile if not on team doc
+              const leaderDoc = await getDoc(doc(db, "registrations", teamInfo.leaderId));
+              if (leaderDoc.exists()) {
+                const leaderData = leaderDoc.data();
+                if (leaderData.problemStatement) {
+                  setProblemStatement(leaderData.problemStatement);
+                  setSolution(leaderData.solution || "");
+                  setTechStack(leaderData.techStack || "");
+                  setHasProblemStatement(true);
+                }
+              }
+            }
+          }
           
           // Fetch all team members
           const membersData = await Promise.all(
@@ -134,11 +156,22 @@ export default function Profile() {
     
     setSaving(true);
     try {
+      // Save to user profile (legacy support)
       await updateDoc(doc(db, "registrations", user.uid), {
         problemStatement,
         solution,
         techStack,
       });
+
+      // Save to team document (so all members can see it)
+      if (userData?.teamName) {
+        await updateDoc(doc(db, "teams", userData.teamName), {
+          problemStatement,
+          solution,
+          techStack,
+        });
+      }
+
       setHasProblemStatement(true);
       setIsEditingProblem(false);
       alert("Problem statement saved successfully!");
