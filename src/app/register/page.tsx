@@ -21,12 +21,11 @@ import {
   arrayUnion,
   where,
 } from "firebase/firestore";
-import { ArrowForwardIos, EmojiEventsOutlined, ContentCopy, CheckCircle } from "@mui/icons-material";
+import { ArrowForwardIos, EmojiEventsOutlined } from "@mui/icons-material";
 import GetUserProgress from "@/utils/getUserProgress";
 import Progress from "@/utils/progress";
 
 const MyForm: React.FC = () => {
-  const MAX_CODE_GENERATION_ATTEMPTS = 10;
   const user = useAuthContext();
   const searchParams = useSearchParams();
   const [loading, setLoadingState] = useState(true);
@@ -48,40 +47,27 @@ const MyForm: React.FC = () => {
         setPopUp(false);
       }
       if (response === Progress.paymentPending) {
-        // Old user migration: Payment is now skipped. Auto-capture payment and redirect.
-        // We also set isTeamMember to 0 (if it was -1) to ensure they are treated as fully registered.
-        updateDoc(doc(db, "registrations", user.uid), {
-          payment_status: "captured",
-          isTeamMember: 0, // Ensure they are not stuck in "notYetTeamMember"
-        }).then(() => {
-          window.location.href = "/dashboard";
-        });
+        // Payment flow disabled - redirect to confirmation
+        window.location.href = "/confirmation";
         return;
       }
       if (response === Progress.incompleteRegistration) {
-        // If registration is incomplete (missing fields), show the form to let them finish.
-        setLoadingState(false);
-        setRegistrationStatus(false);
-        setPopUp(false);
+        window.location.href = "/confirmation";
         return;
       }
       if (response === Progress.notYetTeamMember) {
-        // Old user migration: User registered but was in "confirmation pending" state (-1).
-        // Update to 0 (Registered, no team) and redirect.
-        updateDoc(doc(db, "registrations", user.uid), {
-          isTeamMember: 0,
-        }).then(() => {
-          window.location.href = "/dashboard";
-        });
-        return;
+        setLoadingState(true);
+        setRegistrationStatus(true);
+        setPopUp(false);
       }
       if (
         response === Progress.completeRegistration ||
         response === Progress.completeRegistrationTeamLead
       ) {
-        // User is fully registered. Redirect to dashboard.
-        window.location.href = "/dashboard";
-        return;
+        setLoadingState(true);
+        setRegistrationStatus(true);
+        setIsCompleteRegistration(true);
+        setPopUp(false);
       }
     });
   }, [user]);
@@ -94,15 +80,6 @@ const MyForm: React.FC = () => {
   const [generatedReferralCode, setGeneratedReferralCode] = useState("");
   const [teamCreated, setTeamCreated] = useState(false);
   const router = useRouter();
-  
-  // Check for referral code in URL
-  useEffect(() => {
-    const urlReferralCode = searchParams.get("referral");
-    if (urlReferralCode) {
-      setReferralCode(urlReferralCode.toUpperCase());
-      setIsTeamLead(false); // Automatically set as team member
-    }
-  }, [searchParams]);
 
   // Auto-fill referral code from URL parameter
   useEffect(() => {
@@ -129,45 +106,6 @@ const MyForm: React.FC = () => {
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const generateReferralCode = () => {
-    let code = "";
-    // Ensure we always generate at least 6 characters before slicing
-    while (code.length < 6) {
-      code += Math.random().toString(36).substring(2);
-    }
-    return code.substring(0, 6).toUpperCase();
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shareReferralLink = () => {
-    const shareUrl = `${window.location.origin}/register?referral=${generatedReferralCode}`;
-    const shareText = `Join my team "${teamName}" for TechSprint 2026!\n\nClick this link to register and auto-join: ${shareUrl}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: "Join my TechSprint team!",
-        text: shareText,
-        url: shareUrl,
-      }).catch(() => {
-        copyToClipboard(shareUrl);
-      });
-    } else {
-      copyToClipboard(shareUrl);
-    }
-  };
-  
-  const getReferralUrl = () => {
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/register?referral=${generatedReferralCode}`;
-    }
-    return '';
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -231,78 +169,8 @@ const MyForm: React.FC = () => {
       }
     }
 
-    // If team lead, create team first
-    if (isTeamLead) {
-      if (!teamName.trim()) {
-        alert("Please enter a team name");
-        setLoadingState(false);
-        return;
-      }
-
-      try {
-        // Check if team name is unique
-        const teamsRef = collection(db, "teams");
-        const teamQuery = query(teamsRef, where("teamName", "==", teamName));
-        const count = (await getCountFromServer(teamQuery)).data().count;
-
-        if (count > 0) {
-          alert("Team name already exists. Please choose a different name.");
-          setLoadingState(false);
-          return;
-        }
-
-        // Generate referral code with uniqueness check
-        let code = generateReferralCode();
-        let codeExists = true;
-        let attempts = 0;
-        
-        while (codeExists && attempts < MAX_CODE_GENERATION_ATTEMPTS) {
-          const codeQuery = query(teamsRef, where("referralCode", "==", code));
-          const codeCount = (await getCountFromServer(codeQuery)).data().count;
-          if (codeCount === 0) {
-            codeExists = false;
-          } else {
-            code = generateReferralCode();
-            attempts++;
-          }
-        }
-
-        if (codeExists) {
-          alert("Failed to generate unique referral code. Please try again.");
-          setLoadingState(false);
-          return;
-        }
-
-        setGeneratedReferralCode(code);
-
-        // Get team number
-        const teamNumber = (await getCountFromServer(query(teamsRef))).data().count + 1;
-
-        // Create team document
-        await setDoc(doc(db, "teams", teamName), {
-          teamName: teamName,
-          teamNumber: teamNumber,
-          referralCode: code,
-          leaderId: user.uid,
-          participants: [user.uid],
-          createdAt: new Date().toISOString(),
-        });
-
-        teamInfo = {
-          teamName: teamName,
-          isTeamMember: 1,
-        };
-
-        setTeamCreated(true);
-      } catch (error) {
-        console.error("Error creating team:", error);
-        alert("Failed to create team. Please try again.");
-        setLoadingState(false);
-        return;
-      }
-    }
     // If member provided a referral code, validate and join team
-    else if (!isTeamLead && referralCode) {
+    if (!isTeamLead && referralCode) {
       try {
         const teamsRef = collection(db, "teams");
         const teamQuery = query(teamsRef, where("referralCode", "==", referralCode.toUpperCase()));
@@ -316,7 +184,7 @@ const MyForm: React.FC = () => {
 
         const teamDoc = teamSnapshot.docs[0];
         const teamData = teamDoc.data();
-        
+
         // Check if team is full (max 5 members)
         if (teamData.participants && teamData.participants.length >= 5) {
           alert("This team is full (maximum 5 members). Please use a different referral code.");
@@ -357,14 +225,14 @@ const MyForm: React.FC = () => {
       ["coc"]: 1,
       ["terms"]: 1,
       ["payment_status"]: "captured",
-      ["teamName"]: teamInfo?.teamName ?? "",
+      ["teamName"]: teamInfo?.teamName || "",
     });
-    
+
     // If team lead, show referral code before redirecting
     if (isTeamLead && generatedCode) {
       alert(`Team created successfully! Your referral code is: ${generatedCode}\n\nShare this code with your team members.`);
     }
-    
+
     // Redirect to dashboard
     window.location.href = "/dashboard";
   };
@@ -390,18 +258,18 @@ const MyForm: React.FC = () => {
 
             <p className="opacity-60 mt-3 text-lg text-gray-700 dark:text-gray-300">3-4th January 2026</p>
 
-            <p className="text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
+            <p className="opacity-60 text-gray-700 dark:text-gray-300">Gandhi Institute of Technology and Management, Visakhapatnam</p>
           </div>
           <img
             src="gdsc_sc.webp"
             className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
-          /> 
+          />
         </div>
         <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto bg-white dark:bg-[#141414]">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a developer profile</h3>
           <p className="mt-2 max-w-[480px] md:text-base text-sm text-gray-700 dark:text-gray-300">
             Create your developer profile to apply for a ticket to Google TechSprint 2026
-            Visakhapatnam so that you don&apos;t miss out on the fun and learning.
+            Visakhapatnam so that you don't miss out on the fun and learning.
             You can also use your profile to earn badges during the conference.
           </p>
 
@@ -420,7 +288,7 @@ const MyForm: React.FC = () => {
                 placeholder="First Name"
                 value={formState.firstName}
                 onChange={handleChange}
-                className="register-input grow text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                className="register-input grow"
               />
 
               <input
@@ -431,7 +299,7 @@ const MyForm: React.FC = () => {
                 placeholder="Last Name"
                 value={formState.lastName}
                 onChange={handleChange}
-                className="register-input grow text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                className="register-input grow"
               />
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8  gap-y-4 md:gap-y-[unset]">
@@ -440,15 +308,14 @@ const MyForm: React.FC = () => {
                 id="email"
                 name="email"
                 required
-                readOnly
                 placeholder="Email Address"
                 value={formState.email}
                 onChange={handleChange}
-                className="register-input grow md:w-1/2 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 opacity-70 cursor-not-allowed bg-gray-100 dark:bg-gray-800"
+                className="register-input grow md:w-1/2 "
               />
               <select
                 name="gender"
-                className="register-input grow md:w-1/2 text-gray-900 dark:text-white"
+                className="register-input grow md:w-1/2 "
                 onChange={handleSelectChange}
                 required
               >
@@ -459,10 +326,10 @@ const MyForm: React.FC = () => {
               </select>
             </div>
             <div className="flex  flex-col md:flex-row md:space-x-8 gap-y-4 md:gap-y-[unset">
-              
+
               <div className="md:w-1/2 ">
                 <select
-                  className="w-full register-input h-max text-gray-900 dark:text-white"
+                  className="w-full register-input h-max"
                   required
                   onChange={handleSelectChange}
                   name="university"
@@ -475,7 +342,7 @@ const MyForm: React.FC = () => {
                     Gayatri Vidya Parishad College of Engineering for Women
                   </option>
                   <option className="dark:bg-black">Andhra University College of Engineering</option>
-                  <option className="dark:bg-black">Vignan&apos;s Institute of Information Technology</option>
+                  <option className="dark:bg-black">Vignan's Institute of Information Technology</option>
                   <option className="dark:bg-black">Vignan Institute of Engineering Women</option>
                   <option className="dark:bg-black">Raghu Engineering College</option>
                   <option className="dark:bg-black">GMR Institute of Technology</option>
@@ -503,7 +370,7 @@ const MyForm: React.FC = () => {
                     placeholder="Institution Name"
                     value={formState.otherUniversity}
                     onChange={handleChange}
-                    className="register-input grow mt-4 w-full text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    className="register-input grow mt-4 w-full"
                   />
                 )}
               </div>
@@ -602,7 +469,7 @@ const MyForm: React.FC = () => {
               <p className="font-bold text-lg text-gray-900 dark:text-white mb-3">Team Registration</p>
               <p className="font-medium text-gray-900 dark:text-white mb-2">Are you a team lead?</p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Team leads create teams and get a referral link. Team members use the link to join.
+                Team leads create teams and get a referral code. Team members use the code to join.
               </p>
               <div className="flex items-center space-x-4 mb-4">
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -615,10 +482,9 @@ const MyForm: React.FC = () => {
                       setReferralCode("");
                     }}
                     required
-                    disabled={!!searchParams.get("referral")}
                     className="w-4 h-4"
                   />
-                  <span className="text-gray-900 dark:text-gray-300">Yes, I&apos;ll create a team</span>
+                  <span className="text-gray-900 dark:text-gray-300">Yes, I'll create a team</span>
                 </label>
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -630,13 +496,12 @@ const MyForm: React.FC = () => {
                       setTeamName("");
                     }}
                     required
-                    disabled={!!searchParams.get("referral")}
                     className="w-4 h-4"
                   />
-                  <span className="text-gray-900 dark:text-gray-300">No, I&apos;ll join a team</span>
+                  <span className="text-gray-900 dark:text-gray-300">No, I'll join a team</span>
                 </label>
               </div>
-              
+
               {isTeamLead === true && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
@@ -657,35 +522,23 @@ const MyForm: React.FC = () => {
                   </p>
                 </div>
               )}
-              
+
               {isTeamLead === false && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    Team Referral Code {searchParams.get("referral") ? "" : "(Optional)"}
+                    Team Referral Code (Optional)
                   </label>
                   <input
                     type="text"
                     value={referralCode}
-                    onChange={(e) => {
-                      const raw = e.target.value.toUpperCase();
-                      const cleaned = raw.replace(/[^A-Z0-9]/g, "");
-                      setReferralCode(cleaned);
-                    }}
+                    onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                     placeholder="Enter code (e.g., ABC123)"
                     maxLength={6}
-                    disabled={!!searchParams.get("referral")}
-                    className="register-input w-full uppercase disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+                    className="register-input w-full uppercase"
                   />
-                  {searchParams.get("referral") ? (
-                    <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center">
-                      <CheckCircle fontSize="small" className="mr-1" />
-                      Referral code auto-filled from link. You&apos;ll automatically join this team!
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Get this code from your team lead. You can also join a team later.
-                    </p>
-                  )}
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Get this code from your team lead. You can also join a team later.
+                  </p>
                 </div>
               )}
             </div>
@@ -707,63 +560,6 @@ const MyForm: React.FC = () => {
             </button>
           </div>
         </form>
-        
-        {/* Team Creation Success Modal */}
-        {teamCreated && !loading && (
-          <div className="absolute top-0 w-full h-full flex items-center justify-center z-20 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] p-4">
-            <div className="max-w-2xl w-full bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
-              <CheckCircle className="text-green-500 mx-auto mb-4" style={{ fontSize: 64 }} />
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Team Created Successfully!</h1>
-              <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">Team: {teamName}</p>
-              
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Your Referral Link</p>
-                <div className="flex items-center justify-center gap-3 mb-3">
-                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-widest">{generatedReferralCode}</p>
-                  <button
-                    onClick={() => copyToClipboard(generatedReferralCode)}
-                    className="p-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-lg transition-colors"
-                    title="Copy code"
-                  >
-                    {copied ? (
-                      <CheckCircle className="text-green-500" />
-                    ) : (
-                      <ContentCopy className="text-blue-600 dark:text-blue-400" />
-                    )}
-                  </button>
-                </div>
-                <div className="bg-white dark:bg-gray-900 rounded p-3 mb-2">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 break-all">
-                    {getReferralUrl()}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <p className="text-gray-700 dark:text-gray-300 font-medium">Share this link with your team members</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  When they click the link, the referral code will be auto-filled and they&apos;ll automatically join your team!
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button
-                  onClick={shareReferralLink}
-                  className="px-6 py-3 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-colors"
-                >
-                  Share Link
-                </button>
-                <button
-                  onClick={() => window.location.href = "/dashboard"}
-                  className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Go to Dashboard
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        
         {loading && (
           <div className="absolute top-0 w-full h-full flex items-center justify-center z-10 bg-opacity-50 bg-black dark:bg-opacity-70 md:ml-[80px] text-center">
             <div className="px-[40px] md:px-[80px] pb-[40px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl mx-8 md:mx-[unset]">
@@ -775,10 +571,10 @@ const MyForm: React.FC = () => {
               )}
               {registered && !isCompleteRegistration && (
                 <>
-                  <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Received</h2>
+                  <h2 className="text-2xl font-medium text-gray-900 dark:text-white">Application Recieved</h2>
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
-                    You&apos;ll be notified of the status of your hackathon team
-                    soon. If you&apos;re not into a team before the hackathon, we&apos;ll
+                    You'll be notified of the status of your hackathon team
+                    soon. If you're not into a team before the hackathon, we'll
                     try to get you a team at the venue. Otherwise, request your
                     team lead to add you to the team.
                     <br />
@@ -799,7 +595,7 @@ const MyForm: React.FC = () => {
               {registered && isCompleteRegistration && (
                 <>
                   <EmojiEventsOutlined fontSize="large" className="mt-8 text-gray-900 dark:text-white" />
-                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">You&apos;re in.</h2>
+                  <h2 className="text-2xl font-medium mt-4 text-gray-900 dark:text-white">You're in.</h2>
                   <p className="text-sm mt-4 mb-8 max-w-[420px] text-gray-700 dark:text-gray-300">
                     Excited to host you for TechSprint 2026.
                     <br />
@@ -827,7 +623,7 @@ const MyForm: React.FC = () => {
                     Confirm your payment
                   </h2>
                   <p className="mt-4 max-w-[480px] mx-auto dark:text-gray-300">
-                    We&apos;re sold out on tickets. But, its not the end of the
+                    We're sold out on tickets. But, its not the end of the
                     world. We're amazed by your enthuasism, and we added more
                     tickets. Here's what your Rs. 200 ticket will unlock for
                     you:
@@ -854,7 +650,7 @@ const MyForm: React.FC = () => {
                               },
                               body: JSON.stringify({
                                 userId: user?.uid,
-                                amount: 20000,
+                                amount: 25000,
                               }),
                             }
                           );
@@ -877,7 +673,7 @@ const MyForm: React.FC = () => {
                         console.log(createOrderIdValue);
                         const options = {
                           key: "rzp_live_4GKxrZC526axav",
-                          amount: 20000,
+                          amount: 25000,
                           currency: "INR",
                           name: "TechSprint 2026 Visakhapatnam",
                           description: "Your ticket receipt for TechSprint 2026 Visakhapatnam",
@@ -916,7 +712,7 @@ const MyForm: React.FC = () => {
                     }}
                     className="border-[1.5px] px-8 py-2 rounded-full border-gray-500 dark:border-gray-700 bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:border-0"
                   >
-                    Pay ₹200
+                    Pay ₹250
                   </button>
                 </>
               )}

@@ -19,13 +19,13 @@ export default function CreateTeam() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0a0a0a] px-4 py-12">
-      <div className="max-w-md w-full bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-700 rounded-xl p-8">
+      {/* <div className="max-w-md w-full bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-700 rounded-xl p-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create Your Team</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Choose a unique team name and get a referral code to share with your team members
         </p>
 
-        <form onSubmit={handleCreateTeam} className="space-y-4">
+        <form className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
               Team Name
@@ -60,7 +60,7 @@ export default function CreateTeam() {
             Create Team
           </button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }

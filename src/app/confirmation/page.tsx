@@ -477,7 +477,7 @@ export default function Confirmation() {
                       }
                       if (team.length >= 5) {
                         setTeamSearchAutocomplete(null);
-                        alert("Team size should be within 2-4 only.");
+                        alert("Team size should be within 3-5 only.");
                         return;
                       }
                       setTeam([...team, teamSearchAutocomplete!]);
@@ -490,7 +490,7 @@ export default function Confirmation() {
               )}
               {isTeamLead && (
                 <p className="mt-2 text-gray-700 dark:text-gray-300">
-                  <b>Note</b>: Team size should be within <b>2-4 only</b>. You
+                  <b>Note</b>: Team size should be within <b>3-5 only</b>. You
                   can edit your team anytime.
                 </p>
               )}

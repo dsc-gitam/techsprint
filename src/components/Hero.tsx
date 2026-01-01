@@ -8,6 +8,7 @@ import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import MapOutlined from '@mui/icons-material/MapOutlined';
+import ProfileModal from './ProfileModal';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);

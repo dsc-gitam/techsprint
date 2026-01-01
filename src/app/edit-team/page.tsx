@@ -294,8 +294,8 @@ export default function Confirmation() {
                     className="px-6 text-white bg-black h-max py-2 my-auto rounded-full"
                     onClick={(e) => {
                       e.preventDefault();
-                      if (team.length == 4) {
-                        alert("Maximum team size is 4.");
+                      if (team.length == 5) {
+                        alert("Maximum team size is 5.");
                         return;
                       }
                       if (teamSearchAutocomplete === null) {
@@ -313,7 +313,7 @@ export default function Confirmation() {
                       }
                       if (team.length >= 5) {
                         setTeamSearchAutocomplete(null);
-                        alert("Team size should be within 2-4 only.");
+                        alert("Team size should be within 3-5 only.");
                         return;
                       }
                       setTeam([...team, teamSearchAutocomplete!]);
@@ -326,7 +326,7 @@ export default function Confirmation() {
               )}
               {isTeamLead && (
                 <p className="mt-2">
-                  <b>Note</b>: Team size should be within <b>2-4 only</b>. You
+                  <b>Note</b>: Team size should be within <b>3-5only</b>. You
                   can edit your team anytime.
                 </p>
               )}

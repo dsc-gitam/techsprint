@@ -27,7 +27,7 @@ export default function Dashboard() {
           // User hasn't registered or payment pending
           router.push("/register");
           break;
-        
+
         case Progress.incompleteRegistration:
           // User registered but not in team yet
           router.push("/confirmation");
@@ -36,13 +36,13 @@ export default function Dashboard() {
         case Progress.notYetTeamMember:
           router.push("/profile");
           break;
-        
+
         case Progress.completeRegistration:
         case Progress.completeRegistrationTeamLead:
           // User is fully registered with team
           router.push("/profile");
           break;
-        
+
         default:
           // Fallback to profile
           router.push("/profile");
@@ -59,7 +59,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="fixed top-0 bg-white w-full h-full">
+      <div className="fixed top-0 bg-white dark:bg-[#0a0a0a] w-full h-full">
         <Loader />
       </div>
     );
