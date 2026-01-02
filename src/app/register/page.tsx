@@ -33,9 +33,20 @@ const MyForm: React.FC = () => {
   const [popUp, setPopUp] = useState(false);
   const [agreedToRules, setAgreedToRules] = useState(false);
   const [isCompleteRegistration, setIsCompleteRegistration] = useState(false);
+  
+  // Check if registration is still open (until Jan 2nd, 3PM 2026)
+  const isRegistrationOpen = new Date() < new Date('2026-01-02T15:00:00');
+  
   useEffect(() => {
     if (user === null) {
       alert("Please login to register for Techsprint");
+      window.location.href = "/";
+      return;
+    }
+    
+    // Check registration deadline
+    if (!isRegistrationOpen) {
+      alert("Registration deadline has passed. Registration closed on January 2nd, 2026 at 3PM.");
       window.location.href = "/";
       return;
     }
