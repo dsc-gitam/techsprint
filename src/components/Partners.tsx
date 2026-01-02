@@ -79,6 +79,17 @@ export default function Partners() {
           </div>
         </div>
 
+        <div className="flex flex-col items-center">
+          <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Sponsor</h4>
+          <div className="w-[140px] md:w-[220px] h-[90px] md:h-[140px] flex items-center justify-center">
+            <img
+              src="./partners/farmvaidya.jpeg"
+              className="max-w-full max-h-full object-contain"
+              alt="GCGC"
+            />
+          </div>
+        </div>
+
         {/* VDC - Sponsor */}
         <div className="flex flex-col items-center">
           <h4 className="opacity-50 mt-4 md:mt-[26.6px] text-sm md:text-xl">Sponsor</h4>
