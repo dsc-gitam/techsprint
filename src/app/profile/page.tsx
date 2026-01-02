@@ -37,8 +37,8 @@ export default function Profile() {
   const [joinTeamCode, setJoinTeamCode] = useState("");
   const [joining, setJoining] = useState(false);
   
-  // Check if editing is allowed (until Jan 1st, 2026)
-  const isEditingAllowed = new Date() < new Date('2026-01-02T09:00:00');
+  // Check if editing is allowed (until Jan 2nd, 3PM 2026)
+  const isEditingAllowed = new Date() < new Date('2026-01-02T15:00:00');
   
   useEffect(() => {
     if (user == null || user === undefined) {
