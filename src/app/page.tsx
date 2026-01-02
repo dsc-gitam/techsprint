@@ -8,6 +8,9 @@ import dynamic from "next/dynamic";
 import Gallery from '@/components/Gallery';
 import Partners from '@/components/Partners';
 import Links from '@/components/Links';
+import VoiceAgent from '@/components/VoiceAgent';
+import { Toaster } from 'sonner';
+import './voice-agent.css';
 
 const Countdown = dynamic(() => import("@/components/Countdown"), {
     ssr: false,
@@ -65,6 +68,10 @@ export default function Home() {
                     </div>
                 </div>
             </footer>
+            
+            {/* Farm Vaidya Voice Agent */}
+            <VoiceAgent />
+            <Toaster />
         </main>
     );
 }
