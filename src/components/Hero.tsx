@@ -8,7 +8,6 @@ import GetUserProgress from '@/utils/getUserProgress';
 import Progress from '@/utils/progress';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import MapOutlined from '@mui/icons-material/MapOutlined';
-import ProfileModal from './ProfileModal';
 
 export default function Hero() {
     const [user, setUser] = useState<User | null>(null);
@@ -39,38 +38,41 @@ export default function Hero() {
             return;
         }
 
-        const provider = new GoogleAuthProvider();
-        try {
-            const result = await signInWithPopup(auth, provider);
-            router.push('/dashboard');
-        } catch (error) {
-            console.error("Error signing in", error);
-        }
+        // const provider = new GoogleAuthProvider();
+        // try {
+        //     const result = await signInWithPopup(auth, provider);
+        //     router.push('/dashboard');
+        // } catch (error) {
+        //     console.error("Error signing in", error);
+        // }
     };
 
     const getButtonText = () => {
-        if (!user) return "Register Now";
+        if (!user) return "Sold Out";
         if (loading) return "Loading...";
 
         switch (userProgress) {
             case Progress.noApplication:
-                return "Register Now";
+                return "Sold Out";
             case Progress.paymentPending:
             case Progress.incompleteRegistration:
             case Progress.notYetTeamMember:
                 return "Complete Registration";
             case Progress.completeRegistration:
             case Progress.completeRegistrationTeamLead:
-                return "You're In ✓";
+                return "View Team";
             default:
-                return "Register Now";
+                return "Sold Out";
         }
     };
 
     const getButtonStyle = () => {
         if (userProgress === Progress.completeRegistration ||
             userProgress === Progress.completeRegistrationTeamLead) {
-            return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-default";
+            return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300";
+        }
+        if (!user || userProgress === Progress.noApplication) {
+             return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gray-400 text-white rounded-full text-base md:text-lg font-medium cursor-not-allowed";
         }
         return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer";
     };
@@ -121,12 +123,19 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-                    <div className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-base md:text-lg font-medium">
-                        Registration Closed
-                    </div>
+                    <button
+                        onClick={isRegistered ? handleRegister : undefined}
+                        className={getButtonStyle()}
+                        disabled={!isRegistered}
+                    >
+                        {getButtonText()}
+                    </button>
                     <a href="#about" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                         Learn More
                     </a>
+                    {/* <a href="https://www.google.com/maps/place/I.C.T+BHAVAN/@17.780655,83.3750075,18.16z/data=!4m6!3m5!1s0x3a395b1ce07ef447:0x2d3bc5abd9fa0c49!8m2!3d17.7804343!4d83.3761856!16s%2Fg%2F11cjnnm2kb?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-(--background) text-(--foreground) border border-[var(--io-border)] rounded-full text-base md:text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                        View Location
+                    </a> */}
                 </div>
 
             </div>

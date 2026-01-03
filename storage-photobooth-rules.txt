@@ -1,0 +1,24 @@
+// Firebase Storage Security Rules Update for Photobooth System
+// Add these rules to your existing storage.rules file
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ... existing rules ...
+    
+    // Photobooth Photos Storage
+    match /photobooth/{userId}/{fileName} {
+      // Anyone authenticated can read photos (for gallery)
+      allow read: if request.auth != null;
+      
+      // Only staff and admin can upload photos
+      allow write: if request.auth != null && 
+        (firestore.get(/databases/(default)/documents/registrations/$(request.auth.uid)).data.role in ["staff", "admin"]);
+      
+      // Only admin can delete photos
+      allow delete: if request.auth != null && 
+        firestore.get(/databases/(default)/documents/registrations/$(request.auth.uid)).data.role == "admin";
+    }
+  }
+}

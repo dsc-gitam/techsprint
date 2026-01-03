@@ -1,0 +1,32 @@
+[
+  {
+    "id": "innovation",
+    "name": "Innovation & Creativity",
+    "description": "Originality of the idea, unique approach to problem-solving, creative use of technology",
+    "maxScore": 5
+  },
+  {
+    "id": "technical",
+    "name": "Technical Implementation",
+    "description": "Quality of code, system architecture, scalability, use of appropriate technologies",
+    "maxScore": 5
+  },
+  {
+    "id": "impact",
+    "name": "Impact & Feasibility",
+    "description": "Real-world applicability, potential for positive impact, practical implementation possibility",
+    "maxScore": 5
+  },
+  {
+    "id": "presentation",
+    "name": "Presentation Quality",
+    "description": "Clarity of explanation, quality of documentation, visual design, communication skills",
+    "maxScore": 5
+  },
+  {
+    "id": "completion",
+    "name": "Completion & Demo",
+    "description": "Working prototype status, feature completeness, successful demonstration, polish level",
+    "maxScore": 5
+  }
+]

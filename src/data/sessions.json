@@ -4,11 +4,11 @@
         "slide": "",
         "title": "Inauguration & Guidelines",
         "description": "Kickoff event and guidelines announcement.",
-        "track": "Shivaji Auditorium",
+        "track": "ICT entrance",
         "link": "",
         "time": "9:00 AM - 9:45 AM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "45",
         "speakers": []
     },
@@ -21,7 +21,7 @@
         "link": "",
         "time": "9:30 AM - 10:00 AM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "30",
         "speakers": []
     },
@@ -34,7 +34,7 @@
         "link": "",
         "time": "10:00 AM - 1:00 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "180",
         "speakers": []
     },
@@ -47,7 +47,7 @@
         "link": "",
         "time": "1:00 PM - 2:00 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "60",
         "speakers": []
     },
@@ -60,7 +60,7 @@
         "link": "",
         "time": "2:00 PM - 3:00 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "60",
         "speakers": []
     },
@@ -73,7 +73,7 @@
         "link": "",
         "time": "3:00 PM - 4:30 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "90",
         "speakers": []
     },
@@ -86,7 +86,7 @@
         "link": "",
         "time": "4:30 PM - 7:00 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "150",
         "speakers": []
     },
@@ -99,7 +99,7 @@
         "link": "",
         "time": "7:00 PM - 8:30 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "90",
         "speakers": []
     },
@@ -112,7 +112,7 @@
         "link": "",
         "time": "8:30 PM - 9:30 PM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "60",
         "speakers": []
     },
@@ -125,7 +125,7 @@
         "link": "",
         "time": "9:30 PM - 1:00 AM",
         "format": "Day 1",
-        "date": "Mar 24, 2026",
+        "date": "Jan 3, 2026",
         "timeDuration": "210",
         "speakers": []
     },
@@ -138,7 +138,7 @@
         "link": "",
         "time": "1:00 AM - 2:30 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "90",
         "speakers": []
     },
@@ -151,7 +151,7 @@
         "link": "",
         "time": "2:30 AM - 5:00 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "150",
         "speakers": []
     },
@@ -164,7 +164,7 @@
         "link": "",
         "time": "5:00 AM - 5:45 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "45",
         "speakers": []
     },
@@ -177,7 +177,7 @@
         "link": "",
         "time": "5:45 AM - 6:00 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "15",
         "speakers": []
     },
@@ -190,7 +190,7 @@
         "link": "",
         "time": "6:00 AM - 9:30 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "210",
         "speakers": []
     },
@@ -203,7 +203,7 @@
         "link": "",
         "time": "9:30 AM - 10:00 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "30",
         "speakers": []
     },
@@ -216,7 +216,7 @@
         "link": "",
         "time": "10:00 AM - 10:30 AM",
         "format": "Day 2",
-        "date": "Mar 25, 2026",
+        "date": "Jan 4, 2026",
         "timeDuration": "30",
         "speakers": []
     }

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import Data to Firestore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357ae8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f5f5f5;
+        }
+        .progress {
+            margin-top: 10px;
+            height: 20px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #4285f4;
+            transition: width 0.3s;
+        }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Import Data to Firestore</h1>
+        <p>This will import registrations.csv and teams.csv into your Firestore database.</p>
+        
+        <div>
+            <input type="file" id="registrationsFile" accept=".csv">
+            <label>registrations.csv</label>
+        </div>
+        <div style="margin-top: 10px;">
+            <input type="file" id="teamsFile" accept=".csv">
+            <label>teams.csv</label>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="importData()" id="importBtn">Import Data</button>
+        </div>
+        
+        <div id="status" class="status" style="display:none;"></div>
+        <div id="progress" class="progress" style="display:none;">
+            <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase config from .env
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = [];
+                let currentValue = '';
+                let insideQuotes = false;
+                
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        insideQuotes = !insideQuotes;
+                    } else if (char === ',' && !insideQuotes) {
+                        values.push(currentValue.trim());
+                        currentValue = '';
+                    } else {
+                        currentValue += char;
+                    }
+                }
+                values.push(currentValue.trim());
+                
+                if (values.length === headers.length) {
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    rows.push(row);
+                }
+            }
+            
+            return rows;
+        }
+
+        async function importRegistrations(registrations) {
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (let i = 0; i < registrations.length; i++) {
+                try {
+                    const { uid, createdAt, updatedAt, ...data } = registrations[i];
+                    
+                    await setDoc(doc(db, 'registrations', uid), {
+                        ...data,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                    
+                    successCount++;
+                    progressBar.style.width = ((i + 1) / registrations.length * 50) + '%';
+                    status.innerHTML = `<span class="success">✓ Registrations: ${successCount}/${registrations.length}</span>`;
+                } catch (error) {
+                    console.error('Error importing registration:', error);
+                    errorCount++;
+                }
+            }
+            
+            return { successCount, errorCount };
+        }
+
+        async function importTeams(teams) {
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (let i = 0; i < teams.length; i++) {
+                try {
+                    const { teamCode, createdAt, memberIds, ...data } = teams[i];
+                    
+                    // Parse memberIds JSON array
+                    let memberIdsArray = [];
+                    try {
+                        memberIdsArray = JSON.parse(memberIds);
+                    } catch (e) {
+                        console.error('Could not parse memberIds for', teamCode);
+                    }
+                    
+                    await setDoc(doc(db, 'teams', teamCode), {
+                        ...data,
+                        memberIds: memberIdsArray,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    successCount++;
+                    progressBar.style.width = (50 + (i + 1) / teams.length * 50) + '%';
+                    status.innerHTML += `<br><span class="success">✓ Teams: ${successCount}/${teams.length}</span>`;
+                } catch (error) {
+                    console.error('Error importing team:', error);
+                    errorCount++;
+                }
+            }
+            
+            return { successCount, errorCount };
+        }
+
+        window.importData = async function() {
+            const registrationsFile = document.getElementById('registrationsFile').files[0];
+            const teamsFile = document.getElementById('teamsFile').files[0];
+            const status = document.getElementById('status');
+            const progress = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+            const importBtn = document.getElementById('importBtn');
+            
+            if (!registrationsFile || !teamsFile) {
+                alert('Please select both CSV files');
+                return;
+            }
+            
+            importBtn.disabled = true;
+            status.style.display = 'block';
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+            status.innerHTML = '<span>Starting import...</span>';
+            
+            try {
+                // Read registrations
+                const registrationsText = await registrationsFile.text();
+                const registrations = parseCSV(registrationsText);
+                
+                // Read teams
+                const teamsText = await teamsFile.text();
+                const teams = parseCSV(teamsText);
+                
+                // Import
+                const regStats = await importRegistrations(registrations);
+                const teamStats = await importTeams(teams);
+                
+                progressBar.style.width = '100%';
+                status.innerHTML = `
+                    <h3 class="success">✅ Import Complete!</h3>
+                    <p>Registrations: ${regStats.successCount} imported, ${regStats.errorCount} errors</p>
+                    <p>Teams: ${teamStats.successCount} imported, ${teamStats.errorCount} errors</p>
+                `;
+                
+            } catch (error) {
+                status.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                console.error(error);
+            } finally {
+                importBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

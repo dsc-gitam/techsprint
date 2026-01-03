@@ -7,20 +7,56 @@
   },
   {
     "format": "Day 1",
-    "time": "20:30",
-    "title": "MILESTONE #2: END of Frontend!",
+    "time": "18:00",
+    "title": "MILESTONE #2: Wireframes & Design",
     "id": "milestone_two"
+  },
+  {
+    "format": "Day 1",
+    "time": "20:30",
+    "title": "MILESTONE #3: END of Frontend!",
+    "id": "milestone_three"
+  },
+  {
+    "format": "Day 1",
+    "time": "23:00",
+    "title": "MILESTONE #4: Database Schema & API Design",
+    "id": "milestone_four"
+  },
+  {
+    "format": "Day 2",
+    "time": "02:00",
+    "title": "MILESTONE #5: Backend Integration Complete",
+    "id": "milestone_five"
   },
   {
     "format": "Day 2",
     "time": "04:00",
-    "title": "MILESTONE #3: Core Features Done!",
-    "id": "milestone_three"
+    "title": "MILESTONE #6: Core Features Done!",
+    "id": "milestone_six"
+  },
+  {
+    "format": "Day 2",
+    "time": "06:00",
+    "title": "MILESTONE #7: Testing & Bug Fixes",
+    "id": "milestone_seven"
+  },
+  {
+    "format": "Day 2",
+    "time": "07:30",
+    "title": "MILESTONE #8: Documentation & Deployment",
+    "id": "milestone_eight"
   },
   {
     "format": "Day 2",
     "time": "08:30",
-    "title": "MILESTONE #4: Launchpad - Submission Time!",
-    "id": "milestone_four"
+    "title": "MILESTONE #9: Final Polish & Demo Prep",
+    "id": "milestone_nine"
+  },
+  {
+    "format": "Day 2",
+    "time": "09:30",
+    "title": "MILESTONE #10: Launchpad - Final Submission!",
+    "id": "milestone_ten"
   }
 ]

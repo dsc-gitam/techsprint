@@ -6,13 +6,8 @@ const initialFormData: initialFormState = {
   lastName: "",
   email: "",
   gender: "",
-  socialProfile: "",
-  linkedin_profile: "",
-  github_profile: "",
   university: "",
   otherUniversity: "",
-  accommodation: 0,
-  tshirtSize: "",
   coc: 0,
   terms: 0,
 };
