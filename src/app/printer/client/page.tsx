@@ -27,6 +27,8 @@ export default function PrinterClient() {
   });
   const [printerName] = useState(`Printer-${Math.random().toString(36).substring(7)}`);
   const [lastHeartbeat, setLastHeartbeat] = useState<Date>(new Date());
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
+  const [availablePrinters, setAvailablePrinters] = useState<string[]>([]);
 
   const wakeLockRef = useRef<any>(null);
   const unsubscribeRef = useRef<(() => void) | null>(null);
@@ -34,6 +36,7 @@ export default function PrinterClient() {
 
   useEffect(() => {
     initializePrinterClient();
+    discoverPrinters();
 
     return () => {
       cleanup();
@@ -56,7 +59,33 @@ export default function PrinterClient() {
       console.error("Wake Lock error:", error);
     }
   };
-
+  const discoverPrinters = async () => {
+    try {
+      // Try to get available printers using Web Print API if supported
+      if ('navigator' in window && 'getPrinters' in (navigator as any)) {
+        const printers = await (navigator as any).getPrinters();
+        setAvailablePrinters(printers.map((p: any) => p.name));
+      }
+      
+      // Fallback: Add common WiFi printer options
+      const commonPrinters = [
+        "Default Printer",
+        "HP WiFi Printer",
+        "Canon WiFi Printer",
+        "Epson WiFi Printer",
+        "Brother WiFi Printer",
+        "Samsung WiFi Printer",
+      ];
+      
+      if (availablePrinters.length === 0) {
+        setAvailablePrinters(commonPrinters);
+      }
+    } catch (error) {
+      console.error("Printer discovery error:", error);
+      // Set default options
+      setAvailablePrinters(["Default Printer", "WiFi Printer 1", "WiFi Printer 2"]);
+    }
+  };
   const startHeartbeat = () => {
     heartbeatIntervalRef.current = setInterval(() => {
       setLastHeartbeat(new Date());
@@ -228,6 +257,12 @@ export default function PrinterClient() {
 
         setTimeout(() => {
           try {
+            // Show alert with printer reminder if specific printer selected
+            if (selectedPrinterName) {
+              // Note: window.print() will open browser's print dialog
+              // User must manually select the printer there
+            }
+            
             iframe.contentWindow?.print();
 
             setTimeout(() => {
@@ -286,7 +321,7 @@ export default function PrinterClient() {
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-blue-900 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className={`w-4 h-4 rounded-full ${connected ? "bg-green-400 animate-pulse" : "bg-red-400"}`}></div>
               <div>
@@ -313,6 +348,35 @@ export default function PrinterClient() {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Printer Selection Instructions */}
+          <div className="bg-white/5 rounded-xl p-4">
+            <label className="block text-sm font-medium text-white mb-2">
+              📌 Active Printer Configuration
+            </label>
+            <select
+              value={selectedPrinterName}
+              onChange={(e) => setSelectedPrinterName(e.target.value)}
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="" className="bg-gray-800">System Default</option>
+              {availablePrinters.map((printer) => (
+                <option key={printer} value={printer} className="bg-gray-800">
+                  {printer}
+                </option>
+              ))}
+            </select>
+            {selectedPrinterName && (
+              <div className="mt-3 bg-blue-500/20 border border-blue-500/30 rounded-lg p-3">
+                <p className="text-sm text-blue-200 font-medium">
+                  ⚠️ When the print dialog opens, select: <span className="font-bold">{selectedPrinterName}</span>
+                </p>
+              </div>
+            )}
+            <p className="text-xs text-white/60 mt-2">
+              💡 The print dialog will open automatically for each job. Select your WiFi printer in the dialog.
+            </p>
           </div>
         </div>
 

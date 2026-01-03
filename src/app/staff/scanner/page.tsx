@@ -23,10 +23,12 @@ import {
   CameraAlt,
   ExitToApp,
   Close,
+  Restaurant,
+  DinnerDining,
 } from "@mui/icons-material";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
-type ActionType = "check-in" | "check-out" | "swag" | "photobooth";
+type ActionType = "check-in" | "check-out" | "swag" | "photobooth" | "lunch" | "dinner";
 
 interface ScannedUser {
   uid: string;
@@ -93,24 +95,28 @@ export default function Scanner() {
 
   const startScanning = () => {
     setScanning(true);
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "qr-reader",
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      false
-    );
+    
+    // Delay scanner initialization to ensure DOM element is rendered
+    setTimeout(() => {
+      const html5QrcodeScanner = new Html5QrcodeScanner(
+        "qr-reader",
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        false
+      );
 
-    html5QrcodeScanner.render(
-      (decodedText) => {
-        handleScan(decodedText);
-        html5QrcodeScanner.clear();
-        setScanning(false);
-      },
-      (errorMessage) => {
-        // Ignore errors, just keep scanning
-      }
-    );
+      html5QrcodeScanner.render(
+        (decodedText) => {
+          handleScan(decodedText);
+          html5QrcodeScanner.clear();
+          setScanning(false);
+        },
+        (errorMessage) => {
+          // Ignore errors, just keep scanning
+        }
+      );
 
-    setScanner(html5QrcodeScanner);
+      setScanner(html5QrcodeScanner);
+    }, 100);
   };
 
   const stopScanning = () => {
@@ -123,19 +129,31 @@ export default function Scanner() {
 
   const handleScan = async (uid: string) => {
     setProcessing(true);
+    console.log("🔍 QR Code Scanned - UID:", uid);
+    
     try {
       // Fetch user data
       const userDoc = await getDoc(doc(db, "registrations", uid));
       if (!userDoc.exists()) {
+        console.error("❌ User not found:", uid);
         alert("User not found. Invalid QR code.");
         setProcessing(false);
         return;
       }
 
       const userData = userDoc.data();
+      console.log("✅ User Data Retrieved:", {
+        uid,
+        name: `${userData.firstName} ${userData.lastName}`,
+        email: userData.email,
+        university: userData.university,
+        teamCode: userData.teamCode,
+        payment_status: userData.payment_status,
+        role: userData.role,
+      });
       
-      // Check if user has checked in (required for swag/photobooth)
-      if (selectedAction === "swag" || selectedAction === "photobooth") {
+      // Check if user has checked in (required for swag/photobooth/lunch/dinner)
+      if (selectedAction === "swag" || selectedAction === "photobooth" || selectedAction === "lunch" || selectedAction === "dinner") {
         const checkInQuery = query(
           collection(db, "checkins"),
           where("userId", "==", uid),
@@ -184,6 +202,38 @@ export default function Scanner() {
         if (!photoSnapshot.empty) {
           const photoDate = photoSnapshot.docs[0].data().timestamp?.toDate?.()?.toLocaleString();
           alert(`⚠️ DUPLICATE BLOCKED!\n\nPhotobooth already used by this user!\nUsed at: ${photoDate || "earlier"}`);
+          setProcessing(false);
+          return;
+        }
+      }
+
+      // Check for lunch duplicate (STRICT - only once per user)
+      if (selectedAction === "lunch") {
+        const lunchQuery = query(
+          collection(db, "checkins"),
+          where("userId", "==", uid),
+          where("type", "==", "lunch")
+        );
+        const lunchSnapshot = await getDocs(lunchQuery);
+        if (!lunchSnapshot.empty) {
+          const lunchDate = lunchSnapshot.docs[0].data().timestamp?.toDate?.()?.toLocaleString();
+          alert(`⚠️ DUPLICATE BLOCKED!\n\nLunch already served to this user!\nServed at: ${lunchDate || "earlier"}`);
+          setProcessing(false);
+          return;
+        }
+      }
+
+      // Check for dinner duplicate (STRICT - only once per user)
+      if (selectedAction === "dinner") {
+        const dinnerQuery = query(
+          collection(db, "checkins"),
+          where("userId", "==", uid),
+          where("type", "==", "dinner")
+        );
+        const dinnerSnapshot = await getDocs(dinnerQuery);
+        if (!dinnerSnapshot.empty) {
+          const dinnerDate = dinnerSnapshot.docs[0].data().timestamp?.toDate?.()?.toLocaleString();
+          alert(`⚠️ DUPLICATE BLOCKED!\n\nDinner already served to this user!\nServed at: ${dinnerDate || "earlier"}`);
           setProcessing(false);
           return;
         }
@@ -265,6 +315,10 @@ export default function Scanner() {
         return <CardGiftcard />;
       case "photobooth":
         return <CameraAlt />;
+      case "lunch":
+        return <Restaurant />;
+      case "dinner":
+        return <DinnerDining />;
     }
   };
 
@@ -278,6 +332,10 @@ export default function Scanner() {
         return "bg-purple-500 hover:bg-purple-600 border-purple-600";
       case "photobooth":
         return "bg-pink-500 hover:bg-pink-600 border-pink-600";
+      case "lunch":
+        return "bg-amber-500 hover:bg-amber-600 border-amber-600";
+      case "dinner":
+        return "bg-blue-500 hover:bg-blue-600 border-blue-600";
     }
   };
 
@@ -313,8 +371,8 @@ export default function Scanner() {
             {/* Action Selector */}
             <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-4 md:p-6 border border-gray-200 dark:border-gray-700 mb-4 md:mb-6">
               <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Select Action</h2>
-              <div className="grid grid-cols-2 gap-2 md:gap-3">
-                {(["check-in", "check-out", "swag", "photobooth"] as ActionType[]).map((action) => (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                {(["check-in", "check-out", "swag", "photobooth", "lunch", "dinner"] as ActionType[]).map((action) => (
                   <button
                     key={action}
                     onClick={() => setSelectedAction(action)}
