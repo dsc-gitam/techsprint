@@ -93,24 +93,28 @@ export default function Scanner() {
 
   const startScanning = () => {
     setScanning(true);
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "qr-reader",
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      false
-    );
+    
+    // Delay scanner initialization to ensure DOM element is rendered
+    setTimeout(() => {
+      const html5QrcodeScanner = new Html5QrcodeScanner(
+        "qr-reader",
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        false
+      );
 
-    html5QrcodeScanner.render(
-      (decodedText) => {
-        handleScan(decodedText);
-        html5QrcodeScanner.clear();
-        setScanning(false);
-      },
-      (errorMessage) => {
-        // Ignore errors, just keep scanning
-      }
-    );
+      html5QrcodeScanner.render(
+        (decodedText) => {
+          handleScan(decodedText);
+          html5QrcodeScanner.clear();
+          setScanning(false);
+        },
+        (errorMessage) => {
+          // Ignore errors, just keep scanning
+        }
+      );
 
-    setScanner(html5QrcodeScanner);
+      setScanner(html5QrcodeScanner);
+    }, 100);
   };
 
   const stopScanning = () => {
@@ -123,16 +127,28 @@ export default function Scanner() {
 
   const handleScan = async (uid: string) => {
     setProcessing(true);
+    console.log("🔍 QR Code Scanned - UID:", uid);
+    
     try {
       // Fetch user data
       const userDoc = await getDoc(doc(db, "registrations", uid));
       if (!userDoc.exists()) {
+        console.error("❌ User not found:", uid);
         alert("User not found. Invalid QR code.");
         setProcessing(false);
         return;
       }
 
       const userData = userDoc.data();
+      console.log("✅ User Data Retrieved:", {
+        uid,
+        name: `${userData.firstName} ${userData.lastName}`,
+        email: userData.email,
+        university: userData.university,
+        teamCode: userData.teamCode,
+        payment_status: userData.payment_status,
+        role: userData.role,
+      });
       
       // Check if user has checked in (required for swag/photobooth)
       if (selectedAction === "swag" || selectedAction === "photobooth") {

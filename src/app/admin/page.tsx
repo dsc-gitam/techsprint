@@ -46,6 +46,11 @@ export default function Page() {
                 isstaff && <div className="flex flex-col p-8 gap-8">
                     <h3 className="text-4xl font-bold">Admin Panel</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <a href="/admin/settings" className="p-6 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                            <h4 className="text-2xl font-bold mb-2">⚙️ Settings</h4>
+                            <p className="text-indigo-100">Configure event settings</p>
+                        </a>
+
                         <a href="/admin/teams" className="p-6 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors">
                             <h4 className="text-2xl font-bold mb-2">👥 Team Management</h4>
                             <p className="text-blue-100">Create teams and manage payments</p>

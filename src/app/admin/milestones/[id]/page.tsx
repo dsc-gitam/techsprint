@@ -51,9 +51,17 @@ export default function Page() {
   async function fetchMilestonesData(id: string, role: string, assignedTeams: string[]) {
     var responses: any[] = [];
     const documents = await getDocs(query(collection(db, "teams")));
+    const isFinalMilestone = id === "milestone_ten";
+    
     documents.forEach((document) => {
       const response = document.data();
-      if (response[`${id}_score`] != undefined) {
+      
+      // For final milestone (10), require submission
+      // For milestones 1-9, show all teams regardless of submission
+      const hasSubmission = response[`${id}_link`] != undefined;
+      const shouldShow = isFinalMilestone ? hasSubmission : true;
+      
+      if (shouldShow) {
         // If judge role, only show assigned teams
         if (role === "judge") {
           if (assignedTeams.includes(document.id)) {
@@ -80,16 +88,20 @@ export default function Page() {
       return;
     }
 
-    // Calculate time bonus/penalty
-    const submissionTime = new Date(teamData[`${data?.id}_time`].toDate());
-    const deadline = new Date("3 Jan 2026 16:30:00 GMT+0530");
-    const timeDiff = (submissionTime.getTime() - deadline.getTime()) / 1000 / 60; // minutes
-    
+    // Calculate time bonus/penalty only if submission exists (milestone 10)
     let timeBonus = 0;
-    if (timeDiff < -60) {
-      timeBonus = -5; // Early submission penalty
-    } else if (timeDiff > 30) {
-      timeBonus = 5; // Late submission penalty
+    const isFinalMilestone = data?.id === "milestone_ten";
+    
+    if (isFinalMilestone && teamData[`${data?.id}_time`]) {
+      const submissionTime = new Date(teamData[`${data?.id}_time`].toDate());
+      const deadline = new Date("3 Jan 2026 16:30:00 GMT+0530");
+      const timeDiff = (submissionTime.getTime() - deadline.getTime()) / 1000 / 60; // minutes
+      
+      if (timeDiff < -60) {
+        timeBonus = -5; // Early submission penalty
+      } else if (timeDiff > 30) {
+        timeBonus = 5; // Late submission penalty
+      }
     }
 
     const judgeScore = {
@@ -164,9 +176,16 @@ export default function Page() {
               </div>
             ))}
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-            ⏱️ <strong>Time Bonus/Penalty:</strong> -5 points if submitted &gt;1 hour early, +5 points if submitted &gt;30 min late
-          </p>
+          {data?.id === "milestone_ten" && (
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+              ⏱️ <strong>Time Bonus/Penalty:</strong> -5 points if submitted &gt;1 hour early, +5 points if submitted &gt;30 min late
+            </p>
+          )}
+          {data?.id !== "milestone_ten" && (
+            <p className="text-sm text-blue-600 dark:text-blue-400 mt-4">
+              ℹ️ <strong>Manual Grading:</strong> This milestone is graded manually without submission requirements
+            </p>
+          )}
         </div>
 
         {/* Submissions List */}
@@ -191,18 +210,24 @@ export default function Page() {
                         {uR.teamName}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {uR.teamCode} • {uR.allottedClassroom || "No classroom"}
+                        {uR.teamCode} • {uR.allotedClassrooms || "No classroom"}
                       </p>
                     </div>
-                    <a
-                      href={uR[`${data?.id}_link`]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                    >
-                      <VisibilityOutlined fontSize="small" />
-                      View Submission
-                    </a>
+                    {uR[`${data?.id}_link`] ? (
+                      <a
+                        href={uR[`${data?.id}_link`]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                      >
+                        <VisibilityOutlined fontSize="small" />
+                        View Submission
+                      </a>
+                    ) : (
+                      <div className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg">
+                        Manual Grading
+                      </div>
+                    )}
                   </div>
 
                   {hasJudged ? (

@@ -151,6 +151,77 @@ async function seedTeams() {
   return { successCount, errorCount };
 }
 
+async function seedStaffAndAdmin() {
+  console.log('👨‍💼 Seeding staff and admin accounts...');
+  
+  const staffAdmin = parseCSV(path.join(__dirname, 'staff-admin-seed.csv')) as Registration[];
+  console.log(`Found ${staffAdmin.length} staff/admin accounts to seed`);
+  
+  let successCount = 0;
+  let errorCount = 0;
+  
+  for (const account of staffAdmin) {
+    try {
+      const { uid, createdAt, updatedAt, ...data } = account;
+      
+      await db.collection('registrations').doc(uid).set({
+        ...data,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      });
+      
+      successCount++;
+      console.log(`  ✓ Seeded ${data.role} account: ${data.firstName} ${data.lastName}`);
+    } catch (error) {
+      console.error(`  ✗ Error seeding account ${account.uid}:`, error);
+      errorCount++;
+    }
+  }
+  
+  console.log(`✅ Staff/Admin complete: ${successCount} success, ${errorCount} errors\n`);
+  return { successCount, errorCount };
+}
+
+async function seedTestTeam() {
+  console.log('🧪 Seeding test team...');
+  
+  const teams = parseCSV(path.join(__dirname, 'test-team-seed.csv')) as Team[];
+  console.log(`Found ${teams.length} test team to seed`);
+  
+  let successCount = 0;
+  let errorCount = 0;
+  
+  for (const team of teams) {
+    try {
+      const { teamCode, createdAt, memberIds, ...data } = team;
+      
+      // Parse memberIds JSON array string
+      let memberIdsArray: string[] = [];
+      try {
+        memberIdsArray = JSON.parse(memberIds);
+      } catch (e) {
+        console.error(`  ⚠ Warning: Could not parse memberIds for ${teamCode}`);
+        memberIdsArray = [];
+      }
+      
+      await db.collection('teams').doc(teamCode).set({
+        ...data,
+        memberIds: memberIdsArray,
+        createdAt: Timestamp.now(),
+      });
+      
+      successCount++;
+      console.log(`  ✓ Seeded test team ${teamCode} (${memberIdsArray.length} members)`);
+    } catch (error) {
+      console.error(`  ✗ Error seeding team ${team.teamCode}:`, error);
+      errorCount++;
+    }
+  }
+  
+  console.log(`✅ Test team complete: ${successCount} success, ${errorCount} errors\n`);
+  return { successCount, errorCount };
+}
+
 async function main() {
   console.log('🚀 Starting Firestore seeding...\n');
   console.log('=' .repeat(70));
@@ -158,8 +229,8 @@ async function main() {
   const startTime = Date.now();
   
   try {
-    const registrationStats = await seedRegistrations();
-    const teamStats = await seedTeams();
+    const staffAdminStats = await seedStaffAndAdmin();
+    const testTeamStats = await seedTestTeam();
     
     const endTime = Date.now();
     const duration = ((endTime - startTime) / 1000).toFixed(2);
@@ -167,12 +238,12 @@ async function main() {
     console.log('=' .repeat(70));
     console.log('📊 SEEDING SUMMARY');
     console.log('=' .repeat(70));
-    console.log(`Registrations: ${registrationStats.successCount} seeded, ${registrationStats.errorCount} errors`);
-    console.log(`Teams: ${teamStats.successCount} seeded, ${teamStats.errorCount} errors`);
+    console.log(`Staff/Admin Accounts: ${staffAdminStats.successCount} seeded, ${staffAdminStats.errorCount} errors`);
+    console.log(`Test Team: ${testTeamStats.successCount} seeded, ${testTeamStats.errorCount} errors`);
     console.log(`Duration: ${duration}s`);
     console.log('=' .repeat(70));
     
-    if (registrationStats.errorCount === 0 && teamStats.errorCount === 0) {
+    if (staffAdminStats.errorCount === 0 && testTeamStats.errorCount === 0) {
       console.log('✅ All data seeded successfully!');
     } else {
       console.log('⚠️  Seeding completed with some errors');

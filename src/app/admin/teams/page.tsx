@@ -42,6 +42,16 @@ export default function AdminTeams() {
   const [creating, setCreating] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [selectedForPayment, setSelectedForPayment] = useState<string | null>(null);
+  const [showCreateParticipant, setShowCreateParticipant] = useState(false);
+  const [newParticipant, setNewParticipant] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    gender: "He/Him",
+    university: "GITAM Visakhapatnam",
+    displayPicture: "https://ui-avatars.com/api/?name=User",
+    payment_status: "pending",
+  });
 
   useEffect(() => {
     if (user === null) {
@@ -163,6 +173,68 @@ export default function AdminTeams() {
     );
   };
 
+  const handleCreateParticipant = async () => {
+    if (!newParticipant.firstName || !newParticipant.lastName || !newParticipant.email) {
+      alert("Please fill in all required fields (First Name, Last Name, Email)");
+      return;
+    }
+
+    setCreating(true);
+    try {
+      // Generate UID
+      const uid = 'MANUAL_' + Math.random().toString(36).substring(2, 15);
+      
+      // Create registration document
+      await setDoc(doc(db, "registrations", uid), {
+        ...newParticipant,
+        uid,
+        teamCode: null,
+        role: "participant",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+
+      alert(`Participant "${newParticipant.firstName} ${newParticipant.lastName}" created successfully!`);
+      
+      // Reset form
+      setNewParticipant({
+        firstName: "",
+        lastName: "",
+        email: "",
+        gender: "He/Him",
+        university: "GITAM Visakhapatnam",
+        displayPicture: "https://ui-avatars.com/api/?name=User",
+        payment_status: "pending",
+      });
+      setShowCreateParticipant(false);
+      
+      // Refresh participants list
+      const registrationsRef = collection(db, "registrations");
+      const q = query(registrationsRef, where("teamCode", "==", null));
+      const snapshot = await getDocs(q);
+      const participantsList: Participant[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        participantsList.push({
+          uid: doc.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          university: data.university === "Other" ? data.otherUniversity : data.university,
+          gender: data.gender,
+          displayPicture: data.displayPicture,
+          payment_status: data.payment_status || "pending",
+        });
+      });
+      setParticipants(participantsList);
+    } catch (error) {
+      console.error("Error creating participant:", error);
+      alert("Failed to create participant. Please try again.");
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const handleConfirmPayment = async (uid: string) => {
     try {
       await updateDoc(doc(db, "registrations", uid), {
@@ -202,11 +274,126 @@ export default function AdminTeams() {
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Team Management</h1>
-          <p className="text-gray-600 dark:text-gray-400">Create teams and manage participant payments</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Team Management</h1>
+              <p className="text-gray-600 dark:text-gray-400">Create participants, teams, and manage payments</p>
+            </div>
+            <button
+              onClick={() => setShowCreateParticipant(!showCreateParticipant)}
+              className="px-6 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center gap-2"
+            >
+              <PeopleOutline />
+              {showCreateParticipant ? "Hide Form" : "Add Participant"}
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Create Participant Form */}
+          {showCreateParticipant && (
+            <div className="lg:col-span-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <PeopleOutline /> Create New Participant
+                </h2>
+                <button
+                  onClick={() => setShowCreateParticipant(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <Close />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newParticipant.firstName}
+                    onChange={(e) => setNewParticipant({...newParticipant, firstName: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newParticipant.lastName}
+                    onChange={(e) => setNewParticipant({...newParticipant, lastName: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={newParticipant.email}
+                    onChange={(e) => setNewParticipant({...newParticipant, email: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Gender
+                  </label>
+                  <select
+                    value={newParticipant.gender}
+                    onChange={(e) => setNewParticipant({...newParticipant, gender: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  >
+                    <option value="He/Him">He/Him</option>
+                    <option value="She/Her">She/Her</option>
+                    <option value="They/Them">They/Them</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    University
+                  </label>
+                  <input
+                    type="text"
+                    value={newParticipant.university}
+                    onChange={(e) => setNewParticipant({...newParticipant, university: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Payment Status
+                  </label>
+                  <select
+                    value={newParticipant.payment_status}
+                    onChange={(e) => setNewParticipant({...newParticipant, payment_status: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="captured">Captured</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                onClick={handleCreateParticipant}
+                disabled={creating}
+                className="mt-4 w-full py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:bg-gray-400 transition-colors"
+              >
+                {creating ? "Creating..." : "Create Participant"}
+              </button>
+            </div>
+          )}
+
           {/* Create Team Form */}
           <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">

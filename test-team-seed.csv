@@ -1,0 +1,2 @@
+teamCode,teamName,leaderId,memberIds,problemStatement,solution,techStack,createdAt
+TEAM99,Test Team Alpha,TEST001alice,"[""TEST001alice"",""TEST002bob"",""TEST003charlie"",""TEST004diana""]",Improving campus sustainability through smart waste management,AI-powered waste sorting and recycling tracking system with mobile app integration,"React Native, TensorFlow, Firebase, Node.js",

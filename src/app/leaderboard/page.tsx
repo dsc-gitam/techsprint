@@ -1,8 +1,8 @@
 "use client";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { EmojiEvents, FilterList } from "@mui/icons-material";
+import { EmojiEvents, FilterList, VisibilityOff } from "@mui/icons-material";
 
 interface TeamScore {
   teamCode: string;
@@ -29,6 +29,18 @@ export default function Leaderboard() {
   const [filterMilestone, setFilterMilestone] = useState<string>("all");
   const [filterClassroom, setFilterClassroom] = useState<string>("all");
   const [classrooms, setClassrooms] = useState<string[]>([]);
+  const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(true);
+
+  // Listen to leaderboard visibility config
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "config", "leaderboard"), (docSnap) => {
+      if (docSnap.exists()) {
+        setIsLeaderboardVisible(docSnap.data().visible ?? true);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     // Real-time listener for leaderboard updates
@@ -67,7 +79,7 @@ export default function Leaderboard() {
         const team: TeamScore = {
           teamCode: data.teamCode || doc.id,
           teamName: data.teamName || "Unknown Team",
-          classroom: data.allottedClassroom || "Not Assigned",
+          classroom: data.allotedClassrooms || "Not Assigned",
           milestone1: m1Score,
           milestone2: m2Score,
           milestone3: m3Score,
@@ -124,6 +136,22 @@ export default function Leaderboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0a0a0a]">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!isLeaderboardVisible) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0a0a0a] px-4">
+        <div className="text-center max-w-md">
+          <VisibilityOff className="text-gray-400 dark:text-gray-600 mx-auto mb-4" style={{ fontSize: 80 }} />
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+            Leaderboard Hidden
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            The leaderboard is currently hidden between milestones. Check back soon to see updated rankings!
+          </p>
+        </div>
       </div>
     );
   }
