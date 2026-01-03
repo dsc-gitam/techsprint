@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { PeopleOutline, QrCode2, CheckCircle, Close } from "@mui/icons-material";
 import Image from "next/image";
 import classrooms from "@/data/classrooms.json";
+import { arrayUnion } from "firebase/firestore";
 
 interface Participant {
   uid: string;
@@ -29,12 +30,20 @@ interface Participant {
   payment_status: string;
 }
 
+interface Team {
+  teamCode: string;
+  teamName: string;
+  leaderId: string;
+  memberIds: string[];
+}
+
 export default function AdminTeams() {
   const user = useAuthContext();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
   const [teamName, setTeamName] = useState("");
   const [teamLeader, setTeamLeader] = useState("");
@@ -44,6 +53,7 @@ export default function AdminTeams() {
   const [selectedForPayment, setSelectedForPayment] = useState<string | null>(null);
   const [showCreateParticipant, setShowCreateParticipant] = useState(false);
   const [newParticipant, setNewParticipant] = useState({
+    uid: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -51,6 +61,8 @@ export default function AdminTeams() {
     university: "GITAM Visakhapatnam",
     displayPicture: "https://ui-avatars.com/api/?name=User",
     payment_status: "pending",
+    teamCode: "" as string,
+    isLeader: false,
   });
 
   useEffect(() => {
@@ -83,6 +95,21 @@ export default function AdminTeams() {
           });
         });
         setParticipants(participantsList);
+        
+        // Fetch all teams
+        const teamsSnapshot = await getDocs(collection(db, "teams"));
+        const teamsList: Team[] = [];
+        teamsSnapshot.forEach((doc) => {
+          const data = doc.data();
+          teamsList.push({
+            teamCode: doc.id,
+            teamName: data.teamName,
+            leaderId: data.leaderId,
+            memberIds: data.memberIds || [],
+          });
+        });
+        setTeams(teamsList);
+        
         setLoading(false);
       } else {
         alert("Access denied. Admin privileges required.");
@@ -174,30 +201,76 @@ export default function AdminTeams() {
   };
 
   const handleCreateParticipant = async () => {
-    if (!newParticipant.firstName || !newParticipant.lastName || !newParticipant.email) {
-      alert("Please fill in all required fields (First Name, Last Name, Email)");
+    if (!newParticipant.uid || !newParticipant.firstName || !newParticipant.lastName || !newParticipant.email) {
+      alert("Please fill in all required fields (Firebase Auth UID, First Name, Last Name, Email)");
       return;
     }
 
     setCreating(true);
     try {
-      // Generate UID
-      const uid = 'MANUAL_' + Math.random().toString(36).substring(2, 15);
+      const uid = newParticipant.uid.trim();
       
-      // Create registration document
+      // Check if registration already exists
+      const existingDoc = await getDoc(doc(db, "registrations", uid));
+      if (existingDoc.exists()) {
+        alert(`⚠️ Registration already exists for UID: ${uid}`);
+        setCreating(false);
+        return;
+      }
+      
+      // If team is selected and user is marked as leader, check if team already has a leader
+      if (newParticipant.teamCode && newParticipant.isLeader) {
+        const selectedTeam = teams.find(t => t.teamCode === newParticipant.teamCode);
+        if (selectedTeam && selectedTeam.leaderId) {
+          const confirmChange = confirm(
+            `⚠️ Team "${selectedTeam.teamName}" already has a leader. Do you want to change the team leader to this participant?`
+          );
+          if (!confirmChange) {
+            setCreating(false);
+            return;
+          }
+        }
+      }
+      
+      const teamCode = newParticipant.teamCode || null;
+      const role = newParticipant.isLeader ? "leader" : "participant";
+      
+      // Create registration document with provided UID
       await setDoc(doc(db, "registrations", uid), {
-        ...newParticipant,
         uid,
-        teamCode: null,
-        role: "participant",
+        firstName: newParticipant.firstName,
+        lastName: newParticipant.lastName,
+        email: newParticipant.email,
+        gender: newParticipant.gender,
+        university: newParticipant.university,
+        displayPicture: newParticipant.displayPicture,
+        payment_status: newParticipant.payment_status,
+        teamCode,
+        role,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
+      
+      // If team is assigned, update team document
+      if (teamCode) {
+        const teamRef = doc(db, "teams", teamCode);
+        const updateData: any = {
+          memberIds: arrayUnion(uid),
+        };
+        
+        // If this person is the leader, update leaderId
+        if (newParticipant.isLeader) {
+          updateData.leaderId = uid;
+        }
+        
+        await updateDoc(teamRef, updateData);
+      }
 
-      alert(`Participant "${newParticipant.firstName} ${newParticipant.lastName}" created successfully!`);
+      alert(`✅ Participant "${newParticipant.firstName} ${newParticipant.lastName}" created successfully!${teamCode ? ` Assigned to team.` : ""}`);
       
       // Reset form
       setNewParticipant({
+        uid: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -205,6 +278,8 @@ export default function AdminTeams() {
         university: "GITAM Visakhapatnam",
         displayPicture: "https://ui-avatars.com/api/?name=User",
         payment_status: "pending",
+        teamCode: "",
+        isLeader: false,
       });
       setShowCreateParticipant(false);
       
@@ -306,6 +381,22 @@ export default function AdminTeams() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Firebase Auth UID <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newParticipant.uid}
+                    onChange={(e) => setNewParticipant({...newParticipant, uid: e.target.value})}
+                    placeholder="Copy from Firebase Console or user's profile"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white font-mono text-sm"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    User must have signed in with Google. Get UID from Firebase Console → Authentication
+                  </p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                     First Name <span className="text-red-500">*</span>
@@ -381,6 +472,47 @@ export default function AdminTeams() {
                     <option value="pending">Pending</option>
                     <option value="captured">Captured</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Assign to Team (Optional)
+                  </label>
+                  <select
+                    value={newParticipant.teamCode}
+                    onChange={(e) => setNewParticipant({...newParticipant, teamCode: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white"
+                  >
+                    <option value="">No Team (Assign Later)</option>
+                    {teams.map((team) => (
+                      <option key={team.teamCode} value={team.teamCode}>
+                        {team.teamCode} - {team.teamName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    Team Leader
+                  </label>
+                  <div className="flex items-center gap-2 mt-3">
+                    <input
+                      type="checkbox"
+                      checked={newParticipant.isLeader}
+                      onChange={(e) => setNewParticipant({...newParticipant, isLeader: e.target.checked})}
+                      disabled={!newParticipant.teamCode}
+                      className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className={`text-sm ${!newParticipant.teamCode ? 'text-gray-400' : 'text-gray-900 dark:text-white'}`}>
+                      Make this participant the team leader
+                    </span>
+                  </div>
+                  {!newParticipant.teamCode && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Select a team first to enable leader option
+                    </p>
+                  )}
                 </div>
               </div>
 
