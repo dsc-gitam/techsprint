@@ -38,38 +38,41 @@ export default function Hero() {
             return;
         }
 
-        const provider = new GoogleAuthProvider();
-        try {
-            const result = await signInWithPopup(auth, provider);
-            router.push('/dashboard');
-        } catch (error) {
-            console.error("Error signing in", error);
-        }
+        // const provider = new GoogleAuthProvider();
+        // try {
+        //     const result = await signInWithPopup(auth, provider);
+        //     router.push('/dashboard');
+        // } catch (error) {
+        //     console.error("Error signing in", error);
+        // }
     };
 
     const getButtonText = () => {
-        if (!user) return "Register Now";
+        if (!user) return "Sold Out";
         if (loading) return "Loading...";
 
         switch (userProgress) {
             case Progress.noApplication:
-                return "Register Now";
+                return "Sold Out";
             case Progress.paymentPending:
             case Progress.incompleteRegistration:
             case Progress.notYetTeamMember:
                 return "Complete Registration";
             case Progress.completeRegistration:
             case Progress.completeRegistrationTeamLead:
-                return "You're In ✓";
+                return "View Team";
             default:
-                return "Register Now";
+                return "Sold Out";
         }
     };
 
     const getButtonStyle = () => {
         if (userProgress === Progress.completeRegistration ||
             userProgress === Progress.completeRegistrationTeamLead) {
-            return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-default";
+            return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-green-500 text-white rounded-full text-base md:text-lg font-medium cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300";
+        }
+        if (!user || userProgress === Progress.noApplication) {
+             return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gray-400 text-white rounded-full text-base md:text-lg font-medium cursor-not-allowed";
         }
         return "w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-[#2563eb] text-white rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer";
     };
@@ -121,9 +124,9 @@ export default function Hero() {
 
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
                     <button
-                        onClick={isRegistered ? undefined : handleRegister}
+                        onClick={isRegistered ? handleRegister : undefined}
                         className={getButtonStyle()}
-                        disabled={isRegistered}
+                        disabled={!isRegistered}
                     >
                         {getButtonText()}
                     </button>

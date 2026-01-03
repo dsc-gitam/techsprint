@@ -58,6 +58,10 @@ export default function Confirmation() {
   const [isCompleteRegistration, setIsCompleteRegistration] = useState(false);
 
   useEffect(() => {
+    alert("Team editing is closed.");
+    router.push("/profile");
+    return;
+
     if (user === null) {
       alert("Please login to register for TechSprint 2026");
       window.location.href = "/";

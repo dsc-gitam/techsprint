@@ -1,7 +1,7 @@
 [
     {
         "day": "1",
-        "date": "24th March",
+        "date": "3rd Jan",
         "schedule": [
             {
                 "startTime": "09:00",
@@ -52,7 +52,7 @@
     },
     {
         "day": "2",
-        "date": "25th March",
+        "date": "4th Jan",
         "schedule": [
             {
                 "startTime": "01:00",

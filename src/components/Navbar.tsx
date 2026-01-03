@@ -79,11 +79,14 @@ export default function Navbar() {
                             <Link href="/#about" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
                                 About
                             </Link>
-                            <Link href="/timeline" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
-                                Timeline
-                            </Link>
                             <Link href="/schedule" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
                                 Schedule
+                            </Link>
+                            <Link href="/leaderboard" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
+                                Leaderboard
+                            </Link>
+                            <Link href="/resources/pitch-deck" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
+                                Resources
                             </Link>
                             <Link href="/team" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
                                 Team
@@ -96,9 +99,6 @@ export default function Navbar() {
                                     Dashboard
                                 </Link>
                             )}
-                            {/* <Link href="/leaderboard" className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors">
-                                Leaderboard
-                            </Link> */}
 
                             {user ? (
                                 <div className="flex items-center gap-4">
@@ -134,11 +134,14 @@ export default function Navbar() {
                                 <Link href="/#about" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
                                     About
                                 </Link>
-                                <Link href="/timeline" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
-                                    Timeline
-                                </Link>
                                 <Link href="/schedule" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
                                     Schedule
+                                </Link>
+                                <Link href="/leaderboard" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
+                                    Leaderboard
+                                </Link>
+                                <Link href="/resources/pitch-deck" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
+                                    Resources
                                 </Link>
                                 <Link href="/team" onClick={() => setMobileMenuOpen(false)} className="text-black/60 dark:text-white/70 hover:text-(--google-blue) font-medium transition-colors px-2 py-2">
                                     Team

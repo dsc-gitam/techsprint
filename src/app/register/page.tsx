@@ -397,6 +397,16 @@ const MyForm: React.FC = () => {
             className="md:h-56 -scale-x-100 translate-y-1 md:translate-y-2"
           /> 
         </div>
+        <div className="p-10 text-center w-full">
+            <h2 className="text-3xl font-bold text-red-500 mb-4">Sold Out!</h2>
+            <p className="text-xl text-gray-700 dark:text-gray-300">
+                Registration for TechSprint 2026 is now closed. We have reached maximum capacity.
+            </p>
+            <Link href="/" className="mt-8 inline-block px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
+                Return Home
+            </Link>
+        </div>
+        <div className="hidden">
         <div className="md:w-4/5 md:mr-auto md:mt-10 p-[20px] pb-0 md:p-[unset] md:ml-auto bg-white dark:bg-[#141414]">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a developer profile</h3>
           <p className="mt-2 max-w-[480px] md:text-base text-sm text-gray-700 dark:text-gray-300">
@@ -508,57 +518,7 @@ const MyForm: React.FC = () => {
                 )}
               </div>
             </div>
-            {formState.gender === "She/Her" && (
-              <div>
-                <label className="mr-3 text-[20px] text-gray-900 dark:text-white">Accommodation</label>
-                <br />
-                <input
-                  name="acco"
-                  type="radio"
-                  id="accoYes"
-                  className="mr-2"
-                  checked={formState.accommodation == 1}
-                  onChange={() => {
-                    setFormState((prevState) => ({
-                      ...prevState,
-                      ["accommodation"]: 1,
-                    }));
-                  }}
-                />
-                <label htmlFor="accoYes" className="mr-8 ml-1 text-gray-900 dark:text-gray-300">
-                  Yes
-                </label>
-                <input
-                  name="acco"
-                  type="radio"
-                  id="accoNo"
-                  className="mr-2"
-                  checked={formState.accommodation == 0}
-                  onChange={() => {
-                    setFormState((prevState) => ({
-                      ...prevState,
-                      ["accommodation"]: 0,
-                    }));
-                  }}
-                />
-                <label htmlFor="accoNo" className="mr-2 ml-1 text-gray-900 dark:text-gray-300">
-                  No
-                </label>
-                <p className="mt-2 md:mt-4 text-[16px] text-gray-700 dark:text-gray-300">
-                  Note: <br />
-                  <b>Eligibility</b>: Accommodation is exclusively available for
-                  female attendees traveling from outside the local area. <br />
-                  <b>Availability</b>: Please note that accommodation is limited
-                  and cannot be guaranteed for all eligible participants. <br />
-                  <b>Confirmation</b>: Successful applicants will receive a
-                  confirmation email with further details regarding their
-                  accommodation. <br />
-                  <b>Payment</b>: Accommodation costs are not included in the
-                  event registration fee. Payment will be required separately at
-                  the venue upon check-in.
-                </p>
-              </div>
-            )}
+            {/* Accommodation section removed - deprecated field */}
           </div>
           <div>
             <div className="flex space-x-3">
@@ -924,6 +884,7 @@ const MyForm: React.FC = () => {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

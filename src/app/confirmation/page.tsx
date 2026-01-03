@@ -286,7 +286,7 @@ export default function Confirmation() {
                 If you don't have a team, we can help you find one at the venue.
               </p>
               <div className="flex items-center space-x-2 mt-2 text-gray-700 dark:text-gray-300">
-                <input
+                {/* <input
                   type="radio"
                   name="isLead"
                   checked={isTeamLead == true}
@@ -315,7 +315,7 @@ export default function Confirmation() {
                   }}
                   required
                 />
-                <p>Yes</p>
+                <p>Yes</p> */}
                 <input
                   type="radio"
                   name="isLead"
@@ -326,6 +326,7 @@ export default function Confirmation() {
                   required
                 />
                 <p>No</p>
+                <span className="text-red-500 text-sm ml-2">(Team creation is sold out)</span>
               </div>
               <div className="h-3" />
 

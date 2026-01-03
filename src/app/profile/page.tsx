@@ -5,7 +5,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import QRCode from "react-qr-code";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ContentCopy, CheckCircle, PeopleOutline } from "@mui/icons-material";
+import { ContentCopy, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
 interface TeamMember {
@@ -25,7 +25,6 @@ export default function Profile() {
   const [teamData, setTeamData] = useState<any>(undefined);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [tabIndex, setTabIndex] = useState(0);
-  const [copied, setCopied] = useState(false);
   
   // Problem statement states
   const [problemStatement, setProblemStatement] = useState("");
@@ -48,55 +47,24 @@ export default function Profile() {
       const response = document.data();
       setUserData(response);
       
-      // Load problem statement data if exists
-      if (response?.problemStatement) {
-        setProblemStatement(response.problemStatement);
-        setHasProblemStatement(true);
-      }
-      if (response?.solution) setSolution(response.solution);
-      if (response?.techStack) setTechStack(response.techStack);
-      
-      // If user is a team lead, fetch team data
-      if (response?.isTeamLead === 1 && response?.teamName) {
-        getDoc(doc(db, "teams", response.teamName)).then((teamDoc) => {
-          if (teamDoc.exists()) {
-            setTeamData(teamDoc.data());
-          }
-        });
-      }
-      
-      // Fetch team members if user is in a team
-      if (response?.isTeamMember === 1 && response?.teamName) {
-        const teamDoc = await getDoc(doc(db, "teams", response.teamName));
+      // If user has a team code, fetch team data
+      if (response?.teamCode) {
+        const teamDoc = await getDoc(doc(db, "teams", response.teamCode));
         if (teamDoc.exists()) {
           const teamInfo = teamDoc.data();
           setTeamData(teamInfo);
 
-          // Fetch problem statement for team members
-          if (!response?.problemStatement) {
-            if (teamInfo.problemStatement) {
-              setProblemStatement(teamInfo.problemStatement);
-              setSolution(teamInfo.solution || "");
-              setTechStack(teamInfo.techStack || "");
-              setHasProblemStatement(true);
-            } else if (teamInfo.leaderId) {
-              // Fallback: Fetch from leader's profile if not on team doc
-              const leaderDoc = await getDoc(doc(db, "registrations", teamInfo.leaderId));
-              if (leaderDoc.exists()) {
-                const leaderData = leaderDoc.data();
-                if (leaderData.problemStatement) {
-                  setProblemStatement(leaderData.problemStatement);
-                  setSolution(leaderData.solution || "");
-                  setTechStack(leaderData.techStack || "");
-                  setHasProblemStatement(true);
-                }
-              }
-            }
+          // Load problem statement from team
+          if (teamInfo.problemStatement) {
+            setProblemStatement(teamInfo.problemStatement);
+            setSolution(teamInfo.solution || "");
+            setTechStack(teamInfo.techStack || "");
+            setHasProblemStatement(true);
           }
           
           // Fetch all team members
           const membersData = await Promise.all(
-            teamInfo.participants.map(async (uid: string) => {
+            teamInfo.memberIds.map(async (uid: string) => {
               const memberDoc = await getDoc(doc(db, "registrations", uid));
               if (memberDoc.exists()) {
                 const r = memberDoc.data();
@@ -119,53 +87,20 @@ export default function Profile() {
     });
   }, [user]);
 
-  const copyToClipboard = () => {
-    if (teamData?.referralCode) {
-      navigator.clipboard.writeText(teamData.referralCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const shareReferralCode = () => {
-    if (!teamData?.referralCode || !teamData?.teamName) return;
-    
-    const shareLink = `${window.location.origin}/register?code=${teamData.referralCode}`;
-    const shareText = `Join my team "${teamData.teamName}" for TechSprint 2026!\n\nClick here to register and join: ${shareLink}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: "Join my TechSprint team!",
-        text: shareText,
-      }).catch(() => {
-        // Fallback to copying the link
-        navigator.clipboard.writeText(shareLink);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
-    } else {
-      // Copy the link
-      navigator.clipboard.writeText(shareLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   const handleSaveProblemStatement = async () => {
     if (!user?.uid) return;
     
+    // Only leader can edit
+    if (userData?.role !== "leader") {
+      alert("Only team leaders can edit the problem statement.");
+      return;
+    }
+    
     setSaving(true);
     try {
-      // Save to user profile (legacy support)
-      await updateDoc(doc(db, "registrations", user.uid), {
-        problemStatement,
-        solution,
-        techStack,
-      });
-
-      // Save to team document (so all members can see it)
-      if (userData?.teamName) {
-        await updateDoc(doc(db, "teams", userData.teamName), {
+      // Save to team document
+      if (userData?.teamCode) {
+        await updateDoc(doc(db, "teams", userData.teamCode), {
           problemStatement,
           solution,
           techStack,
@@ -183,81 +118,6 @@ export default function Profile() {
     }
   };
 
-  const handleJoinTeam = async () => {
-    if (!user?.uid || !joinTeamCode) return;
-    
-    setJoining(true);
-    try {
-      const teamsRef = collection(db, "teams");
-      const teamQuery = query(teamsRef, where("referralCode", "==", joinTeamCode.toUpperCase()));
-      const teamSnapshot = await getDocs(teamQuery);
-
-      if (teamSnapshot.empty) {
-        alert("Invalid referral code. Please check and try again.");
-        setJoining(false);
-        return;
-      }
-
-      const teamDoc = teamSnapshot.docs[0];
-      const teamData = teamDoc.data();
-      
-      if (teamData.participants && teamData.participants.length >= 5) {
-        alert("This team is full (maximum 5 members).");
-        setJoining(false);
-        return;
-      }
-
-      if (teamData.participants && teamData.participants.includes(user.uid)) {
-        alert("You are already in this team!");
-        setJoining(false);
-        return;
-      }
-
-      await updateDoc(doc(db, "teams", teamDoc.id), {
-        participants: arrayUnion(user.uid),
-      });
-
-      await updateDoc(doc(db, "registrations", user.uid), {
-        isTeamMember: 1,
-        teamName: teamData.teamName,
-      });
-
-      alert("Successfully joined team!");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error joining team:", error);
-      alert("Failed to join team. Please try again.");
-    } finally {
-      setJoining(false);
-    }
-  };
-
-  const handleLeaveTeam = async () => {
-    if (!user?.uid || !teamData?.teamName) return;
-    
-    if (!confirm("Are you sure you want to leave this team?")) return;
-
-    setJoining(true);
-    try {
-      await updateDoc(doc(db, "teams", teamData.teamName), {
-        participants: arrayRemove(user.uid),
-      });
-
-      await updateDoc(doc(db, "registrations", user.uid), {
-        isTeamMember: 0,
-        teamName: "",
-      });
-
-      alert("Successfully left the team.");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error leaving team:", error);
-      alert("Failed to leave team. Please try again.");
-    } finally {
-      setJoining(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -270,6 +130,7 @@ export default function Profile() {
                 <div className="w-full flex flex-col items-center bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                   <img
                     src={user.photoURL}
+                    referrerPolicy="no-referrer"
                     className="w-24 h-24 rounded-full"
                   />
                   <p className="text-xl mt-3 font-medium text-gray-900 dark:text-white">
@@ -285,52 +146,7 @@ export default function Profile() {
                   </p>
                   
                   {/* Team Referral Code Section for Team Leads */}
-                  {userData.isTeamLead === 1 && teamData?.referralCode && (
-                    <div className="mt-4 w-full p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Team: {teamData.teamName}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Share this code with your friends to join them in you team</p>
-                      
-                      {/* Referral Code Display */}
-                      <div className="flex items-center justify-center gap-2 mb-4 p-3 bg-white dark:bg-[#0a0a0a] rounded-lg border border-blue-300 dark:border-blue-700">
-                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-widest">{teamData.referralCode}</p>
-                        <button
-                          onClick={copyToClipboard}
-                          className="p-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-lg transition-colors"
-                          title="Copy code"
-                        >
-                          {copied ? (
-                            <CheckCircle className="text-green-500" fontSize="small" />
-                          ) : (
-                            <ContentCopy className="text-blue-600 dark:text-blue-400" fontSize="small" />
-                          )}
-                        </button>
-                      </div>
-                      
-                      {/* Registration Link Display */}
-                      <div className="space-y-2">
-                        <p className="text-xs font-medium text-gray-700 dark:text-gray-300">Direct Registration Link:</p>
-                        <div className="flex items-center gap-2 p-2 bg-white dark:bg-[#0a0a0a] rounded-lg border border-gray-300 dark:border-gray-600">
-                          <input
-                            type="text"
-                            value={`${typeof window !== 'undefined' ? window.location.origin : ''}/register?code=${teamData.referralCode}`}
-                            readOnly
-                            className="flex-1 text-xs bg-transparent text-gray-700 dark:text-gray-300 outline-none select-all"
-                            onClick={(e) => e.currentTarget.select()}
-                          />
-                          <button
-                            onClick={shareReferralCode}
-                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors shrink-0"
-                            title="Copy link"
-                          >
-                            <ContentCopy className="text-gray-600 dark:text-gray-400" fontSize="small" />
-                          </button>
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-                          💡 Click the link to select and copy, or click the copy button
-                        </p>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
                 
                 {/* QR Code Section */}
@@ -362,7 +178,7 @@ export default function Profile() {
             <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Problem Statement</h2>
-                {hasProblemStatement && !isEditingProblem && isEditingAllowed && userData?.isTeamLead === 1 && (
+                {hasProblemStatement && !isEditingProblem && isEditingAllowed && userData?.role === "leader" && (
                   <button
                     onClick={() => setIsEditingProblem(true)}
                     className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
@@ -372,7 +188,7 @@ export default function Profile() {
                 )}
               </div>
               
-              {userData?.isTeamLead === 1 && (!hasProblemStatement || isEditingProblem) ? (
+              {userData?.role === "leader" && (!hasProblemStatement || isEditingProblem) ? (
                 // Edit Mode
                 <div className="space-y-4">
                   <div>
@@ -479,55 +295,25 @@ export default function Profile() {
                       </p>
                     </div>
                   )}
-                  
-                  {userData?.isTeamLead !== 1 && userData?.isTeamMember === 1 && (
-                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        ℹ️ Only the Team Lead can edit the problem statement.
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
             
-            {/* Join Team Section */}
-            {userData?.isTeamMember !== 1 && (
-              <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Join a Team</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                      Enter Referral Code
-                    </label>
-                    <input
-                      type="text"
-                      value={joinTeamCode}
-                      onChange={(e) => setJoinTeamCode(e.target.value)}
-                      placeholder="Enter 6-digit code"
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <button
-                    onClick={handleJoinTeam}
-                    disabled={joining || !joinTeamCode}
-                    className="w-full py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {joining ? "Joining..." : "Join Team"}
-                  </button>
-                </div>
-              </div>
-            )}
-
+            {/* Join Team Section - Removed, team assignment is now handled by admin */}
             {/* Team View Section */}
-            {userData?.isTeamMember === 1 && teamData && (
+            {userData?.teamCode && teamData && (
               <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white">Your Team</h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {teamData.teamName} #{teamData.teamNumber}
+                      {teamData.teamName} (Code: {teamData.teamCode})
                     </p>
+                    {teamData.allottedClassroom && (
+                      <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mt-1">
+                        📍 Classroom: {teamData.allottedClassroom}
+                      </p>
+                    )}
                   </div>
                   <PeopleOutline className="text-gray-400" fontSize="large" />
                 </div>
@@ -564,25 +350,18 @@ export default function Profile() {
                     </div>
                   ))}
                 </div>
-                
-                {userData?.isTeamLead === 1 && (
-                  <button
-                    onClick={() => router.push('/edit-team')}
-                    className="w-full mt-4 py-2 text-blue-500 dark:text-blue-400 rounded-lg border border-gray-300 dark:border-gray-600 font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
-                  >
-                    Edit Team
-                  </button>
-                )}
-                
-                {userData?.isTeamLead !== 1 && (
-                  <button
-                    onClick={handleLeaveTeam}
-                    disabled={joining}
-                    className="w-full mt-4 py-2 text-red-500 dark:text-red-400 rounded-lg border border-red-300 dark:border-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                  >
-                    {joining ? "Leaving..." : "Leave Team"}
-                  </button>
-                )}
+              </div>
+            )}
+
+            {/* No Team Message */}
+            {!userData?.teamCode && (
+              <div className="bg-gray-50 dark:bg-[#141414] rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Team Status</h2>
+                <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <p className="text-center font-medium text-amber-800 dark:text-amber-200">
+                    ℹ️ You are not assigned to a team yet. Contact admin for team assignment.
+                  </p>
+                </div>
               </div>
             )}
             

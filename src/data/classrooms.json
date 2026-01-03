@@ -1,0 +1,50 @@
+[
+  {
+    "id": "lab-101",
+    "name": "Lab 101",
+    "capacity": 30,
+    "building": "Main Block"
+  },
+  {
+    "id": "lab-102",
+    "name": "Lab 102",
+    "capacity": 30,
+    "building": "Main Block"
+  },
+  {
+    "id": "lab-201",
+    "name": "Lab 201",
+    "capacity": 25,
+    "building": "Main Block"
+  },
+  {
+    "id": "lab-202",
+    "name": "Lab 202",
+    "capacity": 25,
+    "building": "Main Block"
+  },
+  {
+    "id": "room-301",
+    "name": "Room 301",
+    "capacity": 20,
+    "building": "Main Block"
+  },
+  {
+    "id": "room-302",
+    "name": "Room 302",
+    "capacity": 20,
+    "building": "Main Block"
+  },
+  {
+    "id": "auditorium",
+    "name": "Main Auditorium",
+    "capacity": 100,
+    "building": "Auditorium Block"
+  },
+  {
+    "id": "conference-hall",
+    "name": "Conference Hall",
+    "capacity": 50,
+    "building": "Admin Block"
+  }
+]

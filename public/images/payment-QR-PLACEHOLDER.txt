@@ -1,0 +1,10 @@
+⚠️ REPLACE THIS FILE WITH YOUR ACTUAL PAYMENT QR CODE
+
+This is a placeholder file. The admin team management page expects a payment QR code image here.
+
+To replace:
+1. Delete this file
+2. Add your actual payment QR code as: payment-QR.png
+3. Recommended: 300x300px or larger PNG image
+
+Without this image, admins won't be able to show payment QR to participants during on-spot registration.
