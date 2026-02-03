@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyPulse - AI-Powered Academic Support Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-gradient: linear-gradient(135deg, #dbeafe 0%, #f3e8ff 50%, #fce7f3 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        nav .logo span {
+            font-size: 1.75rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .role-btn {
+            background: #f3f4f6;
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid transparent;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .role-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .role-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .btn-login {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--bg-gradient);
+            padding: 6rem 2rem;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-dark);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem 3rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+        }
+
+        /* Role-based sections */
+        .role-section {
+            display: none;
+        }
+
+        .role-section.active {
+            display: block;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: #f9fafb;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .feature-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: var(--bg-gradient);
+            padding: 6rem 2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -1.5rem;
+            left: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+        }
+
+        .step-card h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .step-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Mentor AI Panel */
+        .mentor-panel {
+            background: #d4fc79;
+            padding: 6rem 2rem;
+        }
+
+        .panel-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .panel-header h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .panel-header p {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .insight-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .insight-card.alert {
+            background: #fecaca;
+        }
+
+        .insight-card.warning {
+            background: #fef3c7;
+        }
+
+        .insight-card.success {
+            background: #d1fae5;
+        }
+
+        .insight-card.info {
+            background: #dbeafe;
+        }
+
+        .insight-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-card ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .insight-card li {
+            padding: 0.75rem 0;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .insight-card li:last-child {
+            border-bottom: none;
+        }
+
+        .insight-card button {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .insight-card button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Student Portal */
+        .student-portal {
+            background: var(--bg-gradient);
+            padding: 6rem 2rem;
+        }
+
+        .portal-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .portal-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .portal-header p {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .subject-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .subject-card.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .portal-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .portal-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .portal-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .portal-section p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .file-upload input[type="file"] {
+            padding: 0.75rem;
+            border: 2px dashed var(--primary);
+            border-radius: 0.5rem;
+            background: #f9fafb;
+            cursor: pointer;
+        }
+
+        .topic-list {
+            list-style: none;
+        }
+
+        .topic-list li {
+            padding: 1rem;
+            background: #f9fafb;
+            margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topic-list .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .topic-list .status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .topic-list .status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Student Progress */
+        .student-progress {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .progress-card {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 1rem;
+            border-left: 5px solid var(--primary);
+        }
+
+        .progress-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Teacher Monitoring Panel */
+        .teacher-panel {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 100%);
+            padding: 6rem 2rem;
+        }
+
+        .monitoring-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .monitoring-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .class-selector {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .class-selector h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .class-selector select {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid var(--primary);
+            font-size: 1rem;
+            min-width: 300px;
+            cursor: pointer;
+            background: white;
+        }
+
+        .status-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .status-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-section h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-section h3 .indicator {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+        }
+
+        .status-section h3 .indicator.green {
+            background: var(--success);
+        }
+
+        .status-section h3 .indicator.red {
+            background: var(--danger);
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .student-card.submitted {
+            border-left: 5px solid var(--success);
+        }
+
+        .student-card.not-submitted {
+            border-left: 5px solid var(--danger);
+        }
+
+        .student-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge.submitted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.not-submitted {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .student-card input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .student-card button {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .student-card button:hover {
+            background: var(--primary-dark);
+        }
+
+        .ai-action-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-action-section h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .ai-action-section p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+        }
+
+        /* Analytics Dashboard */
+        .analytics {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .stat-card .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: black;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .chat-widget:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: var(--bg-gradient);
+            padding: 6rem 2rem;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-card .quote {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: var(--text-light);
+        }
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-card .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .testimonial-card .author-info h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-card .author-info p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* FAQ Section */
+        .faq {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .faq-list {
+            max-width: 900px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            background: #f3f4f6;
+        }
+
+        .faq-item.active {
+            background: #ede9fe;
+        }
+
+        .faq-question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            margin-top: 1rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            padding: 1.25rem 3rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .insights-grid,
+            .portal-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .subjects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .role-selector {
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 2rem;
+                background: white;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                display: none;
+            }
+
+            .role-selector.mobile-open {
+                display: flex;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo" onclick="showRole('home')">
+                <span>📚</span>
+                <span>StudyPulse</span>
+            </div>
+            <div class="nav-links">
+                <div class="role-selector">
+                    <button class="role-btn" onclick="showRole('student')">Student</button>
+                    <button class="role-btn" onclick="showRole('teacher')">Teacher</button>
+                    <button class="role-btn" onclick="showRole('mentor')">Mentor</button>
+                </div>
+                <a onclick="scrollToSection('features')">Features</a>
+                <a onclick="scrollToSection('how-it-works')">How It Works</a>
+                <a onclick="scrollToSection('testimonials')">Testimonials</a>
+            </div>
+            <button class="btn-login" onclick="showRole('student')">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Home View (Default) -->
+    <div id="home-view" class="role-section active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>AI-Powered Academic Support Portal</h1>
+                <p>Built in collaboration with leading educators to support <strong>Students, Teachers & Mentors</strong></p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                    <button class="btn-primary" onclick="showRole('student')">
+                        I'm a Student 🎓
+                    </button>
+                    <button class="btn-primary" onclick="showRole('teacher')">
+                        I'm a Teacher 👨‍🏫
+                    </button>
+                    <button class="btn-primary" onclick="showRole('mentor')">
+                        I'm a Mentor 🧑‍🏫
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collaboration Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">💛 Our Collaboration</h2>
+                <p class="section-subtitle">
+                    StudyPulse works closely with universities to automatically track attendance, assignment submission, and learning consistency using AI. Our platform provides real-time behavioral analysis, emotional support insights, and AI-powered alerts.
+                </p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">✨ Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon">🤖</div>
+                        <h3>AI Behavioral Analysis</h3>
+                        <p>Advanced machine learning algorithms analyze student behavior patterns to identify early warning signs of academic struggle or emotional distress.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📊</div>
+                        <h3>Real-Time Monitoring</h3>
+                        <p>Track attendance, assignment submissions, participation rates, and engagement metrics in real-time across all courses and students.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔔</div>
+                        <h3>Smart Alerts System</h3>
+                        <p>Receive intelligent notifications when students show concerning patterns, allowing for timely intervention before issues escalate.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">💬</div>
+                        <h3>AI Chat Assistant</h3>
+                        <p>24/7 AI-powered chatbot provides instant support, answers questions, and guides students through academic challenges.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📈</div>
+                        <h3>Performance Analytics</h3>
+                        <p>Comprehensive dashboards visualize student progress, identify trends, and provide actionable insights for educators.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🎯</div>
+                        <h3>Personalized Support</h3>
+                        <p>Tailored recommendations and resources based on individual student needs, learning styles, and academic goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">🔄 How It Works</h2>
+                <p class="section-subtitle">Simple, effective, and powered by AI</p>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Connect Your Systems</h3>
+                        <p>Integrate StudyPulse with your existing Learning Management System (LMS) in minutes. We support all major platforms.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>AI Learns Baselines</h3>
+                        <p>Our AI establishes normal behavioral patterns for each student during the first 2-3 weeks of the semester.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Continuous Monitoring</h3>
+                        <p>The system tracks attendance, submissions, participation, and engagement across all courses automatically.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>Early Detection</h3>
+                        <p>AI identifies deviations from baseline patterns and flags students who may need support before crisis occurs.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <h3>Smart Interventions</h3>
+                        <p>Teachers and mentors receive alerts with suggested actions and communication templates for outreach.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">6</div>
+                        <h3>Track & Improve</h3>
+                        <p>Monitor intervention effectiveness and continuously refine support strategies based on outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Dashboard -->
+        <section class="analytics">
+            <div class="container">
+                <h2 class="section-title">📊 Impact by the Numbers</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Improved Retention Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3-6</div>
+                        <div class="stat-label">Weeks Earlier Detection</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">92%</div>
+                        <div class="stat-label">Student Satisfaction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Students Supported</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="testimonials" class="testimonials">
+            <div class="container">
+                <h2 class="section-title">💬 What Users Say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="quote">"StudyPulse helped me identify struggling students weeks before I would have noticed. The early intervention saved several students from dropping out."</p>
+                        <div class="author">
+                            <div class="avatar">👨‍🏫</div>
+                            <div class="author-info">
+                                <h4>Dr. James Chen</h4>
+                                <p>Computer Science Professor</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="quote">"As a student dealing with anxiety, having the AI assistant available 24/7 was life-changing. I got help before things spiraled out of control."</p>
+                        <div class="author">
+                            <div class="avatar">👩‍🎓</div>
+                            <div class="author-info">
+                                <h4>Sarah Martinez</h4>
+                                <p>Engineering Student</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="quote">"The analytics dashboard gives me incredible insights into my students' wellbeing. I can be proactive instead of reactive for the first time."</p>
+                        <div class="author">
+                            <div class="avatar">👩‍🏫</div>
+                            <div class="author-info">
+                                <h4>Prof. Emily Watson</h4>
+                                <p>Psychology Department Head</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq">
+            <div class="container">
+                <h2 class="section-title">❓ Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            How does StudyPulse protect student privacy?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer">
+                            StudyPulse only uses data that students already share through normal academic activities (attendance, assignment submissions, etc.). All data is encrypted, FERPA compliant, and students are fully informed about what data is collected and how it's used.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            Which Learning Management Systems do you integrate with?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer">
+                            We integrate with all major LMS platforms including Canvas, Blackboard, Moodle, D2L Brightspace, and Google Classroom. Custom integrations are also available.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            How long does implementation take?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Most institutions are fully up and running within 2-3 weeks. This includes LMS integration, staff training, and initial AI baseline establishment.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            What kind of training do teachers need?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer">
+                            We provide comprehensive training including video tutorials, live webinars, and ongoing support. Most educators are comfortable using the system after just 2-3 hours of training.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            Can students opt out of monitoring?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes, student privacy and agency are paramount. Students can opt out of certain monitoring features, though we encourage participation through transparency about the benefits.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <h2>Transform Student Support at Your Institution</h2>
+                <p>Join hundreds of schools using AI to ensure no student falls through the cracks</p>
+                <div class="cta-buttons">
+                    <button class="btn-secondary" onclick="showRole('student')">Start Free Trial</button>
+                    <button class="btn-primary" onclick="alert('Demo request submitted!')">Request Demo</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Student Portal View -->
+    <div id="student-view" class="role-section">
+        <section class="student-portal">
+            <div class="container">
+                <div class="portal-header">
+                    <h2>📚 Student Portal – StudyPulse</h2>
+                    <p>Your Smart Academic Assistant</p>
+                </div>
+
+                <div class="subjects-grid">
+                    <div class="subject-card" onclick="selectSubject(this, 'DSA')">DSA</div>
+                    <div class="subject-card" onclick="selectSubject(this, 'Maths')">Maths</div>
+                    <div class="subject-card" onclick="selectSubject(this, 'OS')">OS</div>
+                    <div class="subject-card" onclick="selectSubject(this, 'DBMS')">DBMS</div>
+                </div>
+
+                <div class="portal-sections">
+                    <div class="portal-section">
+                        <h3>📅 Timetable & Topics</h3>
+                        <p id="timetable-content">Select a subject to view timetable and covered topics</p>
+                        <ul class="topic-list" id="topic-list" style="display: none;">
+                            <li>
+                                <span>Arrays and Strings</span>
+                                <span class="status completed">Completed</span>
+                            </li>
+                            <li>
+                                <span>Linked Lists</span>
+                                <span class="status completed">Completed</span>
+                            </li>
+                            <li>
+                                <span>Stacks and Queues</span>
+                                <span class="status pending">In Progress</span>
+                            </li>
+                            <li>
+                                <span>Trees and Graphs</span>
+                                <span class="status pending">Upcoming</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="portal-section">
+                        <h3>📝 Assignments & Deadlines</h3>
+                        <p id="assignment-content">Choose a subject to view assignments and deadlines</p>
+                        <div class="file-upload">
+                            <input type="file" id="fileUpload" />
+                            <button class="btn-primary" onclick="uploadFile()">Upload Assignment</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem; font-size: 1.25rem; font-weight: 600;">
+                    StudyPulse AI | Student Success Assistant
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Progress Section -->
+        <section class="student-progress">
+            <div class="container">
+                <h2 class="section-title">📈 Your Progress</h2>
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <h3>Overall Completion</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>75% Complete</span>
+                            <span>3 of 4 subjects</span>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Assignment Submission</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>90% On Time</span>
+                            <span>18 of 20 assignments</span>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Attendance Rate</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>95% Attendance</span>
+                            <span>38 of 40 classes</span>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Participation Score</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 82%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>82% Active</span>
+                            <span>Very Good</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Teacher Portal View -->
+    <div id="teacher-view" class="role-section">
+        <section class="teacher-panel">
+            <div class="container">
+                <div class="monitoring-header">
+                    <h2>👨‍🏫 Teacher Monitoring Panel</h2>
+                    <p>Track student progress and provide timely support</p>
+                </div>
+
+                <div class="class-selector">
+                    <h3>Select Class</h3>
+                    <select id="classSelector" onchange="loadClassData()">
+                        <option value="">Select Class</option>
+                        <option value="cs-a">Class A - Computer Science</option>
+                        <option value="cs-b">Class B - Data Science</option>
+                        <option value="cs-c">Class C - Information Technology</option>
+                    </select>
+                </div>
+
+                <div class="status-sections" id="classData" style="display: none;">
+                    <!-- Submitted Students -->
+                    <div class="status-section">
+                        <h3><span class="indicator green"></span> Submitted Students</h3>
+                        <div class="students-grid">
+                            <div class="student-card submitted">
+                                <h4>Aarav Kumar</h4>
+                                <div class="status-badge submitted">Submitted ✓</div>
+                                <input type="text" placeholder="Enter marks" value="8" />
+                                <button onclick="submitMarks('Aarav')">Submit Marks</button>
+                            </div>
+                            <div class="student-card submitted">
+                                <h4>Pranav Sharma</h4>
+                                <div class="status-badge submitted">Submitted ✓</div>
+                                <input type="text" placeholder="Enter marks" />
+                                <button onclick="submitMarks('Pranav')">Submit Marks</button>
+                            </div>
+                            <div class="student-card submitted">
+                                <h4>Rahul Patel</h4>
+                                <div class="status-badge submitted">Submitted ✓</div>
+                                <input type="text" placeholder="Enter marks" />
+                                <button onclick="submitMarks('Rahul')">Submit Marks</button>
+                            </div>
+                            <div class="student-card submitted">
+                                <h4>Karthik Reddy</h4>
+                                <div class="status-badge submitted">Submitted ✓</div>
+                                <input type="text" placeholder="Enter marks" />
+                                <button onclick="submitMarks('Karthik')">Submit Marks</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Not Submitted Students -->
+                    <div class="status-section">
+                        <h3><span class="indicator red"></span> Not Submitted Students</h3>
+                        <div class="students-grid">
+                            <div class="student-card not-submitted">
+                                <h4>Mira Singh</h4>
+                                <div class="status-badge not-submitted">Not Submitted ⚠️</div>
+                                <input type="text" placeholder="Enter marks" value="0" readonly />
+                                <button onclick="sendReminder('Mira')">Send Reminder</button>
+                            </div>
+                            <div class="student-card not-submitted">
+                                <h4>Sneha Gupta</h4>
+                                <div class="status-badge not-submitted">Not Submitted ⚠️</div>
+                                <input type="text" placeholder="Enter marks" value="0" readonly />
+                                <button onclick="sendReminder('Sneha')">Send Reminder</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Auto Action -->
+                    <div class="ai-action-section">
+                        <h3>🤖 AI Auto Action</h3>
+                        <p>No critical alerts at this time 😊</p>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">The AI will automatically send supportive reminders to students who miss multiple deadlines.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacher Analytics -->
+        <section class="analytics">
+            <div class="container">
+                <h2 class="section-title">📊 Class Performance Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Average Submission Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">92%</div>
+                        <div class="stat-label">Class Attendance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Students Need Support</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Mentor AI View -->
+    <div id="mentor-view" class="role-section">
+        <section class="mentor-panel">
+            <div class="container">
+                <div class="panel-header">
+                    <h2>🧑‍🏫 Mentor AI Insights Panel</h2>
+                    <p>Real-time behaviour analysis, emotional support insights & AI alerts</p>
+                </div>
+
+                <div class="insights-grid">
+                    <!-- Students Facing Issues -->
+                    <div class="insight-card alert">
+                        <h3>🚨 Students Facing Issues</h3>
+                        <ul>
+                            <li>• Harini – Stress due to workload 😔</li>
+                            <li>• Pranay – Facing doubts in DSA 😕</li>
+                            <li>• Sneha – Lack of motivation 😞</li>
+                            <li>• Rajesh – Family issues affecting studies 😢</li>
+                        </ul>
+                        <button onclick="viewDetails('issues')">View Detailed Reports</button>
+                    </div>
+
+                    <!-- Performance Dropping -->
+                    <div class="insight-card warning">
+                        <h3>📉 Performance Dropping</h3>
+                        <ul>
+                            <li>• Rahul – Consistency down by 35%</li>
+                            <li>• Mira – Assignments missed twice</li>
+                            <li>• Ankit – Participation decreased by 50%</li>
+                        </ul>
+                        <button onclick="trackTrend()">Track Performance Trends</button>
+                    </div>
+
+                    <!-- Not Submitting Assignments -->
+                    <div class="insight-card alert">
+                        <h3>⚠️ Not Submitting Assignments</h3>
+                        <ul>
+                            <li>• Aarav – 3 Assignments Pending ❗</li>
+                            <li>• Riya – 2 Assignments Pending ⚠️</li>
+                            <li>• Vikram – 4 Assignments Pending 🚨</li>
+                        </ul>
+                        <button onclick="sendAIReminder()">Send AI-Powered Reminder</button>
+                    </div>
+
+                    <!-- Doing Really Well -->
+                    <div class="insight-card success">
+                        <h3>🎉 Doing Really Well</h3>
+                        <ul>
+                            <li>• Karthik – Amazing Consistency 👍</li>
+                            <li>• Ananya – Top Performer 🏆</li>
+                            <li>• Priya – Excellent participation 🌟</li>
+                            <li>• Dev – Helping peers actively 🤝</li>
+                        </ul>
+                        <button onclick="sendAppreciation()">Send Appreciation Messages</button>
+                    </div>
+
+                    <!-- Attendance Issues -->
+                    <div class="insight-card warning">
+                        <h3>📅 Attendance Concerns</h3>
+                        <ul>
+                            <li>• Sanjay – Missed 5 classes this week</li>
+                            <li>• Neha – Irregular attendance pattern</li>
+                            <li>• Amit – 3 consecutive absences</li>
+                        </ul>
+                        <button onclick="checkAttendance()">View Attendance Details</button>
+                    </div>
+
+                    <!-- Engagement Insights -->
+                    <div class="insight-card info">
+                        <h3>💡 Engagement Insights</h3>
+                        <ul>
+                            <li>• 12 students highly engaged</li>
+                            <li>• 8 students moderately engaged</li>
+                            <li>• 5 students need attention</li>
+                            <li>• Overall class engagement: 78%</li>
+                        </ul>
+                        <button onclick="viewEngagement()">Detailed Engagement Report</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mentor Tools -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">🛠️ Mentor Tools</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon">📧</div>
+                        <h3>Smart Communication</h3>
+                        <p>AI-generated supportive messages tailored to each student's situation and needs.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📊</div>
+                        <h3>Trend Analysis</h3>
+                        <p>Visualize student progress over time and identify patterns early.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🎯</div>
+                        <h3>Intervention Tracking</h3>
+                        <p>Monitor effectiveness of support provided and adjust strategies accordingly.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🤝</div>
+                        <h3>Peer Support Network</h3>
+                        <p>Connect struggling students with successful peers for mentorship.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📱</div>
+                        <h3>Mobile Alerts</h3>
+                        <p>Receive critical notifications on your mobile device for urgent situations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📝</div>
+                        <h3>Session Notes</h3>
+                        <p>Document mentor sessions with AI-assisted note-taking and follow-up suggestions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" onclick="openChat()">
+        💬 Chat with AI
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>📚 StudyPulse</h3>
+                <p style="margin-top: 1rem; opacity: 0.8;">AI-powered academic support system transforming student success through early intervention and intelligent insights.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#" onclick="showRole('student')">Student Portal</a></li>
+                    <li><a href="#" onclick="showRole('teacher')">Teacher Dashboard</a></li>
+                    <li><a href="#" onclick="showRole('mentor')">Mentor Insights</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p><strong>StudyPulse</strong> - AI-Powered Academic Support System</p>
+            <p style="margin-top: 0.5rem;">© 2026 StudyPulse. Empowering education through intelligent insights.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Role Management
+        function showRole(role) {
+            // Hide all role sections
+            document.querySelectorAll('.role-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected role section
+            if (role === 'home') {
+                document.getElementById('home-view').classList.add('active');
+            } else if (role === 'student') {
+                document.getElementById('student-view').classList.add('active');
+            } else if (role === 'teacher') {
+                document.getElementById('teacher-view').classList.add('active');
+            } else if (role === 'mentor') {
+                document.getElementById('mentor-view').classList.add('active');
+            }
+
+            // Update active button
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smooth scroll
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Subject selection
+        let selectedSubject = '';
+        function selectSubject(element, subject) {
+            // Remove active class from all subjects
+            document.querySelectorAll('.subject-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected
+            element.classList.add('active');
+            selectedSubject = subject;
+            
+            // Update content
+            document.getElementById('timetable-content').textContent = `Viewing ${subject} timetable and covered topics`;
+            document.getElementById('topic-list').style.display = 'block';
+            document.getElementById('assignment-content').textContent = `Viewing ${subject} assignments and deadlines`;
+        }
+
+        // File upload
+        function uploadFile() {
+            const fileInput = document.getElementById('fileUpload');
+            if (fileInput.files.length > 0) {
+                alert(`Assignment uploaded successfully for ${selectedSubject || 'selected subject'}!\nFile: ${fileInput.files[0].name}`);
+                fileInput.value = '';
+            } else {
+                alert('Please select a file first');
+            }
+        }
+
+        // Teacher functions
+        function loadClassData() {
+            const selector = document.getElementById('classSelector');
+            const classData = document.getElementById('classData');
+            
+            if (selector.value) {
+                classData.style.display = 'block';
+            } else {
+                classData.style.display = 'none';
+            }
+        }
+
+        function submitMarks(studentName) {
+            alert(`Marks submitted for ${studentName}!`);
+        }
+
+        function sendReminder(studentName) {
+            alert(`AI-powered reminder sent to ${studentName} ✅\n\n"Hi ${studentName}, we noticed you haven't submitted the recent assignment. If you're facing any challenges, please reach out - we're here to help!"`);
+        }
+
+        // Mentor functions
+        function viewDetails(type) {
+            alert('Opening detailed student reports...\n\nThis would show comprehensive information about each student including:\n- Behavioral patterns\n- Communication history\n- Academic performance\n- Suggested interventions');
+        }
+
+        function trackTrend() {
+            alert('Opening performance trend analysis...\n\nThis would show:\n- Week-by-week performance graphs\n- Comparison with baseline\n- Predictive analytics\n- Recommended actions');
+        }
+
+        function sendAIReminder() {
+            alert('AI-powered reminders sent! ✅\n\nThe system has sent personalized, supportive messages to all students with pending assignments, tailored to their individual situations.');
+        }
+
+        function sendAppreciation() {
+            alert('Appreciation messages sent! 🎉\n\nPositive reinforcement messages have been sent to high-performing students to acknowledge their excellent work and consistency.');
+        }
+
+        function checkAttendance() {
+            alert('Opening attendance details...\n\nThis would show:\n- Detailed attendance records\n- Patterns and trends\n- Comparison with class average\n- Suggested outreach');
+        }
+
+        function viewEngagement() {
+            alert('Opening engagement report...\n\nThis would include:\n- Participation metrics\n- Discussion forum activity\n- Assignment completion rates\n- Overall engagement score');
+        }
+
+        // Chat
+        function openChat() {
+            alert('💬 AI Chat Assistant\n\nHi! I\'m here to help with:\n✓ Assignment questions\n✓ Schedule information\n✓ Resource recommendations\n✓ Study tips\n✓ Mental health support\n\nHow can I assist you today?');
+        }
+
+        // FAQ toggle
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+        }
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .step-card, .insight-card, .student-card, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
